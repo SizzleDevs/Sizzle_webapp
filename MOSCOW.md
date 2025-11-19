@@ -36,7 +36,7 @@
 - **Live spraakfunctie tijdens het koken**
   - Handsfree vragen stellen (push-to-talk of eenvoudige mic-knop).
 
-## **WON’T HAVE (for now)**
+## **WON’T HAVE**
 - **Volledige social features**
   - Comments, likes, volgen van andere gebruikers.
 - **Geavanceerd recommender system**
