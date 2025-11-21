@@ -38,7 +38,8 @@ Maak ze simpel en voorspelbaar. Bijvoorbeeld:
 ### **AI functionaliteit**
 
 * `POST /ai/analyze-step` — krijgt een stap en retour: tijd, moeilijkheid, mogelijke vervangingen
-* `POST /ai/question` — vraag + recept-id → antwoord
+* `POST /ai/recipequestion` — vraag + recept-id → antwoord
+* `POST /ai/question` - vraag → antwoord or aanbelvolen recept door AI
 
 ### **Gebruikers**
 
