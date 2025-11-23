@@ -537,6 +537,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 
+## 5. AI Integratie
 
 ### 5.1 Vraag Stellen Over Recept
 
