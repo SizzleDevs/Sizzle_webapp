@@ -1,9 +1,10 @@
 :root {
     --bg-color: #FFFCF5;
-    --text-color: #000000;
+    --text-color: #0B0800;
     --accent-color: #E6B800; /* Gold/Orange */
+    --icon-color: #5c4a00; /* Dark yellow (almost black) for icons */
     --card-bg: #FFFCF5;
-    --border-color: #000000;
+    --border-color: #0B0800;
     --border-radius: 12px;
     --font-serif: 'Playfair Display', serif;
     --font-sans: 'DM Sans', sans-serif;
@@ -31,6 +32,7 @@ body {
   'opsz' 24;
   vertical-align: middle;
   user-select: none;
+    color: var(--text-color); /* icons should match page text color */
 }
 
 .material-symbols-rounded.filled {
@@ -39,7 +41,7 @@ body {
   'wght' 400,
   'GRAD' 0,
   'opsz' 24;
-    color: var(--accent-color); /* use accent for filled icons */
+        color: var(--text-color); /* filled icons should match text color */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -74,6 +76,22 @@ header {
     font-size: 1.5rem;
 }
 
+.highlight {
+    color: var(--accent-color);
+    /* Outline painted only outside the glyphs using text-shadow (1px outward). */
+    /* Removed -webkit-text-stroke so the stroke doesn't intrude inward. */
+    text-shadow:
+        -1px -1px 0 var(--text-color),
+        -1px 0 0 var(--text-color),
+        -1px 1px 0 var(--text-color),
+        0 -1px 0 var(--text-color),
+        0 1px 0 var(--text-color),
+        1px -1px 0 var(--text-color),
+        1px 0 0 var(--text-color),
+        1px 1px 0 var(--text-color);
+    text-decoration: none; /* ensure no underline */
+}
+
 /* Hero Section */
 .hero {
     text-align: center;
@@ -83,13 +101,6 @@ header {
 .hero h1 {
     font-size: 3rem;
     margin-bottom: 20px;
-}
-
-.highlight {
-    color: var(--accent-color);
-    text-decoration: underline; /* Or specific style from image */
-    text-decoration-color: var(--accent-color);
-    text-decoration-thickness: 3px;
 }
 
 .search-bar {
@@ -106,7 +117,8 @@ header {
     border-radius: var(--border-radius);
     background: var(--card-bg);
     display: flex;
-    padding: 5px;
+    align-items: center; /* vertically center input and button including shadows */
+    padding: 10px; /* increase padding so button shadows are visually inside the wrapper */
 }
 
 .search-input-wrapper input {
@@ -121,13 +133,25 @@ header {
 .search-button {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
-    padding: 10px 20px;
+    padding: 8px 14px; /* slightly reduced internal padding to control width when height is fixed */
+    height: 36px; /* match the ai-send-btn height for consistent alignment */
     font-weight: bold;
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 5px;
     border-radius: calc(var(--border-radius) - 4px);
+    box-shadow: 4px 4px 0px rgba(0,0,0,1);
+    transition: filter 0.08s, box-shadow 0.1s, transform 0.1s;
+}
+
+.search-button:hover {
+    filter: brightness(0.92); /* dim on hover */
+}
+
+.search-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px rgba(0,0,0,1);
 }
 
 .filters {
@@ -348,7 +372,7 @@ header {
     align-items: center;
     justify-content: center;
     background: var(--accent-color);
-    color: var(--card-bg);
+    color: var(--text-color);
     font-weight: bold;
     transition: all 0.2s;
 }
@@ -397,7 +421,7 @@ header {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+    box-shadow: none; /* removed shadow around AI box */
 }
 
 .ai-chat-header {
@@ -424,7 +448,8 @@ header {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     display: flex;
-    padding: 5px;
+    align-items: center; /* vertically center input and send button including shadows */
+    padding: 8px; /* increase padding so send button shadow is visually inside the wrapper */
     background: var(--card-bg);
 }
 
@@ -438,14 +463,25 @@ header {
 
 .ai-send-btn {
     background: var(--accent-color);
-    border: none;
+    border: 1px solid var(--border-color);
     width: 36px;
-    height: 36px;
+    height: 36px; /* ensure fixed square size */
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     border-radius: 8px;
+    box-shadow: 4px 4px 0px rgba(0,0,0,1);
+    transition: filter 0.08s, box-shadow 0.1s, transform 0.1s;
+}
+
+.ai-send-btn:hover {
+    filter: brightness(0.92); /* dim on hover */
+}
+
+.ai-send-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px rgba(0,0,0,1); /* keep same press animation */
 }
 
 /* Footer Button */
