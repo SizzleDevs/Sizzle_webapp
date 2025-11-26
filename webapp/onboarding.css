@@ -1,0 +1,282 @@
+:root {
+    --bg-color: #FFFCF5;
+    --text-color: #0B0800;
+    --accent-color: #E6B800;
+    --card-bg: #FFFCF5;
+    --border-color: #0B0800;
+    --border-radius: 12px;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'DM Sans', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+}
+
+.highlight {
+    color: var(--accent-color);
+    text-shadow:
+        -1px -1px 0 var(--text-color),
+        -1px 0 0 var(--text-color),
+        -1px 1px 0 var(--text-color),
+        0 -1px 0 var(--text-color),
+        0 1px 0 var(--text-color),
+        1px -1px 0 var(--text-color),
+        1px 0 0 var(--text-color),
+        1px 1px 0 var(--text-color);
+}
+
+.onboarding-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.onboarding-step {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.onboarding-step.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+header {
+    padding: 20px 0;
+    margin-bottom: 40px;
+}
+
+.logo {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+.step-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 32px;
+    font-size: 1rem;
+}
+
+/* Form Styles */
+.onboarding-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    text-align: left;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.form-group .input-wrapper {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--card-bg);
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.form-group .input-wrapper input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    font-size: 1rem;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-sans);
+}
+
+.form-group .input-wrapper input::placeholder {
+    color: #999;
+}
+
+/* Tags Container */
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-self: flex-start;
+    gap: 10px;
+    margin-top: 8px;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 8px;
+    width: 100%;
+}
+
+/* Custom scrollbar for tags */
+.tags-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.tags-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tags-container::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 4px;
+}
+
+/* Tag Styles - matching filter-tag */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border-color);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.tag:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.tag.selected {
+    background-color: var(--accent-color);
+}
+
+.tag .tag-icon {
+    /* hidden by default, will show only when selected */
+    display: none;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    margin-left: 8px;
+    line-height: 1;
+}
+
+.tag.selected .tag-icon {
+    display: inline-block; /* show the X without a circle */
+}
+
+/* Footer */
+.step-footer {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.step-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ddd;
+    transition: background-color 0.2s;
+}
+
+.indicator.active {
+    background-color: var(--text-color);
+}
+
+.next-btn {
+    background-color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    padding: 12px 30px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+    font-family: var(--font-sans);
+    color: var(--text-color);
+}
+
+.next-btn:hover {
+    filter: brightness(0.92);
+}
+
+.next-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .tag {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+}
