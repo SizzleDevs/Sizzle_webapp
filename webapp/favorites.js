@@ -40,6 +40,12 @@ window.toggleFavorite = function(element, id) {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if logged in
+    if (!isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
     // Load favorite recipes
     const favoritesContainer = document.getElementById('favorites-container');
     const favoriteRecipes = recipes.filter(recipe => recipe.isFavorite);

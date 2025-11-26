@@ -87,10 +87,7 @@ window.saveNewPassword = function() {
 
 window.logout = function() {
     if (confirm('Weet je zeker dat je uit wilt loggen?')) {
-        // Clear session/token
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        window.location.href = 'index.html';
+        logout();
     }
 };
 
@@ -106,8 +103,14 @@ window.deleteAccount = function() {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if logged in
+    if (!isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
     // Load user data
-    document.getElementById('username').value = currentUser.username;
+    document.getElementById('username').value = getUsername();
     document.getElementById('username').setAttribute('readonly', '');
     document.getElementById('current-password').value = '••••••••';
     document.getElementById('current-password').setAttribute('readonly', '');

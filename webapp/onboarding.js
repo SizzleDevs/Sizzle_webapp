@@ -122,7 +122,7 @@ function setupNavigation() {
         // Collect all data
         const userData = {
             username: document.getElementById('username').value,
-            password: document.getElementById('password').value,
+            password: CryptoJS.SHA256(document.getElementById('password').value).toString(),
             name: document.getElementById('name').value,
             tags: selectedTags
         };

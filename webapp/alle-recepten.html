@@ -16,7 +16,7 @@
             <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">Sizzle</div>
             <div class="header-icons">
                 <span class="material-symbols-rounded" onclick="window.location.href='favorites.html'" style="cursor: pointer;">favorite_border</span>
-                <span class="material-symbols-rounded" onclick="window.location.href='profile.html'" style="cursor: pointer;">person</span>
+                <span class="material-symbols-rounded" onclick="redirectToProfileIfLoggedIn()" style="cursor: pointer;">person</span>
             </div>
         </header>
 
@@ -40,6 +40,7 @@
         </div>
     </div>
 
+    <script src="auth.js"></script>
     <script type="module" src="alle-recepten.js"></script>
 </body>
 </html>
