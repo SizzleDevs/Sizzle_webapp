@@ -359,6 +359,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
   "message": "Recept toegevoegd aan favorieten",
   "id": "123",
   "titel": "Pasta Carbonara",
+  "tags": ["soep", "gezond"],
+  "bereidingstijd": 30,
+  "moeilijkheid": "gemakkelijk",
   "toevoegdOp": "2025-01-20T14:30:00Z"
 }
 ```
