@@ -28,7 +28,7 @@ export const recipes = [
         bereidingstijd: 30,
         moeilijkheid: "gemiddeld",
         image: "ratatouille.jpg",
-        isFavorite: false
+        isFavorite: true
     },
     {
         id: "3",
@@ -91,7 +91,7 @@ export const recipes = [
         bereidingstijd: 40,
         moeilijkheid: "gemiddeld",
         image: "curry.jpg",
-        isFavorite: false
+        isFavorite: true
     },
     {
         id: "10",
@@ -127,7 +127,7 @@ export const recipes = [
         bereidingstijd: 35,
         moeilijkheid: "gemiddeld",
         image: "tacos.jpg",
-        isFavorite: false
+        isFavorite: true
     },
     {
         id: "14",

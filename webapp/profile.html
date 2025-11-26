@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijn Profiel - Sizzle</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Sizzle</div>
+            <div class="header-icons">
+                <span class="material-symbols-rounded" onclick="window.location.href='index.html'">home</span>
+                <span class="material-symbols-rounded filled" onclick="window.location.href='index.html'">person</span>
+            </div>
+        </header>
+
+        <section class="profile-section">
+            <h1>Mijn Profiel</h1>
+            
+            <div class="profile-card">
+                <div class="profile-form">
+                    <div class="form-group">
+                        <label for="username">Gebruikersnaam</label>
+                        <div class="username-wrapper">
+                            <input type="text" id="username">
+                            <button class="edit-username-btn" id="edit-username-btn" onclick="toggleEditUsername()">Bewerk</button>
+                        </div>
+                    </div>
+
+                    <div class="password-change-form" id="password-change-form">
+                        <h3>Wachtwoord wijzigen</h3>
+                        <div class="form-group">
+                            <label for="current-password-verify">Huidige wachtwoord</label>
+                            <input type="password" id="current-password-verify" placeholder="Voer je huidige wachtwoord in">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password">Nieuw wachtwoord</label>
+                            <input type="password" id="new-password" placeholder="Voer nieuw wachtwoord in">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Bevestig wachtwoord</label>
+                            <input type="password" id="confirm-password" placeholder="Voer wachtwoord opnieuw in">
+                        </div>
+                        <div class="password-error hidden" id="password-error"></div>
+                        <div class="form-buttons">
+                            <button class="primary-btn" onclick="saveNewPassword()">Wachtwoord opslaan</button>
+                            <button class="secondary-btn" onclick="clearPasswordForm()">Wissen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="primary-btn logout-btn" onclick="logout()">
+                        <span class="material-symbols-rounded">logout</span>
+                        Uitloggen
+                    </button>
+                    <button class="danger-btn" onclick="deleteAccount()">
+                        <span class="material-symbols-rounded">delete</span>
+                        Account verwijderen
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="profile.js"></script>
+</body>
+</html>

@@ -41,7 +41,11 @@ body {
   'wght' 400,
   'GRAD' 0,
   'opsz' 24;
-        color: var(--text-color); /* filled icons should match text color */
+        color: var(--accent-color); /* filled icons should be golden/yellow */
+}
+
+.favorite-icon .material-symbols-rounded.filled {
+    color: var(--accent-color); /* make heart yellow when favorited */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -604,4 +608,330 @@ header {
 
 .discover-btn:hover {
     filter: brightness(0.92); /* dim on hover like other buttons */
+}
+
+/* Profile Page Styles */
+.profile-section {
+    margin-bottom: 80px;
+}
+
+.profile-section h1 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+}
+
+.profile-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    background: var(--card-bg);
+    margin-bottom: 60px;
+}
+
+.profile-form {
+    margin-bottom: 40px;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.form-group input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: calc(var(--border-radius) - 4px);
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background: var(--card-bg);
+    color: var(--text-color);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.form-group input[readonly] {
+    background: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.username-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.username-wrapper input {
+    flex: 1;
+    max-width: 400px;
+}
+
+.password-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.password-wrapper input {
+    flex: 1;
+    max-width: 400px;
+}
+
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    flex: 1;
+    max-width: 400px;
+    padding-right: 40px;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.password-toggle-icon .material-symbols-rounded {
+    color: var(--text-color);
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.password-toggle-icon:active .material-symbols-rounded {
+    opacity: 1;
+}
+
+.edit-username-btn {
+    background-color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    padding: 10px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: calc(var(--border-radius) - 4px);
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+}
+
+.edit-username-btn:hover {
+    filter: brightness(0.92);
+}
+
+.edit-username-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+.edit-password-btn {
+    background-color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    padding: 10px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: calc(var(--border-radius) - 4px);
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+}
+
+.edit-password-btn:hover {
+    filter: brightness(0.92);
+}
+
+.edit-password-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+.password-group {
+    margin-bottom: 15px;
+}
+
+.change-password-btn {
+    background-color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    padding: 10px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: calc(var(--border-radius) - 4px);
+    font-size: 0.95rem;
+    margin-top: 10px;
+    display: inline-block;
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+}
+
+.change-password-btn:hover {
+    filter: brightness(0.92);
+}
+
+.change-password-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+.password-change-form {
+    padding: 20px 0;
+    margin: 30px 0 0 0;
+}
+
+.password-change-form h3 {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.password-change-form.hidden {
+    display: none;
+}
+
+.change-password-btn {
+    background-color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    padding: 10px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: calc(var(--border-radius) - 4px);
+    font-size: 0.95rem;
+    margin-top: 10px;
+    display: inline-block;
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+}
+
+.change-password-btn:hover {
+    filter: brightness(0.92);
+}
+
+.change-password-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+.password-error {
+    color: #d32f2f;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(211, 47, 47, 0.1);
+    border-radius: 4px;
+}
+
+.password-error.hidden {
+    display: none;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Consistent Button Styles */
+.primary-btn {
+    background-color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: calc(var(--border-radius) - 4px);
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.primary-btn:hover {
+    filter: brightness(0.92);
+}
+
+.primary-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: calc(var(--border-radius) - 4px);
+    transition: background-color 0.2s;
+    font-size: 1rem;
+}
+
+.secondary-btn:hover {
+    background-color: rgba(0,0,0,0.03);
+}
+
+.danger-btn {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: calc(var(--border-radius) - 4px);
+    box-shadow: 0px 4px 0px rgba(211, 47, 47, 0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.danger-btn:hover {
+    filter: brightness(0.95);
+}
+
+.danger-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(211, 47, 47, 0.95);
+}
+
+.profile-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border-color);
+}
+
+.logout-btn {
+    margin: 0;
+}
+
+.favorites-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+
+.no-favorites {
+    text-align: center;
+    color: #888;
+    padding: 40px 20px;
+    font-size: 1.1rem;
+}
+
+.hidden {
+    display: none !important;
 }
