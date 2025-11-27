@@ -982,3 +982,17 @@ header {
     }
 }
 
+/* Footer */
+.page-footer {
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 60px;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.page-footer p {
+    margin: 0;
+}
+

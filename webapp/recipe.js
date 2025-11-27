@@ -52,6 +52,8 @@ function renderRecipe(recipe) {
 // Servings control logic
 let baseServings = 4; // default assumed base servings
 let currentServings = baseServings;
+let servingsIntervalId = null;
+let servingsDirection = 0; // 1 for increase, -1 for decrease, 0 for none
 
 function parseNumberFromString(text) {
     if (!text) return null;
@@ -81,6 +83,26 @@ function formatNumber(n) {
     return parseFloat(n.toFixed(2)).toString();
 }
 
+function convertUnit(num, unit) {
+    // If number is 1 or bigger, keep original unit
+    if (num >= 1) {
+        return { num, unit };
+    }
+    
+    // If number is less than 1, convert to smaller unit
+    const lowerUnit = unit.toLowerCase().trim();
+    
+    if (lowerUnit === 'kilo' || lowerUnit === 'kilo\'s') {
+        return { num: num * 1000, unit: 'gram' };
+    }
+    if (lowerUnit === 'liter' || lowerUnit === 'liters') {
+        return { num: num * 1000, unit: 'mL' };
+    }
+    
+    // Return as-is if no conversion needed
+    return { num, unit };
+}
+
 function updateIngredientAmounts() {
     const items = document.querySelectorAll('#ingredient-list .ingredient-item');
     items.forEach(li => {
@@ -94,7 +116,11 @@ function updateIngredientAmounts() {
         }
         const factor = currentServings / baseServings;
         const newNum = parsed.num * factor;
-        span.textContent = `${formatNumber(newNum)}${parsed.unit ? ' ' + parsed.unit : ''}`;
+        
+        // Convert units if needed
+        const converted = convertUnit(newNum, parsed.unit);
+        
+        span.textContent = `${formatNumber(converted.num)}${converted.unit ? ' ' + converted.unit : ''}`;
     });
 }
 
@@ -123,9 +149,53 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    if (decreaseBtn) decreaseBtn.addEventListener('click', () => setServings(currentServings - 1));
-    if (increaseBtn) increaseBtn.addEventListener('click', () => setServings(currentServings + 1));
+    // Decrease button events
+    if (decreaseBtn) {
+        decreaseBtn.addEventListener('mousedown', () => {
+            servingsDirection = -1;
+            startServingsInterval();
+        });
+        decreaseBtn.addEventListener('touchstart', () => {
+            servingsDirection = -1;
+            startServingsInterval();
+        });
+        decreaseBtn.addEventListener('click', () => setServings(currentServings - 1));
+    }
+
+    // Increase button events
+    if (increaseBtn) {
+        increaseBtn.addEventListener('mousedown', () => {
+            servingsDirection = 1;
+            startServingsInterval();
+        });
+        increaseBtn.addEventListener('touchstart', () => {
+            servingsDirection = 1;
+            startServingsInterval();
+        });
+        increaseBtn.addEventListener('click', () => setServings(currentServings + 1));
+    }
+
+    // Stop interval on mouse/touch up
+    document.addEventListener('mouseup', stopServingsInterval);
+    document.addEventListener('touchend', stopServingsInterval);
 });
+
+function startServingsInterval() {
+    if (servingsIntervalId) return;
+    servingsIntervalId = setInterval(() => {
+        if (servingsDirection !== 0) {
+            setServings(currentServings + servingsDirection);
+        }
+    }, 250); // 4 times per second
+}
+
+function stopServingsInterval() {
+    if (servingsIntervalId) {
+        clearInterval(servingsIntervalId);
+        servingsIntervalId = null;
+    }
+    servingsDirection = 0;
+}
 
 // Global function for onclick handlers (since module scope is not global)
 window.toggleCheckbox = function(element) {
@@ -144,6 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (recipe) {
         renderRecipe(recipe);
+        // Apply unit conversion immediately after rendering
+        updateIngredientAmounts();
     } else {
         document.getElementById('recipe-title').textContent = "Recept niet gevonden";
     }
