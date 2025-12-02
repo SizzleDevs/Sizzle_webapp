@@ -1,0 +1,31 @@
+{
+  "id": "13",
+  "titel": "Biefstuk met groenten",
+  "ingrediënten": [
+    {"naam": "biefstuk", "hoeveelheid": "250g, op kamertemperatuur"},
+    {"naam": "broccoli", "hoeveelheid": "200g, in roosjes"},
+    {"naam": "wortel", "hoeveelheid": "1, in plakjes"},
+    {"naam": "kastanjechampignons", "hoeveelheid": "100g, in plakjes"},
+    {"naam": "rode paprika", "hoeveelheid": "1/2, in reepjes"},
+    {"naam": "rode ui", "hoeveelheid": "1/2, in partjes"},
+    {"naam": "olijfolie", "hoeveelheid": "2 el"},
+    {"naam": "boter", "hoeveelheid": "15g"},
+    {"naam": "verse tijm", "hoeveelheid": "1 tl, fijngehakt"},
+    {"naam": "knoflook", "hoeveelheid": "1 teen, geplet"},
+    {"naam": "zout", "hoeveelheid": "naar smaak"},
+    {"naam": "zwarte peper", "hoeveelheid": "versgemalen, naar smaak"},
+    {"naam": "citroensap", "hoeveelheid": "1 tl"},
+    {"naam": "verse peterselie", "hoeveelheid": "1 el, fijngehakt"}
+  ],
+  "stappen": [
+    {"stapNummer": 1, "beschrijving": "Haal de biefstuk 30 minuten van tevoren uit de koelkast. Dep droog en bestrooi met zout en peper.", "duur": 1},
+    {"stapNummer": 2, "beschrijving": "Verwarm de oven voor op 200°C. Meng broccoli, wortel, paprika, ui en champignons met 1 el olijfolie, tijm, zout en peper. Rooster 20 minuten op een bakplaat.", "duur": 25},
+    {"stapNummer": 3, "beschrijving": "Verhit 1 el olijfolie en de boter in een koekenpan. Voeg de knoflook toe en bak de biefstuk op hoog vuur 2-3 minuten per kant (afhankelijk van dikte en gewenste gaarheid).", "duur": 7},
+    {"stapNummer": 4, "beschrijving": "Laat de biefstuk 5 minuten rusten onder aluminiumfolie.", "duur": 5},
+    {"stapNummer": 5, "beschrijving": "Snijd de biefstuk in plakken. Besprenkel de geroosterde groenten met citroensap en peterselie.", "duur": 2},
+    {"stapNummer": 6, "beschrijving": "Serveer de biefstuk met de groenten op een bord. Garneer met extra peterselie.", "duur": 1}
+  ],
+  "tags": ["avondeten", "gezond"],
+  "bereidingstijd": 50,
+  "moeilijkheid": "middel"
+}

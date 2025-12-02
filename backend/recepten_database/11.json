@@ -1,0 +1,32 @@
+{
+  "id": "11",
+  "titel": "Salade",
+  "ingrediënten": [
+    {"naam": "gemengde sla", "hoeveelheid": "120g"},
+    {"naam": "rucola", "hoeveelheid": "30g"},
+    {"naam": "komkommer", "hoeveelheid": "1/2, in halve maantjes"},
+    {"naam": "cherrytomaten", "hoeveelheid": "8, gehalveerd"},
+    {"naam": "feta", "hoeveelheid": "60g, in blokjes"},
+    {"naam": "rode ui", "hoeveelheid": "1/4, in dunne ringen"},
+    {"naam": "olijven", "hoeveelheid": "8, zwart, gehalveerd"},
+    {"naam": "avocado", "hoeveelheid": "1/2, in blokjes"},
+    {"naam": "walnoten", "hoeveelheid": "1 el, grof gehakt"},
+    {"naam": "verse basilicum", "hoeveelheid": "1 el, gescheurd"},
+    {"naam": "olijfolie", "hoeveelheid": "2 el"},
+    {"naam": "balsamicoazijn", "hoeveelheid": "1 el"},
+    {"naam": "honing", "hoeveelheid": "1 tl"},
+    {"naam": "mosterd", "hoeveelheid": "1/2 tl"},
+    {"naam": "zout", "hoeveelheid": "naar smaak"},
+    {"naam": "peper", "hoeveelheid": "naar smaak"}
+  ],
+  "stappen": [
+    {"stapNummer": 1, "beschrijving": "Was en droog de sla en rucola. Snijd komkommer, cherrytomaten, rode ui, avocado en olijven. Hak de walnoten grof.", "duur": 5},
+    {"stapNummer": 2, "beschrijving": "Meng in een kommetje olijfolie, balsamicoazijn, honing, mosterd, zout en peper tot een dressing.", "duur": 2},
+    {"stapNummer": 3, "beschrijving": "Doe de sla, rucola, komkommer, tomaat, ui, olijven, avocado, feta en walnoten in een grote kom.", "duur": 2},
+    {"stapNummer": 4, "beschrijving": "Voeg de dressing toe en schep alles voorzichtig om.", "duur": 1},
+    {"stapNummer": 5, "beschrijving": "Garneer met verse basilicum en serveer direct als lunch of bijgerecht.", "duur": 1}
+  ],
+  "tags": ["gezond", "snel", "lunch"],
+  "bereidingstijd": 20,
+  "moeilijkheid": "middel"
+}

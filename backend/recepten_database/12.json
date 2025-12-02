@@ -1,0 +1,27 @@
+{
+  "id": "12",
+  "titel": "Sandwich",
+  "ingrediënten": [
+    {"naam": "volkorenbrood", "hoeveelheid": "2 sneetjes"},
+    {"naam": "oude kaas", "hoeveelheid": "1 plak"},
+    {"naam": "achterham", "hoeveelheid": "1 plak"},
+    {"naam": "boter", "hoeveelheid": "10g, op kamertemperatuur"},
+    {"naam": "mosterd", "hoeveelheid": "1 tl"},
+    {"naam": "sla", "hoeveelheid": "handje, gemengd"},
+    {"naam": "tomaat", "hoeveelheid": "2 plakjes"},
+    {"naam": "komkommer", "hoeveelheid": "2 plakjes"},
+    {"naam": "ei", "hoeveelheid": "1, hardgekookt en in plakjes"},
+    {"naam": "zout", "hoeveelheid": "snufje"},
+    {"naam": "peper", "hoeveelheid": "snufje"}
+  ],
+  "stappen": [
+    {"stapNummer": 1, "beschrijving": "Kook het ei 8 minuten, laat schrikken en pel. Snijd in plakjes.", "duur": 10},
+    {"stapNummer": 2, "beschrijving": "Besmeer beide sneetjes brood met boter. Smeer op één sneetje een dun laagje mosterd.", "duur": 2},
+    {"stapNummer": 3, "beschrijving": "Beleg met sla, kaas, ham, tomaat, komkommer en ei. Bestrooi met zout en peper.", "duur": 2},
+    {"stapNummer": 4, "beschrijving": "Leg het andere sneetje brood erop en druk licht aan.", "duur": 1},
+    {"stapNummer": 5, "beschrijving": "Snijd de sandwich diagonaal doormidden en serveer direct.", "duur": 1}
+  ],
+  "tags": ["snel", "lunch"],
+  "bereidingstijd": 18,
+  "moeilijkheid": "middel"
+}

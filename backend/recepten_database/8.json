@@ -1,0 +1,34 @@
+{
+  "id": "8",
+
+
+  "titel": "Omelet",
+  "ingrediënten": [
+    {"naam": "eieren", "hoeveelheid": "4"},
+    {"naam": "melk", "hoeveelheid": "60ml"},
+    {"naam": "boter", "hoeveelheid": "15g"},
+    {"naam": "zout", "hoeveelheid": "snufje"},
+    {"naam": "peper", "hoeveelheid": "snufje"},
+    {"naam": "verse bieslook", "hoeveelheid": "1 el, fijngehakt"},
+    {"naam": "verse peterselie", "hoeveelheid": "1 el, fijngehakt"},
+    {"naam": "champignons", "hoeveelheid": "50g, in plakjes"},
+    {"naam": "tomaat", "hoeveelheid": "1/2, in blokjes"},
+    {"naam": "geraspte kaas", "hoeveelheid": "30g"},
+    {"naam": "ui", "hoeveelheid": "1/4, gesnipperd"},
+    {"naam": "paprika", "hoeveelheid": "1/4, in blokjes"}
+  ],
+  "stappen": [
+    {"stapNummer": 1, "beschrijving": "Klop de eieren los met melk, zout en peper in een kom.", "duur": 2},
+    {"stapNummer": 2, "beschrijving": "Snijd champignons, ui, paprika, tomaat en hak de kruiden fijn.", "duur": 3},
+    {"stapNummer": 3, "beschrijving": "Verhit de helft van de boter in een koekenpan. Bak de champignons, ui en paprika 3 minuten tot ze zacht zijn.", "duur": 3},
+    {"stapNummer": 4, "beschrijving": "Voeg de tomaat toe en bak 1 minuut mee.", "duur": 1},
+    {"stapNummer": 5, "beschrijving": "Schep de groenten uit de pan en houd apart.", "duur": 1},
+    {"stapNummer": 6, "beschrijving": "Verhit de rest van de boter in de pan. Giet het eimengsel erin en bak op laag vuur.", "duur": 2},
+    {"stapNummer": 7, "beschrijving": "Verdeel de gebakken groenten, kaas en kruiden over de omelet als de onderkant gestold is.", "duur": 1},
+    {"stapNummer": 8, "beschrijving": "Vouw de omelet dubbel en bak nog 1 minuut tot de kaas smelt.", "duur": 1},
+    {"stapNummer": 9, "beschrijving": "Serveer direct, eventueel met extra kruiden.", "duur": 1}
+  ],
+  "tags": ["ontbijt", "snel"],
+  "bereidingstijd": 20,
+  "moeilijkheid": "middel"
+}

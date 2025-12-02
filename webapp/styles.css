@@ -536,7 +536,7 @@ header {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     display: flex;
-    align-items: center; /* vertically center input and send button including shadows */
+    flex-direction: column;
     padding: 8px; /* increase padding so send button shadow is visually inside the wrapper */
     background: var(--card-bg);
 }
@@ -591,8 +591,6 @@ header {
     align-items: center;
     gap: 10px;
     border-radius: var(--border-radius);
-    color: var(--text-color); /* ensure link text uses site text color, not browser default */
-    text-decoration: none; /* remove default underline from anchors */
     /* shadow straight down, same width as button, reduced depth */
     box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
@@ -989,12 +987,186 @@ header {
     text-align: center;
     padding: 40px 20px;
     margin-top: 60px;
-    border-top: none;
+    border-top: 1px solid var(--border-color);
     font-size: 0.9rem;
     color: #888;
 }
 
 .page-footer p {
     margin: 0;
+}
+
+/* AI Text Selection Button */
+/* AI Text Selection Button - floating above selection */
+.ai-selection-btn {
+    position: absolute;
+    background-color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    padding: 8px 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 1000;
+    font-family: var(--font-sans);
+    user-select: none;
+}
+
+.ai-selection-btn:hover {
+    filter: brightness(0.92);
+}
+
+.ai-selection-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+.ai-selection-btn.hidden {
+    display: none;
+}
+
+/* Visual state when the selection button is pressed */
+.ai-selection-btn.pressed {
+    transform: translateY(2px);
+    opacity: 0.95;
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+/* AI Context Box above input - shows selected text */
+.ai-context-box-input {
+    /* background uses card bg color */
+    background-color: var(--card-bg); /* same as page card background */
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    position: relative; /* allow absolute-positioned close button */
+    padding-right: 44px; /* leave space for close button */
+}
+
+.ai-context-box-input.hidden {
+    display: none;
+}
+
+.ai-context-box-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-color);
+    opacity: 0.7;
+    margin-bottom: 6px;
+}
+
+.ai-context-box-header .material-symbols-rounded {
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.ai-context-box-header span:nth-child(2) {
+    flex: 1;
+}
+
+.ai-context-box-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.15s;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+}
+
+.ai-context-box-close:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.ai-context-box-close .material-symbols-rounded {
+    color: var(--text-color);
+    opacity: 0.6;
+}
+
+.ai-context-box-text {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+    /* Match the user message font and color */
+    font-family: var(--font-sans);
+    opacity: 0.55;
+}
+
+/* Inline context next to a user message */
+.ai-message-context {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+    font-style: italic;
+    opacity: inherit; /* inherit opacity from parent user message */
+    font-size: inherit; /* same size as parent */
+    color: inherit; /* same color as parent (user message) */
+    font-family: inherit; /* same font */
+}
+
+.ai-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-input-row input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 8px;
+    background: transparent;
+}
+
+/* AI Context Box in messages - shows selected text reference */
+.ai-context-box {
+    background-color: var(--card-bg); /* same as cards */
+    border-left: 3px solid var(--accent-color);
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.ai-context-label {
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ai-context-text {
+    font-style: italic;
+    line-height: 1.4;
+    max-height: 80px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.ai-context-text::-webkit-scrollbar {
+    display: none;
 }
 

@@ -235,6 +235,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const messages = document.getElementById('ai-messages');
     const aiRobotWrapper = document.querySelector('.ai-robot-wrapper');
 
+    // Context elements (for selection feature)
+
     // If there are already messages, hide the robot helper wrapper
     if (aiRobotWrapper && messages && messages.children.length > 0) {
         aiRobotWrapper.classList.add('hidden');
@@ -249,20 +251,47 @@ document.addEventListener('DOMContentLoaded', () => {
             aiRobotWrapper.classList.add('hidden');
         }
 
+        // Check if there's context from selection
+        const contextBoxInput = document.getElementById('ai-context-box-input');
+        const contextBoxText = document.getElementById('ai-context-box-text');
+        const hasContext = contextBoxInput && !contextBoxInput.classList.contains('hidden');
+
         // User message (plain text, dimmed)
         const userMsg = document.createElement('p');
         userMsg.classList.add('message', 'user');
         userMsg.style.marginTop = '10px';
         userMsg.textContent = text;
         messages.appendChild(userMsg);
+
+        // If there's context, append it inline next to the user message (small, italic, low opacity)
+        if (hasContext && contextBoxText) {
+            const contextSpan = document.createElement('span');
+            contextSpan.classList.add('ai-message-context');
+            contextSpan.innerHTML = `
+                <em>${escapeHtml(contextBoxText.textContent)}</em>
+            `;
+            userMsg.appendChild(contextSpan);
+
+            // Clear the context box above input
+            contextBoxInput.classList.add('hidden');
+        }
         input.value = '';
+        
+        // Reset placeholder after sending
+        input.placeholder = 'Stel een vraag...';
 
         // AI Response (Mock) — plain text, full opacity
         setTimeout(() => {
             const aiMsg = document.createElement('p');
             aiMsg.classList.add('message', 'ai');
             aiMsg.style.marginTop = '10px';
-            aiMsg.textContent = 'Dat is een goede vraag! Je kunt dit ingrediënt vervangen door iets anders als je dat wilt.';
+            
+            // Check if there was context
+            if (hasContext) {
+                aiMsg.textContent = 'Ik heb de geselecteerde tekst bekeken. Dat is een goede vraag! Je kunt dit ingrediënt vervangen door iets anders als je dat wilt.';
+            } else {
+                aiMsg.textContent = 'Dat is een goede vraag! Je kunt dit ingrediënt vervangen door iets anders als je dat wilt.';
+            }
             messages.appendChild(aiMsg);
             messages.scrollTop = messages.scrollHeight;
         }, 1000);
@@ -292,4 +321,153 @@ document.addEventListener('DOMContentLoaded', () => {
                 sendBtn.click();
             }
         });
+
+    // AI Text Selection Feature
+    const aiSelectionBtn = document.getElementById('ai-selection-btn');
+    const aiContextBoxInput = document.getElementById('ai-context-box-input');
+    const aiContextBoxText = document.getElementById('ai-context-box-text');
+    const aiContextBoxClose = document.getElementById('ai-context-box-close');
+    let selectedText = '';
+    let currentContextText = ''; // Track the current context for AI questions
+    let isButtonClicked = false; // Prevent hiding during click
+
+    // Function to show the button at selection position
+    function showButtonAtSelection(text, selection) {
+        selectedText = text;
+        
+        try {
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            
+            // Position the button above the selection, centered
+            const btnWidth = 100; // approximate button width
+            let left = rect.left + window.scrollX + (rect.width / 2) - (btnWidth / 2);
+            let top = rect.top + window.scrollY - 45;
+            
+            // Keep button within viewport horizontally
+            if (left < 10) left = 10;
+            if (left + btnWidth > window.innerWidth - 10) left = window.innerWidth - btnWidth - 10;
+            
+            aiSelectionBtn.style.left = `${left}px`;
+            aiSelectionBtn.style.top = `${top}px`;
+            aiSelectionBtn.classList.remove('hidden');
+        } catch (e) {
+            // Selection might be invalid
+            aiSelectionBtn.classList.add('hidden');
+        }
+    }
+
+    // Function to check selection and show/hide button
+    function checkSelection() {
+        // Don't hide if button was just clicked
+        if (isButtonClicked) return;
+        
+        const selection = window.getSelection();
+        const text = selection.toString().trim();
+        
+        if (text && text.length > 0) {
+            // Check if selection is within recipe content (ingredients or steps)
+            const recipeContent = document.querySelector('.recipe-content');
+            if (recipeContent && selection.anchorNode && recipeContent.contains(selection.anchorNode)) {
+                showButtonAtSelection(text, selection);
+                return;
+            }
+        }
+        
+        // Hide button if no valid selection
+        aiSelectionBtn.classList.add('hidden');
+    }
+
+    // Show button when mouse is released after selecting
+    document.addEventListener('mouseup', (e) => {
+        // Don't process if clicking on the button itself
+        if (e.target.closest('#ai-selection-btn')) return;
+        
+        // Small delay to ensure selection is finalized
+        setTimeout(checkSelection, 50);
+    });
+
+    // Ensure pressed state is cleared on mouseup/touchend anywhere
+    document.addEventListener('mouseup', () => {
+        isButtonClicked = false;
+        unmarkButtonPressed();
+    });
+    document.addEventListener('touchend', () => {
+        isButtonClicked = false;
+        unmarkButtonPressed();
+    });
+
+    // Handle "Vraag AI" button - use mousedown/touchstart for immediate response and visual pressed state
+    function markButtonPressed() {
+        aiSelectionBtn.classList.add('pressed');
+    }
+    function unmarkButtonPressed() {
+        aiSelectionBtn.classList.remove('pressed');
+    }
+
+    aiSelectionBtn.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        isButtonClicked = true;
+        markButtonPressed();
+    });
+    aiSelectionBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        isButtonClicked = true;
+        markButtonPressed();
+    });
+
+    // Handle "Vraag AI" button click
+    aiSelectionBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!selectedText) {
+            isButtonClicked = false;
+            return;
+        }
+
+        // Store the context for AI questions
+        currentContextText = selectedText;
+
+        // Show context box with truncated text (one line)
+        const displayText = selectedText.length > 50 
+            ? `"${selectedText.substring(0, 50)}..."` 
+            : `"${selectedText}"`;
+        aiContextBoxText.textContent = displayText;
+        aiContextBoxInput.classList.remove('hidden');
+        
+        // Focus on the input field
+        input.focus();
+
+        // Hide the selection button
+        aiSelectionBtn.classList.add('hidden');
+        
+        // Clear the text selection
+        window.getSelection().removeAllRanges();
+        
+        // Reset flag after a delay and clear pressed state
+        setTimeout(() => {
+            isButtonClicked = false;
+            unmarkButtonPressed();
+        }, 100);
+    });
+
+    // Handle context box close button
+    aiContextBoxClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Clear context
+        currentContextText = '';
+        aiContextBoxInput.classList.add('hidden');
+    });
+
+    // Helper function to escape HTML
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 });

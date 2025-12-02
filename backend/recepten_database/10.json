@@ -1,0 +1,35 @@
+{
+  "id": "10",
+  "titel": "Wraps",
+  "ingrediënten": [
+    {"naam": "tortilla wraps", "hoeveelheid": "4, middelgroot"},
+    {"naam": "kipfilet", "hoeveelheid": "250g"},
+    {"naam": "olijfolie", "hoeveelheid": "1 el"},
+    {"naam": "paprikapoeder", "hoeveelheid": "1 tl"},
+    {"naam": "knoflookpoeder", "hoeveelheid": "1/2 tl"},
+    {"naam": "zout", "hoeveelheid": "naar smaak"},
+    {"naam": "peper", "hoeveelheid": "naar smaak"},
+    {"naam": "ijsbergsla", "hoeveelheid": "60g, fijngesneden"},
+    {"naam": "tomaat", "hoeveelheid": "1, in plakjes"},
+    {"naam": "komkommer", "hoeveelheid": "1/3, in reepjes"},
+    {"naam": "avocado", "hoeveelheid": "1/2, in plakjes"},
+    {"naam": "geraspte kaas", "hoeveelheid": "30g"},
+    {"naam": "rode ui", "hoeveelheid": "1/4, in dunne ringen"},
+    {"naam": "mayonaise", "hoeveelheid": "2 el"},
+    {"naam": "yoghurt", "hoeveelheid": "1 el"},
+    {"naam": "citroensap", "hoeveelheid": "1 tl"},
+    {"naam": "verse koriander", "hoeveelheid": "1 el, fijngehakt (optioneel)"}
+  ],
+  "stappen": [
+    {"stapNummer": 1, "beschrijving": "Snijd de kipfilet in reepjes. Meng met olijfolie, paprikapoeder, knoflookpoeder, zout en peper.", "duur": 3},
+    {"stapNummer": 2, "beschrijving": "Bak de kipreepjes in een hete pan in 8 minuten gaar en goudbruin. Laat iets afkoelen.", "duur": 8},
+    {"stapNummer": 3, "beschrijving": "Snijd de groenten en avocado. Rasp de kaas. Meng mayonaise, yoghurt en citroensap tot een sausje.", "duur": 3},
+    {"stapNummer": 4, "beschrijving": "Verwarm de wraps kort in een droge koekenpan of magnetron.", "duur": 2},
+    {"stapNummer": 5, "beschrijving": "Beleg elke wrap met sla, tomaat, komkommer, avocado, rode ui, kip, kaas en koriander.", "duur": 2},
+    {"stapNummer": 6, "beschrijving": "Besprenkel met het sausje. Rol de wraps stevig op en snijd eventueel schuin doormidden.", "duur": 2},
+    {"stapNummer": 7, "beschrijving": "Serveer direct als lunch of lichte maaltijd.", "duur": 1}
+  ],
+  "tags": ["snel", "lunch"],
+  "bereidingstijd": 25,
+  "moeilijkheid": "middel"
+}
