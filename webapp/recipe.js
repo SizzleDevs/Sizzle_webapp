@@ -54,47 +54,105 @@ function renderRecipe(recipe) {
 
 // --- Cookmode Step-by-Step Overlay ---
 let cookmodeStepIdx = 0;
+let cookmodeSlideDirection = 'right'; // 'left' when going back, 'right' when going forward
 
 function cookmodeRenderStep(idx) {
     const steps = window._sizzleRecipeSteps;
     const ingredients = window._sizzleRecipeIngredients;
     if (!steps || !steps.length) return;
-    const step = steps[idx];
+    // In cookmode we present ingredients as the first step (index 0),
+    // followed by the real steps. So total steps in cookmode is steps.length + 1
+    const totalSteps = steps.length + 1;
+    const isIngredientStep = idx === 0;
+    const step = isIngredientStep ? null : steps[idx - 1];
     const anim = document.getElementById('cookmode-step-anim');
     const ingredientsContainer = document.getElementById('cookmode-ingredients');
-    if (!step || !anim) return;
+    if (!anim) return;
     
-    // Animate out old content
-    anim.classList.remove('fade-in');
+    // Animate out old content with slide
+    const slideOutClass = cookmodeSlideDirection === 'right' ? 'slide-out-left' : 'slide-out-right';
+    const slideInClass = cookmodeSlideDirection === 'right' ? 'slide-in-right' : 'slide-in-left';
+    
+    // Remove any existing animation classes and reset state
+    anim.classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right');
+    
+    // Force a reflow to ensure the starting state is applied
+    void anim.offsetWidth;
+    
+    // Add slide-out class to animate the current content out
+    anim.classList.add(slideOutClass);
+    
+    // Wait for the slide-out transition to complete (matches CSS transition duration)
     setTimeout(() => {
-        anim.innerHTML = `
-            <div class="cookmode-step-label">Stap ${step.stapNummer} van ${steps.length}</div>
-            <div class="cookmode-step-main">
-                <div class="cookmode-step-time"><span class="material-symbols-rounded">timer</span> ${step.duur} min</div>
-                <div class="cookmode-step-desc">${step.beschrijving}</div>
-            </div>
-        `;
-        setTimeout(() => anim.classList.add('fade-in'), 10);
-    }, 120);
-    
-    // Render ingredients with dashes and servings control
-    if (ingredientsContainer && ingredients) {
-        ingredientsContainer.innerHTML = `
-            <div class="cookmode-ingredients-header">
-                <h4>Ingrediënten</h4>
-                <div class="cookmode-servings-control">
-                    <button id="cookmode-decrease-servings"><span class="material-symbols-rounded" style="font-size: 1rem;">remove</span></button>
-                    <span id="cookmode-servings-count">${window._cookmodeServings || 4} Personen</span>
-                    <button id="cookmode-increase-servings"><span class="material-symbols-rounded" style="font-size: 1rem;">add</span></button>
+        // Remove slideOutClass and hide element briefly while swapping content
+        anim.classList.remove(slideOutClass);
+        anim.style.opacity = '0';
+        // If this is the ingredient step, show ingredients in the center (no yellow label)
+        if (isIngredientStep) {
+            anim.innerHTML = `
+                <div class="cookmode-step-main">
+                    <div class="cookmode-ingredients-inner">
+                        <div class="cookmode-ingredients-header">
+                            <h3>Ingrediënten</h3>
+                            <div class="cookmode-servings-control">
+                                <button id="cookmode-decrease-servings"><span class="material-symbols-rounded" style="font-size: 1rem;">remove</span></button>
+                                <span id="cookmode-servings-count">${window._cookmodeServings || 4} Personen</span>
+                                <button id="cookmode-increase-servings"><span class="material-symbols-rounded" style="font-size: 1rem;">add</span></button>
+                            </div>
+                        </div>
+                        <ul class="cookmode-ingredients-list" id="cookmode-ingredients-list">
+                            ${ingredients.map(ing => `
+                                <li class="ingredient-item" data-base="${ing.hoeveelheid}">
+                                    <div class="checkbox-wrapper" onclick="toggleCheckbox(this)">
+                                        <div class="custom-checkbox unchecked"><span class="material-symbols-rounded">check</span></div>
+                                        <span>${ing.naam}</span>
+                                    </div>
+                                    <span class="ing-amount" data-base="${ing.hoeveelheid}">${ing.hoeveelheid}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <ul class="cookmode-ingredients-list" id="cookmode-ingredients-list">
-                ${ingredients.map(ing => `<li data-base="${ing.hoeveelheid}"><span class="ing-dash">–</span> ${ing.naam} <span class="ing-amount">${ing.hoeveelheid}</span></li>`).join('')}
-            </ul>
-        `;
-        // Attach servings control events
-        setupCookmodeServingsControl();
-        updateCookmodeIngredientAmounts();
+            `;
+        } else {
+            // Render the actual step.
+            const sanitizedDesc = sanitizeStepDescription(step.beschrijving, ingredients);
+            const stepNumberLabel = `Stap ${step.stapNummer} van ${steps.length}`;
+            anim.innerHTML = `
+                <div class="cookmode-step-label">${stepNumberLabel}</div>
+                <div class="cookmode-step-main">
+                    <div class="cookmode-step-time"><span class="material-symbols-rounded">timer</span> ${step.duur} min</div>
+                    <div class="cookmode-step-desc">${sanitizedDesc}</div>
+                </div>
+            `;
+        }
+        
+        // Setup servings control and update amounts after content is rendered
+        if (isIngredientStep) {
+            setTimeout(() => {
+                setupCookmodeServingsControl();
+                updateCookmodeIngredientAmounts();
+            }, 20);
+        }
+        
+        // Reset opacity and trigger slide-in animation
+        anim.style.opacity = '';
+        requestAnimationFrame(() => {
+            anim.classList.add(slideInClass);
+        });
+    }, 250); // Wait for slide-out transition (0.22s = 220ms, add buffer)
+    
+    // Manage the side ingredients column: hide it when ingredients are shown in the center,
+    // otherwise clear/hide to avoid the vertical divider showing duplicated content.
+    if (ingredientsContainer) {
+        if (isIngredientStep) {
+            // Hide side column (CSS .hidden exists in page) so content appears centered
+            ingredientsContainer.classList.add('hidden');
+        } else {
+            ingredientsContainer.classList.remove('hidden');
+            // Clear any previous content to avoid duplication
+            ingredientsContainer.innerHTML = '';
+        }
     }
     
     // Nav buttons - use invisible class instead of display:none for consistent layout
@@ -108,7 +166,7 @@ function cookmodeRenderStep(idx) {
         }
     }
     if (nextBtn) {
-        if (idx < steps.length - 1) {
+        if (idx < totalSteps - 1) {
             nextBtn.innerHTML = 'Volgende stap <span class="material-symbols-rounded">arrow_forward</span>';
             nextBtn.disabled = false;
         } else {
@@ -116,6 +174,30 @@ function cookmodeRenderStep(idx) {
             nextBtn.disabled = false;
         }
     }
+}
+
+// Helper: escape regex special chars for ingredient names
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Remove ingredient names from step descriptions to avoid duplication in cookmode
+function sanitizeStepDescription(description, ingredients) {
+    if (!description) return '';
+    let out = description;
+    if (ingredients && Array.isArray(ingredients)) {
+        ingredients.forEach(ing => {
+            if (!ing || !ing.naam) return;
+            const name = ing.naam.trim();
+            if (!name) return;
+            const re = new RegExp('\\b' + escapeRegExp(name) + '\\b', 'gi');
+            out = out.replace(re, '');
+        });
+    }
+    // Collapse multiple spaces and clean up stray punctuation
+    out = out.replace(/\s{2,}/g, ' ').trim();
+    out = out.replace(/\s([,.;:!])/g, '$1');
+    return out;
 }
 
 function openCookmode() {
@@ -188,7 +270,9 @@ function setupCookmodeServingsControl() {
 function cookmodeNext() {
     const steps = window._sizzleRecipeSteps;
     if (!steps) return;
-    if (cookmodeStepIdx < steps.length - 1) {
+    const totalSteps = steps.length + 1; // include ingredients as first step
+    if (cookmodeStepIdx < totalSteps - 1) {
+        cookmodeSlideDirection = 'right';
         cookmodeStepIdx++;
         cookmodeRenderStep(cookmodeStepIdx);
     } else {
@@ -199,6 +283,7 @@ function cookmodeNext() {
 
 function cookmodePrev() {
     if (cookmodeStepIdx > 0) {
+        cookmodeSlideDirection = 'left';
         cookmodeStepIdx--;
         cookmodeRenderStep(cookmodeStepIdx);
     }
@@ -416,6 +501,49 @@ window.toggleCheckbox = function(element) {
     }
 };
 
+// Favorite button functionality
+function setupFavoriteButton(recipeId) {
+    const favoriteBtn = document.getElementById('favorite-btn');
+    const favoriteIcon = document.getElementById('favorite-icon');
+    
+    if (!favoriteBtn || !favoriteIcon) return;
+    
+    // Check if recipe is already favorited (from localStorage)
+    const favorites = JSON.parse(localStorage.getItem('sizzle_favorites') || '[]');
+    const isFavorite = favorites.includes(recipeId);
+    
+    // Set initial state
+    if (isFavorite) {
+        favoriteIcon.textContent = 'favorite';
+        favoriteIcon.classList.add('filled');
+    } else {
+        favoriteIcon.textContent = 'favorite_border';
+        favoriteIcon.classList.remove('filled');
+    }
+    
+    // Handle click
+    favoriteBtn.addEventListener('click', () => {
+        const currentFavorites = JSON.parse(localStorage.getItem('sizzle_favorites') || '[]');
+        const isCurrentlyFavorite = currentFavorites.includes(recipeId);
+        
+        if (isCurrentlyFavorite) {
+            // Remove from favorites
+            const newFavorites = currentFavorites.filter(id => id !== recipeId);
+            localStorage.setItem('sizzle_favorites', JSON.stringify(newFavorites));
+            favoriteIcon.textContent = 'favorite_border';
+            favoriteIcon.classList.remove('filled');
+            console.log(`Removed ${recipeId} from favorites`);
+        } else {
+            // Add to favorites
+            currentFavorites.push(recipeId);
+            localStorage.setItem('sizzle_favorites', JSON.stringify(currentFavorites));
+            favoriteIcon.textContent = 'favorite';
+            favoriteIcon.classList.add('filled');
+            console.log(`Added ${recipeId} to favorites`);
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const id = getRecipeId();
     const recipe = recipeDetails[id] || recipeDetails["1"];
@@ -426,6 +554,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateIngredientAmounts();
         // Initialize cookmode after recipe is rendered
         setupCookmode();
+        // Initialize favorite button
+        setupFavoriteButton(id);
     } else {
         document.getElementById('recipe-title').textContent = "Recept niet gevonden";
     }

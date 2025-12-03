@@ -14,7 +14,7 @@
 }
 .cookmode-content {
     background: transparent;
-    padding: 48px 48px 32px 48px;
+    padding: 48px 80px 32px 80px;
     width: 100%;
     max-width: 1200px;
     min-height: 100vh;
@@ -42,8 +42,8 @@
     flex: 1 1 0;
     min-width: 220px;
     max-width: 340px;
-    border-left: 1px solid var(--border-color);
-    padding-left: 32px;
+    /* Removed vertical divider to keep cookmode visually unified */
+    padding-left: 0;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -54,9 +54,11 @@
     align-items: center;
     margin-bottom: 16px;
 }
+.cookmode-ingredients-header h3,
 .cookmode-ingredients-header h4 {
-    font-size: 1.1rem;
-    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-family: var(--font-sans);
+    font-weight: 600;
     margin: 0;
     color: var(--text-color);
 }
@@ -87,13 +89,14 @@
     margin: 0;
 }
 .cookmode-ingredients-list li {
-    font-size: 1rem;
-    padding: 7px 0;
+    font-size: 1.1rem;
+    padding: 12px 0;
     border-bottom: 1px solid rgba(0,0,0,0.08);
     display: flex;
     align-items: center;
     gap: 8px;
     color: var(--text-color);
+    font-family: var(--font-sans);
 }
 .cookmode-ingredients-list li:last-child {
     border-bottom: none;
@@ -114,18 +117,39 @@
     align-items: flex-start;
     justify-content: center;
     min-height: 180px;
-    opacity: 0;
-    transform: translateY(24px) scale(0.98);
-    transition: opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1);
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.22s ease, transform 0.22s ease;
     width: 100%;
 }
-.cookmode-step-anim.fade-in {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+/* Slide-out animations */
+.cookmode-step-anim.slide-out-left {
+    opacity: 0;
+    transform: translateX(-60px);
+}
+.cookmode-step-anim.slide-out-right {
+    opacity: 0;
+    transform: translateX(60px);
+}
+/* Slide-in animations */
+.cookmode-step-anim.slide-in-right {
+    animation: slideInRight 0.25s ease forwards;
+}
+.cookmode-step-anim.slide-in-left {
+    animation: slideInLeft 0.25s ease forwards;
+}
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(60px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-60px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 .cookmode-step-label {
-    font-size: 1.1rem;
-    color: var(--accent-color);
+    font-size: 1rem;
+    color: var(--text-color);
+    opacity: 0.6;
     font-family: var(--font-sans);
     margin-bottom: 18px;
     letter-spacing: 0.02em;
@@ -150,8 +174,8 @@
     color: var(--accent-color);
 }
 .cookmode-step-desc {
-    font-size: 1.5rem;
-    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    font-family: var(--font-sans);
     color: var(--text-color);
     margin-bottom: 0;
     line-height: 1.6;
@@ -163,6 +187,7 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 32px;
+    margin-bottom: 24px;
     gap: 12px;
 }
 .cookmode-nav-btn {
@@ -178,14 +203,16 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: filter 0.08s, transform 0.1s, opacity 0.15s;
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s, opacity 0.15s;
     outline: none;
 }
 .cookmode-nav-btn:hover {
     filter: brightness(0.92);
 }
 .cookmode-nav-btn:active {
-    transform: translateY(1px);
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
 }
 .cookmode-nav-btn:disabled {
     opacity: 0.5;
@@ -202,9 +229,9 @@
 }
 .cookmode-exit-btn {
     position: absolute;
-    top: 18px;
-    right: 18px;
-    background: none;
+    top: 48px;
+    right: 80px;
+    background: var(--bg-color);
     border: 1px solid var(--border-color);
     color: var(--text-color);
     font-size: 1.5rem;
@@ -214,11 +241,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.15s;
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
     z-index: 10;
 }
 .cookmode-exit-btn:hover {
-    background: rgba(0,0,0,0.05);
+    filter: brightness(0.92);
+}
+.cookmode-exit-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
 }
 @keyframes cookmode-fadein {
     from { opacity: 0; }
@@ -555,6 +587,15 @@ header {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
+}
+
+/* Recipe action buttons (Kookmodus, Favoriet) */
+.recipe-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    padding-top: 12px; /* add top padding so action buttons sit lower under tags */
+    flex-wrap: wrap;
 }
 
 /* Ingredients */

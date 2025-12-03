@@ -29,6 +29,15 @@
                     <div class="recipe-meta-tags" id="recipe-tags">
                         <!-- Tags injected here -->
                     </div>
+                    
+                    <div class="recipe-actions">
+                        <button id="cookmode-btn" class="primary-btn" style="font-size:1rem; padding: 8px 18px; display: flex; align-items: center; gap: 8px;">
+                            <span class="material-symbols-rounded">play_circle</span> Kookmodus
+                        </button>
+                        <button id="favorite-btn" class="secondary-btn" style="font-size:1rem; padding: 8px; display: flex; align-items: center; gap: 8px; background: var(--bg-color); border: none;" title="Favoriet">
+                            <span class="material-symbols-rounded" id="favorite-icon">favorite_border</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="ingredients-box">
@@ -46,12 +55,7 @@
                 </div>
 
                 <div class="steps-container">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <h3>Stappen</h3>
-                        <button id="cookmode-btn" class="primary-btn" style="font-size:1rem; padding: 8px 18px; display: flex; align-items: center; gap: 8px;">
-                            <span class="material-symbols-rounded">play_circle</span> Kookmodus
-                        </button>
-                    </div>
+                    <h3>Stappen</h3>
                     <div id="steps-list">
                         <!-- Steps injected here -->
                     </div>
@@ -107,7 +111,7 @@
 
         <div class="discover-more">
             <h2>Nog meer gerechten<br>ontdekken?</h2>
-            <a class="discover-btn" href="alle-recepten.html"><span class="material-symbols-rounded">list</span> Alle gerechten</a>
+            <button class="discover-btn" onclick="window.location.href='alle-recepten.html'"><span class="material-symbols-rounded">list</span> Alle gerechten</button>
         </div>
 
         <footer class="page-footer">
