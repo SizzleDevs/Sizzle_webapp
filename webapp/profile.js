@@ -85,12 +85,6 @@ window.saveNewPassword = function() {
     clearPasswordForm();
 };
 
-window.logout = function() {
-    if (confirm('Weet je zeker dat je uit wilt loggen?')) {
-        logout();
-    }
-};
-
 window.deleteAccount = function() {
     if (confirm('Weet je zeker dat je je account wilt verwijderen? Dit kan niet ongedaan worden gemaakt.')) {
         if (confirm('Dit is je laatste waarschuwing. Je account en al je data zullen permanent verwijderd worden.')) {
@@ -110,8 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Load user data
-    document.getElementById('username').value = getUsername();
-    document.getElementById('username').setAttribute('readonly', '');
     document.getElementById('current-password').value = '••••••••';
     document.getElementById('current-password').setAttribute('readonly', '');
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Weet je zeker dat je uit wilt loggen?')) {
+                logout();
+            }
+        });
+    }
 });

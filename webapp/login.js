@@ -30,8 +30,7 @@ function setupLogin() {
         console.log('Login data:', loginData);
         
         try {
-            // Call the API (placeholder - replace with actual API call)
-            const response = await fetch('/api/login', {
+            const response = await fetch('http://127.0.0.1:5000/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -43,19 +42,16 @@ function setupLogin() {
                 const result = await response.json();
                 // Assume result has token
                 localStorage.setItem('authToken', result.token);
-                localStorage.setItem('username', username);
+                localStorage.setItem('username', result.username);
                 // Redirect to home or profile
                 window.location.href = 'index.html';
             } else {
-                alert('Inloggen mislukt. Controleer je gegevens.');
+                const error = await response.json();
+                alert(`Inloggen mislukt: ${error.message}`);
             }
         } catch (error) {
             console.error('Login error:', error);
-            // For now, simulate login success for demo
-            alert('Login gesimuleerd - in productie zou dit naar de API gaan.');
-            localStorage.setItem('authToken', 'dummy-token');
-            localStorage.setItem('username', username);
-            window.location.href = 'index.html';
+            alert('Er is een fout opgetreden bij het inloggen. Controleer de console voor meer informatie.');
         }
     });
 }

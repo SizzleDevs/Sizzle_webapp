@@ -113,7 +113,7 @@ function setupNavigation() {
         step2.classList.add('active');
     });
     
-    finishBtn.addEventListener('click', () => {
+    finishBtn.addEventListener('click', async () => {
         if (selectedTags.length === 0) {
             alert('Selecteer minimaal één interesse om door te gaan.');
             return;
@@ -129,7 +129,27 @@ function setupNavigation() {
         
         console.log('User data collected:', userData);
         
-        // Here you would normally send the data to the API
-        alert(`Account aangemaakt voor ${userData.name}!\n\nGeselecteerde interesses: ${selectedTags.join(', ')}`);
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                localStorage.setItem('authToken', result.token);
+                localStorage.setItem('username', result.username);
+                window.location.href = 'index.html';
+            } else {
+                const error = await response.json();
+                alert(`Registratie mislukt: ${error.message}`);
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            alert('Er is een fout opgetreden bij de registratie. Controleer de console voor meer informatie.');
+        }
     });
 }
