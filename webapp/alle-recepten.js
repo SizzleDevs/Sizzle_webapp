@@ -1,7 +1,7 @@
-import { recipes } from './data.js';
-
-let filteredRecipes = [...recipes];
+let recipes = [];
+let filteredRecipes = [];
 let selectedFilters = new Set();
+let favoriteRecipeIds = new Set();
 
 function createRecipeCard(recipe) {
     const card = document.createElement('div');
@@ -11,7 +11,8 @@ function createRecipeCard(recipe) {
     };
 
     const tagsHtml = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
-    const heartClass = recipe.isFavorite ? 'favorited' : '';
+    const isFavorite = favoriteRecipeIds.has(recipe.id);
+    const heartClass = isFavorite ? 'favorited' : '';
 
     card.innerHTML = `
         <div class="card-header">
@@ -28,14 +29,36 @@ function createRecipeCard(recipe) {
 }
 
 // Global function for favorite toggle
-window.toggleFavorite = function(element, id) {
+window.toggleFavorite = async function(element, id) {
+    if (!isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+    }
+
     const icon = element.querySelector('.material-symbols-rounded');
-    if (!icon.classList.contains('favorited')) {
-        icon.classList.add('favorited');
-        console.log(`Added ${id} to favorites`);
-    } else {
-        icon.classList.remove('favorited');
-        console.log(`Removed ${id} from favorites`);
+    const isCurrentlyFavorite = icon.classList.contains('favorited');
+    const method = isCurrentlyFavorite ? 'DELETE' : 'POST';
+    const token = localStorage.getItem('authToken');
+
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/api/favorieten/${id}`, {
+            method: method,
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+            icon.classList.toggle('favorited');
+            if (isCurrentlyFavorite) {
+                favoriteRecipeIds.delete(id);
+            } else {
+                favoriteRecipeIds.add(id);
+            }
+        } else {
+            alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
+        }
+    } catch (error) {
+        console.error('Error updating favorites:', error);
+        alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
     }
 };
 
@@ -118,33 +141,53 @@ function getURLParameters() {
     };
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Get URL parameters
-    const { search, filter } = getURLParameters();
-    
-    // Initial render
-    renderFilters();
-    
-    // Apply search parameter if provided
-    if (search) {
-        document.getElementById('search-input').value = search;
-    }
-    
-    // Apply filter parameter if provided
-    if (filter) {
-        selectedFilters.add(filter);
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const recipesResponse = await fetch('http://127.0.0.1:5000/api/recepten');
+        recipes = await recipesResponse.json();
+
+        if (isLoggedIn()) {
+            const token = localStorage.getItem('authToken');
+            const favoritesResponse = await fetch('http://127.0.0.1:5000/api/favorieten', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (favoritesResponse.ok) {
+                const favoriteRecipes = await favoritesResponse.json();
+                favoriteRecipeIds = new Set(favoriteRecipes.map(r => r.id));
+            }
+        }
+        
+        // Get URL parameters
+        const { search, filter } = getURLParameters();
+        
+        // Initial render
         renderFilters();
-    }
-    
-    // Apply filters and render recipes
-    applyFilters();
-    
-    // Search input listener
-    document.getElementById('search-input').addEventListener('input', applyFilters);
-    
-    // Search button listener
-    document.getElementById('search-btn').addEventListener('click', (e) => {
-        e.preventDefault();
+        
+        // Apply search parameter if provided
+        if (search) {
+            document.getElementById('search-input').value = search;
+        }
+        
+        // Apply filter parameter if provided
+        if (filter) {
+            selectedFilters.add(filter);
+            renderFilters();
+        }
+        
+        // Apply filters and render recipes
         applyFilters();
-    });
+        
+        // Search input listener
+        document.getElementById('search-input').addEventListener('input', applyFilters);
+        
+        // Search button listener
+        document.getElementById('search-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            applyFilters();
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        const grid = document.getElementById('recipes-grid');
+        grid.innerHTML = '<p class="no-results">Kon de recepten niet laden. Probeer het later opnieuw.</p>';
+    }
 });

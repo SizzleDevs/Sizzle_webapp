@@ -1,4 +1,4 @@
-import { recipes, recommendations } from './data.js';
+let favoriteRecipeIds = new Set();
 
 function createRecipeCard(recipe) {
     const card = document.createElement('div');
@@ -8,7 +8,8 @@ function createRecipeCard(recipe) {
     };
 
     const tagsHtml = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
-    const heartClass = recipe.isFavorite ? 'favorited' : '';
+    const isFavorite = favoriteRecipeIds.has(recipe.id);
+    const heartClass = isFavorite ? 'favorited' : '';
 
     card.innerHTML = `
         <div class="card-header">
@@ -25,16 +26,36 @@ function createRecipeCard(recipe) {
 }
 
 // Global function for favorite toggle
-window.toggleFavorite = function(element, id) {
+window.toggleFavorite = async function(element, id) {
+    if (!isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+    }
+
     const icon = element.querySelector('.material-symbols-rounded');
-    if (!icon.classList.contains('favorited')) {
-        icon.classList.add('favorited');
-        // Call API to add favorite
-        console.log(`Added ${id} to favorites`);
-    } else {
-        icon.classList.remove('favorited');
-        // Call API to remove favorite
-        console.log(`Removed ${id} from favorites`);
+    const isCurrentlyFavorite = icon.classList.contains('favorited');
+    const method = isCurrentlyFavorite ? 'DELETE' : 'POST';
+    const token = localStorage.getItem('authToken');
+
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/api/favorieten/${id}`, {
+            method: method,
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+            icon.classList.toggle('favorited');
+            if (isCurrentlyFavorite) {
+                favoriteRecipeIds.delete(id);
+            } else {
+                favoriteRecipeIds.add(id);
+            }
+        } else {
+            alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
+        }
+    } catch (error) {
+        console.error('Error updating favorites:', error);
+        alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
     }
 };
 
@@ -60,17 +81,38 @@ function renderSection(title, recipesList, highlightWord = '') {
     return section;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const contentArea = document.getElementById('content-area');
 
-    // Section 1: Voor jou
-    contentArea.appendChild(renderSection('Voor jou', recommendations.voorkeur, 'jou'));
+    if (isLoggedIn()) {
+        const token = localStorage.getItem('authToken');
+        try {
+            const favoritesResponse = await fetch('http://127.0.0.1:5000/api/favorieten', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (favoritesResponse.ok) {
+                const favoriteRecipes = await favoritesResponse.json();
+                favoriteRecipeIds = new Set(favoriteRecipes.map(r => r.id));
+            }
+        } catch (error) {
+            console.error('Error fetching favorites:', error);
+        }
+    }
 
-    // Section 2: Als avondeten
-    contentArea.appendChild(renderSection('Als avondeten', recommendations.avondeten, 'avondeten'));
-
-    // Section 3: Trending nu
-    contentArea.appendChild(renderSection('Trending nu', recommendations.trending, 'Trending'));
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/aanbevelingen');
+        if (response.ok) {
+            const recommendations = await response.json();
+            contentArea.appendChild(renderSection('Voor jou', recommendations.voorkeur, 'jou'));
+            contentArea.appendChild(renderSection('Als avondeten', recommendations.avondeten, 'avondeten'));
+            contentArea.appendChild(renderSection('Trending nu', recommendations.trending, 'Trending'));
+        } else {
+            contentArea.innerHTML = '<p>Kon de aanbevelingen niet laden.</p>';
+        }
+    } catch (error) {
+        console.error('Error fetching recommendations:', error);
+        contentArea.innerHTML = '<p>Kon de aanbevelingen niet laden.</p>';
+    }
 
     // Search bar functionality
     const searchInput = document.querySelector('.search-input-wrapper input');
@@ -102,19 +144,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    /* 
-       Implementation according to API documentation:
-       
-       // Fetch recommendations
-       fetch('/api/aanbevelingen', {
-           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
-       })
-       .then(response => response.json())
-       .then(data => {
-           contentArea.appendChild(renderSection('Voor jou', data.voorkeur, 'jou'));
-           contentArea.appendChild(renderSection('Als avondeten', data.voorkeur_avondeten, 'avondeten'));
-           contentArea.appendChild(renderSection('Trending nu', data.trending, 'Trending'));
-       });
-    */
 });

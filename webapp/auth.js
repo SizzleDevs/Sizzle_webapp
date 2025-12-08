@@ -1,33 +1,32 @@
 // Authentication utilities
-function isLoggedIn() {
-    return localStorage.getItem('authToken') !== null;
+window.isLoggedIn = function() {
+    const token = localStorage.getItem('authToken');
+    console.log('isLoggedIn check, token:', token);
+    return token !== null;
 }
 
-function getUsername() {
+window.getUsername = function() {
     return localStorage.getItem('username');
 }
 
-function logout() {
+window.logout = function() {
+    console.log('logout function called');
     localStorage.removeItem('authToken');
     localStorage.removeItem('username');
+    console.log('authToken and username removed from localStorage');
     window.location.href = 'login.html';
 }
 
-function redirectIfNotLoggedIn() {
+window.redirectIfNotLoggedIn = function() {
     if (!isLoggedIn()) {
         window.location.href = 'login.html';
     }
 }
 
-function redirectToProfileIfLoggedIn() {
+window.redirectToProfileIfLoggedIn = function() {
     if (isLoggedIn()) {
         window.location.href = 'profile.html';
     } else {
         window.location.href = 'login.html';
     }
-}
-
-// Export for modules if needed
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { isLoggedIn, getUsername, logout, redirectIfNotLoggedIn, redirectToProfileIfLoggedIn };
 }

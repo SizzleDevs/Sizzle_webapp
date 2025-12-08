@@ -1,5 +1,3 @@
-import { recipeDetails } from './data.js';
-
 function getRecipeId() {
     const params = new URLSearchParams(window.location.search);
     return params.get('id') || "1"; // Default to 1 if not found
@@ -600,63 +598,82 @@ window.toggleCheckbox = function(element) {
 };
 
 // Favorite button functionality
-function setupFavoriteButton(recipeId) {
+async function setupFavoriteButton(recipeId) {
     const favoriteBtn = document.getElementById('favorite-btn');
     const favoriteIcon = document.getElementById('favorite-icon');
     
     if (!favoriteBtn || !favoriteIcon) return;
     
-    // Always use filled heart icon
     favoriteIcon.textContent = 'favorite';
-    
-    // Check if recipe is already favorited (from localStorage)
-    const favorites = JSON.parse(localStorage.getItem('sizzle_favorites') || '[]');
-    const isFavorite = favorites.includes(recipeId);
-    
-    // Set initial state
-    if (isFavorite) {
-        favoriteIcon.classList.add('favorited');
-    } else {
-        favoriteIcon.classList.remove('favorited');
+
+    if (!isLoggedIn()) {
+        favoriteBtn.style.display = 'none';
+        return;
+    }
+
+    const token = localStorage.getItem('authToken');
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/favorieten', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+            const favorites = await response.json();
+            const isFavorite = favorites.some(fav => fav.id === recipeId);
+            
+            if (isFavorite) {
+                favoriteIcon.classList.add('favorited');
+            } else {
+                favoriteIcon.classList.remove('favorited');
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching favorites:', error);
     }
     
-    // Handle click
-    favoriteBtn.addEventListener('click', () => {
-        const currentFavorites = JSON.parse(localStorage.getItem('sizzle_favorites') || '[]');
-        const isCurrentlyFavorite = currentFavorites.includes(recipeId);
-        
-        if (isCurrentlyFavorite) {
-            // Remove from favorites
-            const newFavorites = currentFavorites.filter(id => id !== recipeId);
-            localStorage.setItem('sizzle_favorites', JSON.stringify(newFavorites));
-            favoriteIcon.classList.remove('favorited');
-            console.log(`Removed ${recipeId} from favorites`);
-        } else {
-            // Add to favorites
-            currentFavorites.push(recipeId);
-            localStorage.setItem('sizzle_favorites', JSON.stringify(currentFavorites));
-            favoriteIcon.classList.add('favorited');
-            console.log(`Added ${recipeId} to favorites`);
+    favoriteBtn.addEventListener('click', async () => {
+        const isCurrentlyFavorite = favoriteIcon.classList.contains('favorited');
+        const method = isCurrentlyFavorite ? 'DELETE' : 'POST';
+
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/api/favorieten/${recipeId}`, {
+                method: method,
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                favoriteIcon.classList.toggle('favorited');
+            } else {
+                alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
+            }
+        } catch (error) {
+            console.error('Error updating favorites:', error);
+            alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
         }
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const id = getRecipeId();
-    const recipe = recipeDetails[id] || recipeDetails["1"];
     
-    if (recipe) {
-        renderRecipe(recipe);
-        // Apply unit conversion immediately after rendering
-        updateIngredientAmounts();
-        // Initialize cookmode after recipe is rendered
-        setupCookmode();
-        // Initialize favorite button
-        setupFavoriteButton(id);
-        // Setup sidebar constraint to stop at last step
-        setupSidebarConstraint();
-    } else {
-        document.getElementById('recipe-title').textContent = "Recept niet gevonden";
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/api/recepten/${id}`);
+        if (response.ok) {
+            const recipe = await response.json();
+            renderRecipe(recipe);
+            // Apply unit conversion immediately after rendering
+            updateIngredientAmounts();
+            // Initialize cookmode after recipe is rendered
+            setupCookmode();
+            // Initialize favorite button
+            setupFavoriteButton(id);
+            // Setup sidebar constraint to stop at last step
+            setupSidebarConstraint();
+        } else {
+            document.getElementById('recipe-title').textContent = "Recept niet gevonden";
+        }
+    } catch (error) {
+        console.error('Error fetching recipe:', error);
+        document.getElementById('recipe-title').textContent = "Kon het recept niet laden";
     }
 
     /*

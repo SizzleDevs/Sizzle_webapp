@@ -18,13 +18,9 @@ function setupLogin() {
             return;
         }
         
-        // Hash the password
-        const hashedPassword = CryptoJS.SHA256(password).toString();
-        
-        // Prepare login data
         const loginData = {
             username: username,
-            password: hashedPassword
+            password: password
         };
         
         console.log('Login data:', loginData);

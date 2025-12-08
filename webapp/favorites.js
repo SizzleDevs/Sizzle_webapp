@@ -1,5 +1,3 @@
-import { recipes } from './data.js';
-
 function createRecipeCard(recipe) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
@@ -36,22 +34,37 @@ window.toggleFavorite = function(element, id) {
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Check if logged in
     if (!isLoggedIn()) {
         window.location.href = 'login.html';
         return;
     }
     
-    // Load favorite recipes
     const favoritesContainer = document.getElementById('favorites-container');
-    const favoriteRecipes = recipes.filter(recipe => recipe.isFavorite);
+    const token = localStorage.getItem('authToken');
 
-    if (favoriteRecipes.length === 0) {
-        favoritesContainer.innerHTML = '<p class="no-favorites">Nog geen favorieten. Voeg recepten toe door op het hartje te klikken!</p>';
-    } else {
-        favoriteRecipes.forEach(recipe => {
-            favoritesContainer.appendChild(createRecipeCard(recipe));
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/favorieten', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
+
+        if (response.ok) {
+            const favoriteRecipes = await response.json();
+            if (favoriteRecipes.length === 0) {
+                favoritesContainer.innerHTML = '<p class="no-favorites">Nog geen favorieten. Voeg recepten toe door op het hartje te klikken!</p>';
+            } else {
+                favoriteRecipes.forEach(recipe => {
+                    favoritesContainer.appendChild(createRecipeCard(recipe));
+                });
+            }
+        } else {
+            favoritesContainer.innerHTML = '<p class="no-favorites">Kon je favorieten niet laden. Probeer het later opnieuw.</p>';
+        }
+    } catch (error) {
+        console.error('Error fetching favorites:', error);
+        favoritesContainer.innerHTML = '<p class="no-favorites">Kon je favorieten niet laden. Probeer het later opnieuw.</p>';
     }
 });
