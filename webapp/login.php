@@ -51,6 +51,7 @@
         <p>Made by Team Sizzle Devs 2025 ©</p>
     </footer>
 
+    <script src="auth.js"></script>
     <script src="login.js"></script>
 </body>
 </html>

@@ -144,4 +144,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
+
+    // Update username display
+    const userDisplayNameElement = document.getElementById('user-display-name');
+    if (userDisplayNameElement) {
+        if (window.isLoggedIn()) {
+            const fullname = window.getFullname();
+            if (fullname) {
+                userDisplayNameElement.textContent = fullname;
+            } else {
+                userDisplayNameElement.textContent = 'Gebruiker';
+            }
+        } else {
+            userDisplayNameElement.textContent = 'Gebruiker';
+        }
+    }
 });

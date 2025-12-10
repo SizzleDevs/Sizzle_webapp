@@ -140,8 +140,7 @@ function setupNavigation() {
 
             if (response.ok) {
                 const result = await response.json();
-                localStorage.setItem('authToken', result.token);
-                localStorage.setItem('username', result.username);
+                await window.storeUserData(result.token, result.username);
                 window.location.href = 'index.php';
             } else {
                 const error = await response.json();

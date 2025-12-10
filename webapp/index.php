@@ -23,7 +23,8 @@
         </header>
 
         <section class="hero">
-            <h1>Wat wordt het<br>vanavond, <span class="highlight">Gebruiker</span>?</h1>
+            <h1>Wat wordt het<br>vanavond, <span id="user-display-name" class="highlight">Gebruiker</span>?</h1>
+
             
             <div class="search-bar">
                 <div class="search-input-wrapper">

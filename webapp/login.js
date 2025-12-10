@@ -37,8 +37,7 @@ function setupLogin() {
             if (response.ok) {
                 const result = await response.json();
                 // Assume result has token
-                localStorage.setItem('authToken', result.token);
-                localStorage.setItem('username', result.username);
+                await window.storeUserData(result.token, result.username);
                 // Redirect to home or profile
                 window.location.href = 'index.php';
             } else {
