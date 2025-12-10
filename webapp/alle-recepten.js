@@ -6,9 +6,7 @@ let favoriteRecipeIds = new Set();
 function createRecipeCard(recipe) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.onclick = () => {
-        window.location.href = `recipe.php?id=${recipe.id}`;
-    };
+    card.setAttribute('onclick', `window.location.href = 'recipe.php?id=${recipe.id}'`);
 
     const tagsHtml = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
     const isFavorite = favoriteRecipeIds.has(recipe.id);
