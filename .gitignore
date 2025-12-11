@@ -1428,3 +1428,4 @@ backend/venv/lib/python3.12/site-packages/bcrypt-5.0.0.dist-info/METADATA
 backend/venv/lib/python3.12/site-packages/bcrypt-5.0.0.dist-info/licenses/LICENSE
 backend/venv/lib/python3.12/site-packages/bcrypt-5.0.0.dist-info/INSTALLER
 backend/venv/lib/python3.12/site-packages/__pycache__/flask_bcrypt.cpython-312.pyc
+*.pyc

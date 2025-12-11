@@ -746,38 +746,51 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Reset placeholder after sending
         input.placeholder = 'Stel een vraag...';
 
-        // AI Response (Mock) — plain text, full opacity
-        setTimeout(() => {
+        // Show a loading indicator
+        const loadingMsg = document.createElement('p');
+        loadingMsg.classList.add('message', 'ai', 'loading');
+        loadingMsg.textContent = 'Sizzle denkt na...';
+        messages.appendChild(loadingMsg);
+        messages.scrollTop = messages.scrollHeight;
+
+        const recipeId = getRecipeId();
+        const token = localStorage.getItem('authToken');
+
+        fetch(`http://127.0.0.1:5000/api/recepten/${recipeId}/ask`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ question: text })
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`Server responded with status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            // Remove loading indicator
+            loadingMsg.remove();
+
+            // AI Response
             const aiMsg = document.createElement('p');
             aiMsg.classList.add('message', 'ai');
-            aiMsg.style.marginTop = '10px';
-            
-            // Check if there was context
-            if (hasContext) {
-                aiMsg.textContent = 'Ik heb de geselecteerde tekst bekeken. Dat is een goede vraag! Je kunt dit ingrediënt vervangen door iets anders als je dat wilt.';
-            } else {
-                aiMsg.textContent = 'Dat is een goede vraag! Je kunt dit ingrediënt vervangen door iets anders als je dat wilt.';
-            }
+            aiMsg.textContent = data.answer;
             messages.appendChild(aiMsg);
             messages.scrollTop = messages.scrollHeight;
-        }, 1000);
-
-        /*
-           API Implementation:
-           
-           fetch(`/api/recepten/${id}/vraag`, {
-               method: 'POST',
-               headers: {
-                   'Content-Type': 'application/json',
-                   'Authorization': 'Bearer ' + localStorage.getItem('token')
-               },
-               body: JSON.stringify({ vraag: text })
-           })
-           .then(res => res.json())
-           .then(data => {
-               // Show data.antwoord
-           });
-        */
+        })
+        .catch(error => {
+            console.error('Error asking AI:', error);
+            // Remove loading indicator and show error
+            loadingMsg.remove();
+            const errorMsg = document.createElement('p');
+            errorMsg.classList.add('message', 'ai', 'error');
+            errorMsg.textContent = 'Sorry, er ging iets mis. Probeer het opnieuw.';
+            messages.appendChild(errorMsg);
+            messages.scrollTop = messages.scrollHeight;
+        });
     });
 
         // Allow pressing Enter in the input to send the message
