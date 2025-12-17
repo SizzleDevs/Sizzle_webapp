@@ -6,7 +6,7 @@ let favoriteRecipeIds = new Set();
 function createRecipeCard(recipe) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.setAttribute('onclick', `window.location.href = 'recipe.php?id=${recipe.id}'`);
+    card.setAttribute('onclick', `window.location.href = 'recipe.html?id=${recipe.id}'`);
 
     const tagsHtml = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
     const isFavorite = favoriteRecipeIds.has(recipe.id);
@@ -29,7 +29,7 @@ function createRecipeCard(recipe) {
 // Global function for favorite toggle
 window.toggleFavorite = async function(element, id) {
     if (!isLoggedIn()) {
-        window.location.href = 'login.php';
+        window.location.href = 'login.html';
         return;
     }
 

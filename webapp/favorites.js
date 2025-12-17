@@ -2,7 +2,7 @@ function createRecipeCard(recipe) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.onclick = () => {
-        window.location.href = `recipe.php?id=${recipe.id}`;
+        window.location.href = `recipe.html?id=${recipe.id}`;
     };
 
     const tagsHtml = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
@@ -37,7 +37,7 @@ window.toggleFavorite = function(element, id) {
 document.addEventListener('DOMContentLoaded', async () => {
     // Check if logged in
     if (!isLoggedIn()) {
-        window.location.href = 'login.php';
+        window.location.href = 'login.html';
         return;
     }
     

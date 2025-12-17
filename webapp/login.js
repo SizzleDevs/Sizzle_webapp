@@ -39,7 +39,7 @@ function setupLogin() {
                 // Assume result has token
                 await window.storeUserData(result.token, result.username);
                 // Redirect to home or profile
-                window.location.href = 'index.php';
+                window.location.href = 'index.html';
             } else {
                 const error = await response.json();
                 alert(`Inloggen mislukt: ${error.message}`);

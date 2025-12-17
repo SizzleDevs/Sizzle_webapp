@@ -4,7 +4,7 @@ function createRecipeCard(recipe) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.onclick = () => {
-        window.location.href = `recipe.php?id=${recipe.id}`;
+        window.location.href = `recipe.html?id=${recipe.id}`;
     };
 
     const tagsHtml = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
@@ -28,7 +28,7 @@ function createRecipeCard(recipe) {
 // Global function for favorite toggle
 window.toggleFavorite = async function(element, id) {
     if (!isLoggedIn()) {
-        window.location.href = 'login.php';
+        window.location.href = 'login.html';
         return;
     }
 
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const searchTerm = searchInput.value.trim();
         if (searchTerm) {
             // Navigate to alle-recepten page with search query
-            window.location.href = `alle-recepten.php?search=${encodeURIComponent(searchTerm)}`;
+            window.location.href = `alle-recepten.html?search=${encodeURIComponent(searchTerm)}`;
         }
     }
     
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const filterName = tag.textContent.trim();
             if (filterName !== 'Meer filters...') {
                 // Navigate to alle-recepten page with filter query
-                window.location.href = `alle-recepten.php?filter=${encodeURIComponent(filterName)}`;
+                window.location.href = `alle-recepten.html?filter=${encodeURIComponent(filterName)}`;
             }
         });
     });

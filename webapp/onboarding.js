@@ -141,7 +141,7 @@ function setupNavigation() {
             if (response.ok) {
                 const result = await response.json();
                 await window.storeUserData(result.token, result.username);
-                window.location.href = 'index.php';
+                window.location.href = 'index.html';
             } else {
                 const error = await response.json();
                 alert(`Registratie mislukt: ${error.message}`);

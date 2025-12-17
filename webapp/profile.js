@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Check if logged in
     if (!isLoggedIn()) {
-        window.location.href = 'login.php';
+        window.location.href = 'login.html';
         return;
     }
 
