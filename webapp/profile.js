@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Check if logged in
     if (!isLoggedIn()) {
         window.location.href = 'login.html';
         return;
@@ -27,49 +26,66 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching profile:', error);
     }
     
-    // Initialize UI
     initializeUI();
     initializeTabs();
 });
 
 function initializeUI() {
-    // Set inputs to readonly initially
     document.getElementById('username').setAttribute('readonly', '');
     document.getElementById('name').setAttribute('readonly', '');
 
-    // Add event listeners
     document.getElementById('edit-username-btn').addEventListener('click', toggleEditUsername);
     document.getElementById('edit-name-btn').addEventListener('click', toggleEditName);
     document.querySelector('.primary-btn[onclick="saveNewPassword()"]')?.addEventListener('click', saveNewPassword);
     document.querySelector('.secondary-btn[onclick="clearPasswordForm()"]')?.addEventListener('click', clearPasswordForm);
-    document.querySelector('.danger-btn[onclick="deleteAccount()"]')?.addEventListener('click', deleteAccount);
+    document.getElementById('delete-account-btn')?.addEventListener('click', deleteAccount);
     document.getElementById('logout-btn').addEventListener('click', () => {
         if (confirm('Weet je zeker dat je uit wilt loggen?')) {
             logout();
         }
     });
+
+    initializeThemeControls();
+}
+
+function initializeThemeControls() {
+    const btns = document.querySelectorAll('.theme-toggle-btn');
+    if (!btns.length) return;
+
+    const setActive = (pref) => {
+        btns.forEach(b => b.classList.toggle('active', b.dataset.theme === pref));
+    };
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const pref = btn.dataset.theme;
+            if (window.setPreferredTheme) {
+                window.setPreferredTheme(pref);
+            } else {
+
+                localStorage.setItem('theme', pref);
+                if (pref === 'system' && window.matchMedia) {
+                    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', pref);
+                }
+            }
+            setActive(pref);
+        });
+    });
+
+    const pref = localStorage.getItem('theme') || 'light';
+    setActive(pref);
 }
 
 function initializeTabs() {
     const tabLinks = document.querySelectorAll('.tab-link');
     const tabContents = document.querySelectorAll('.tab-content');
 
-    // Open the first tab by default
-    tabLinks[0]?.classList.add('active');
-    tabContents[0]?.classList.add('active');
-
-    tabLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            const tabName = link.dataset.tab;
-
-            tabLinks.forEach(l => l.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-
-            link.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
-        });
-    });
-}
+    tabLinks.forEach(l => l.classList.remove('active'));
+    tabContents.forEach(c => c.classList.add('active'));
+} 
 
 function toggleEditUsername() {
     const usernameInput = document.getElementById('username');

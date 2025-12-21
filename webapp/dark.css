@@ -1912,57 +1912,210 @@ cent color */
     }
 }
 
-/* Settings Tabs */
+/* Settings Sections (stacked) */
 .settings-card {
+    /* remove big single boxed container so sections feel like distinct cards */
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+
+/* Hide the horizontal tab controls — sections are shown stacked vertically now */
+.tabs {
+    display: none;
+}
+
+/* Make each tab-content visible and styled as a large boxed section */
+.tab-content {
+    display: block;
+    padding: 0;
+    margin-bottom: var(--spacing-md);
+    animation: fadeIn 0.28s;
+}
+
+.tab-content.section-box {
     border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-lg);
+    border-radius: calc(var(--border-radius) - 2px);
+    padding: var(--card-padding);
+    background: var(--card-bg);
+    /* remove shadow to match requested style */
+    box-shadow: none;
+}
+
+/* Section heading inside each box (semantic heading) */
+.tab-content.section-box .section-heading {
+    font-size: 1.15rem;
+    margin-bottom: var(--spacing-md);
+    font-family: var(--font-serif);
+    color: var(--text-color);
+    font-weight: 800;
+}
+
+/* Remove any stray divider at the bottom of the settings area */
+.tabs {
+    display: none;
+    border-bottom: none;
+}
+
+.settings-card {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* Account actions: keep delete + logout together, left aligned */
+.account-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: flex-start; /* left aligned */
+    margin-top: var(--spacing-md);
+}
+
+/* Danger zone styling */
+.danger-zone .section-heading {
+    color: #ff7a7a; /* subtle red for danger heading in dark */
+}
+
+/* Theme buttons—separate buttons like other app buttons */
+.theme-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* Ensure theme buttons show active state clearly */
+.theme-toggle-btn.active {
+    /* Keep accent background, but use the global border color so the outline remains visible */
+    background: var(--accent-color) !important;
+    color: var(--text-color) !important; /* use normal text color, not white */
+    border: 1px solid var(--border-color) !important; /* visible outline like other buttons */
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95) !important;
+}
+
+/* Override primary-btn for clear and theme buttons to not be yellow but keep shadow */
+.clear-btn, .theme-toggle-btn {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Give logout the same primary shadow and interactions */
+.logout-btn {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+}
+.logout-btn:hover {
+    filter: brightness(0.92);
+}
+.logout-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    filter: brightness(1.15);
+}
+
+/* Short inputs for password fields */
+.field-wrapper.short {
+    max-width: 360px;
+}
+
+/* Make padding more consistent inside section boxes */
+.tab-content.section-box {
+    border: 1px solid var(--border-color);
+    border-radius: calc(var(--border-radius) - 2px);
+    padding: var(--card-padding);
     background: var(--card-bg);
 }
 
-.tabs {
-    overflow: hidden;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: var(--spacing-lg);
+.tab-content.section-box:last-child {
+    margin-bottom: 0;
+}
+/* Theme buttons: same shape & effects as primary buttons, neutral by default */
+.theme-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
 }
 
-.tab-link {
-    background-color: transparent;
+.theme-toggle-btn {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm) var(--container-padding);
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: calc(var(--border-radius) - 4px);
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-color);
+}
+
+.theme-toggle-btn:hover {
+    filter: brightness(0.92);
+}
+
+.theme-toggle-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    filter: brightness(1.15);
+}
+
+.theme-toggle-btn .material-symbols-rounded {
+    font-size: 18px;
+}
+
+.theme-toggle-btn .btn-label {
+    display: inline-block;
+}
+
+.theme-toggle-btn.active {
+    background-color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color); /* use normal text color inside active button */
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+}
+
+.theme-toggle-btn.active:hover {
+    filter: brightness(0.92);
+}
+
+.theme-toggle-btn.active:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    filter: brightness(1.15);
+}
+
+/* Field wrapper (reuse homescreen search input styles) */
+.field-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--card-bg);
+    padding: 8px 10px;
+}
+
+.field-wrapper input {
     border: none;
     outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
+    background: transparent;
+    flex: 1;
     font-size: 1rem;
-    font-family: var(--font-sans);
-    font-weight: 600;
-    color: var(--text-color);
-    opacity: 0.7;
-}
-
-.tab-link:hover {
-    opacity: 1;
-}
-
-.tab-link.active {
-    opacity: 1;
-    border-bottom: 2px solid var(--accent-color);
-}
-
-.tab-content {
-    display: none;
     padding: 6px 0;
-    animation: fadeIn 0.5s;
 }
 
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity: 1;}
 }
-
-.tab-content.active {
-    display: block;
-}
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+} 
 
 /* Theme Switch */
 .theme-switch-wrapper {

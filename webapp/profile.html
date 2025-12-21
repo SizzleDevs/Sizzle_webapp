@@ -29,76 +29,85 @@
             <h1>Instellingen</h1>
             
             <div class="settings-card">
-                <div class="tabs">
-                    <button class="tab-link active" data-tab="general">Algemeen</button>
-                    <button class="tab-link" data-tab="security">Beveiliging</button>
-                    <button class="tab-link" data-tab="appearance">Uiterlijk</button>
-                </div>
 
-                <div id="general" class="tab-content">
+
+                <div id="general" class="tab-content section-box">
+                    <h2 class="section-heading">Algemeen</h2>
                     <div class="form-group">
                         <label for="username">Gebruikersnaam</label>
                         <div class="username-wrapper">
-                            <input type="text" id="username">
+                            <div class="field-wrapper">
+                                <input type="text" id="username">
+                            </div>
                             <button class="edit-username-btn" id="edit-username-btn" onclick="toggleEditUsername()">Bewerk</button>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="name">Naam</label>
                         <div class="username-wrapper">
-                            <input type="text" id="name">
+                            <div class="field-wrapper">
+                                <input type="text" id="name">
+                            </div>
                             <button class="edit-username-btn" id="edit-name-btn" onclick="toggleEditName()">Bewerk</button>
                         </div>
                     </div>
                 </div>
 
-                <div id="security" class="tab-content">
+                <div id="security" class="tab-content section-box">
+                    <h2 class="section-heading">Beveiliging</h2>
                     <div class="password-change-form" id="password-change-form">
-                        <h3>Wachtwoord wijzigen</h3>
+
                         <div class="form-group">
                             <label for="current-password-verify">Huidige wachtwoord</label>
-                            <input type="password" id="current-password-verify" placeholder="Voer je huidige wachtwoord in">
+                            <div class="field-wrapper short">
+                                <input type="password" id="current-password-verify" placeholder="Huidig wachtwoord">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="new-password">Nieuw wachtwoord</label>
-                            <input type="password" id="new-password" placeholder="Voer nieuw wachtwoord in">
+                            <div class="field-wrapper short">
+                                <input type="password" id="new-password" placeholder="Nieuw wachtwoord">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="confirm-password">Bevestig wachtwoord</label>
-                            <input type="password" id="confirm-password" placeholder="Voer wachtwoord opnieuw in">
+                            <div class="field-wrapper short">
+                                <input type="password" id="confirm-password" placeholder="Bevestig wachtwoord">
+                            </div>
                         </div>
                         <div class="password-error hidden" id="password-error"></div>
                         <div class="form-buttons">
+                            <button class="primary-btn clear-btn" onclick="clearPasswordForm()">Wissen</button>
                             <button class="primary-btn" onclick="saveNewPassword()">Wachtwoord opslaan</button>
-                            <button class="secondary-btn" onclick="clearPasswordForm()">Wissen</button>
                         </div>
                     </div>
-                    <div class="profile-actions">
-                        <button class="danger-btn" onclick="deleteAccount()">
+                </div> 
+
+                <div id="appearance" class="tab-content section-box">
+                    <h2 class="section-heading">Uiterlijk</h2>
+                    <div class="form-group">
+                        <label>Thema</label>
+                        <div class="theme-buttons" role="tablist" aria-label="Thema instellingen">
+                            <button type="button" class="theme-toggle-btn" data-theme="light" id="theme-light-btn"><span class="material-symbols-rounded">light_mode</span><span class="btn-label">Licht</span></button>
+                            <button type="button" class="theme-toggle-btn" data-theme="dark" id="theme-dark-btn"><span class="material-symbols-rounded">dark_mode</span><span class="btn-label">Donker</span></button>
+                            <button type="button" class="theme-toggle-btn" data-theme="system" id="theme-system-btn"><span class="material-symbols-rounded">devices</span><span class="btn-label">Systeem</span></button>
+                        </div>
+                    </div>
+                </div> 
+
+                <div id="danger" class="tab-content section-box danger-zone">
+                    <h2 class="section-heading">Gevarenzone</h2>
+                    <div class="account-actions">
+                        <button class="danger-btn" id="delete-account-btn" onclick="deleteAccount()">
                             <span class="material-symbols-rounded">delete</span>
                             Account verwijderen
                         </button>
+                        <button class="secondary-btn logout-btn" id="logout-btn">
+                            <span class="material-symbols-rounded">logout</span>
+                            Uitloggen
+                        </button>
                     </div>
-                </div>
-
-                <div id="appearance" class="tab-content">
-                    <div class="form-group">
-                        <label>Thema</label>
-                        <div class="theme-switch-wrapper">
-                            <label class="theme-switch" for="theme-toggle-switch">
-                                <input type="checkbox" id="theme-toggle-switch" />
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-actions">
-                    <button class="primary-btn logout-btn" id="logout-btn">
-                        <span class="material-symbols-rounded">logout</span>
-                        Uitloggen
-                    </button>
-                </div>
+                </div> 
             </div>
         </section>
 
