@@ -19,19 +19,22 @@
         <header>
             <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">Sizzle</div>
             <div class="header-icons">
-                <span class="material-symbols-rounded" onclick="window.location.href='index.html'">home</span>
-                <span class="material-symbols-rounded" onclick="window.location.href='favorites.html'">favorite</span>
-                <span class="material-symbols-rounded" onclick="redirectToProfileIfLoggedIn()">person</span>
+                <span class="material-symbols-rounded" onclick="window.location.href='favorites.html'" style="cursor: pointer;">favorite</span>
+                <span class="material-symbols-rounded filled" onclick="window.location.href='about.html'" style="cursor: pointer;">info</span>
+                <span class="material-symbols-rounded" onclick="redirectToProfileIfLoggedIn()" style="cursor: pointer;">person</span>
             </div>
         </header>
+
+        <section class="hero">
+            <h1>Over <span class="highlight">Sizzle</span></h1>
+            <p>Jouw ultieme partner in het ontdekken van heerlijke recepten.</p>
+        </section>
 
         <section class="about-section">
             <div class="about-grid">
                 <div class="about-text">
-                    <h1>Over Sizzle</h1>
-                    <p>Sizzle is jouw ultieme partner in het ontdekken van heerlijke recepten voor elke gelegenheid. Of je nu op zoek bent naar een snel avondmaal, een verfijnd gerecht voor een speciale gelegenheid, of gewoon inspiratie nodig hebt voor je volgende maaltijd, Sizzle staat voor je klaar.</p>
-                    <p>Onze missie is om koken toegankelijk, leuk en inspirerend te maken voor iedereen. Met een uitgebreide database van recepten, handige zoek- en filteropties, en gepersonaliseerde aanbevelingen, helpt Sizzle je om nieuwe smaken en culinaire hoogstandjes te ontdekken.</p>
-                    <p>Of je nu een doorgewinterde chef-kok bent of net begint met koken, Sizzle biedt iets voor iedereen. Duik in de wereld van smaken, experimenteer met nieuwe ingrediënten, en maak van elke maaltijd een feestje met Sizzle!</p>
+                    <p>Sizzle is jouw partner voor heerlijke recepten voor elke gelegenheid — van snelle avondmaaltijden tot verfijnde diners. Of je nu inspiratie zoekt of stap-voor-stap hulp nodig hebt, Sizzle helpt je snel iets lekkers te bereiden.</p>
+                    <p>Onze missie is koken toegankelijk en inspirerend te maken met een ruime receptenbibliotheek, slimme zoek- en filteropties en persoonlijke aanbevelingen. Voor zowel beginners als gevorderden biedt Sizzle volop mogelijkheden om nieuwe smaken te ontdekken.</p>
                 </div>
                 <div class="about-image">
                     <img src="foto's/sizzle Mockup.png" alt="Sizzle mockup">
@@ -40,8 +43,8 @@
         </section>
 
         <section class="team-section">
+            <h2 class="section-title">Ons <span class="highlight">Team</span></h2>
             <div class="team-intro">
-                <h1>Ons Team</h1>
                 <p>Sizzle is ontwikkeld door een toegewijd team van enthousiaste ontwikkelaars die passie hebben voor zowel technologie als koken. Samen streven we ernaar om jou de beste ervaring te bieden bij het ontdekken van nieuwe recepten en het verbeteren van je kookkunsten.</p>
             </div>
             
@@ -108,6 +111,11 @@
                 </div>
             </div>
         </section>
+
+        <div class="discover-more">
+            <h2>Nog meer gerechten<br>ontdekken?</h2>
+            <button class="discover-btn" onclick="window.location.href='alle-recepten.html'"><span class="material-symbols-rounded">list</span> Alle gerechten</button>
+        </div>
 
         <footer class="page-footer">
             <p>Made by Team Sizzle Devs 2025 ©</p>
