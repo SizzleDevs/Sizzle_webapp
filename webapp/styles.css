@@ -487,7 +487,13 @@ header {
         margin-top: 1.8rem;
     }
 
-    .about-section .about-text { flex: 1 1 60%; }
+    .about-section .about-text { 
+        flex: 1 1 60%;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 32px;
+    }
 
     .about-section .about-image { flex: 0 0 560px; max-width: 52%; }
 
@@ -514,17 +520,25 @@ header {
         margin-bottom: var(--section-margin);
     }
 
-    text-shadow:
-        -1px -1px 0 var(--text-color),
-        -1px 0 0 var(--text-color),
-        -1px 1px 0 var(--text-color),
-        0 -1px 0 var(--text-color),
-        0 1px 0 var(--text-color),
-        1px -1px 0 var(--text-color),
-        1px 0 0 var(--text-color),
-        1px 1px 0 var(--text-color);
-    text-decoration: none; /* ensure no underline */
-}
+    .team-intro {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 32px;
+        margin-bottom: 2.5rem;
+    }
+
+    .team-intro h1 {
+        margin-bottom: 1rem;
+    }
+
+    .about-section .about-text p,
+    .team-intro p {
+        opacity: 0.85;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
 
 /* Hero Section */
 .hero {
