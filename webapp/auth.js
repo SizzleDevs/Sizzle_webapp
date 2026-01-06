@@ -61,3 +61,48 @@ window.redirectToProfileIfLoggedIn = function() {
         window.location.href = 'login.html';
     }
 }
+
+// Password Visibility Toggle
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleIcons = document.querySelectorAll('.password-toggle-icon');
+
+    toggleIcons.forEach(icon => {
+        // Find sibling input
+        const wrapper = icon.parentElement;
+        const input = wrapper.querySelector('input');
+
+        if (!input) return;
+
+        const showPassword = () => {
+            input.type = 'text';
+            icon.textContent = 'visibility_off';
+            icon.style.opacity = '1';
+        };
+
+        const hidePassword = () => {
+            input.type = 'password';
+            icon.textContent = 'visibility';
+            icon.style.opacity = '';
+        };
+
+        // Mouse events
+        icon.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            showPassword();
+        });
+
+        icon.addEventListener('mouseup', hidePassword);
+        icon.addEventListener('mouseleave', hidePassword);
+
+        // Touch events for mobile
+        icon.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            showPassword();
+        });
+
+        icon.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            hidePassword();
+        });
+    });
+});
