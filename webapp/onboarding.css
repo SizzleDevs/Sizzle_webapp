@@ -147,12 +147,14 @@ h1 {
     display: flex;
     align-items: center;
     padding: var(--spacing-sm);
+    position: relative;
 }
 
 .form-group .input-wrapper input {
     flex: 1;
     border: none;
     padding: var(--spacing-sm);
+    padding-right: 32px;
     font-size: 1rem;
     outline: none;
     background: transparent;
