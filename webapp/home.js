@@ -38,7 +38,7 @@ window.toggleFavorite = async function(element, id) {
     const token = localStorage.getItem('authToken');
 
     try {
-        const response = await fetch(`http://127.0.0.1:5000/api/favorieten/${id}`, {
+        const response = await fetch(`http://127.0.0.1:5000/api/favorieten${id}`, {
             method: method,
             headers: { 'Authorization': `Bearer ${token}` }
         });

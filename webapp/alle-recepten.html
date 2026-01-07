@@ -54,3 +54,11 @@
     <script type="module" src="alle-recepten.js"></script>
 </body>
 </html>
+<script>
+console.log("Pagina geladen");
+
+fetch("http://127.0.0.1:5000/")
+  .then(r => r.text())
+  .then(t => console.log("Backend zegt:", t))
+  .catch(e => console.error(e));
+</script>
