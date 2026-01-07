@@ -44,7 +44,8 @@ window.logout = function() {
     console.log('logout function called');
     localStorage.removeItem('authToken');
     localStorage.removeItem('username');
-    console.log('authToken and username removed from localStorage');
+    localStorage.removeItem('fullname');
+    console.log('User data removed from localStorage');
     window.location.href = 'login.html';
 }
 

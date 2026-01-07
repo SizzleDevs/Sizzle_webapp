@@ -100,7 +100,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const response = await fetch(window.API.RECOMMENDATIONS);
+        // Send auth header if logged in for personalized recommendations
+        const headers = {};
+        if (isLoggedIn()) {
+            headers['Authorization'] = `Bearer ${localStorage.getItem('authToken')}`;
+        }
+        
+        const response = await fetch(window.API.RECOMMENDATIONS, { headers });
         if (response.ok) {
             const recommendations = await response.json();
             contentArea.appendChild(renderSection('Voor jou', recommendations.voorkeur, 'jou'));

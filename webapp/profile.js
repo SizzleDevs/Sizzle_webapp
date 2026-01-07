@@ -141,26 +141,20 @@ async function saveName() {
 }
 
 function clearPasswordForm() {
-    document.getElementById('current-password-verify').value = '';
+    const currentPwField = document.getElementById('current-password-verify');
+    if (currentPwField) currentPwField.value = '';
     document.getElementById('new-password').value = '';
     document.getElementById('confirm-password').value = '';
     document.getElementById('password-error').classList.add('hidden');
 }
 
 async function saveNewPassword() {
-    const currentPasswordVerify = document.getElementById('current-password-verify').value;
     const newPassword = document.getElementById('new-password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
     const errorElement = document.getElementById('password-error');
 
-    if (!currentPasswordVerify) {
-        errorElement.textContent = 'Voer je huidige wachtwoord in.';
-        errorElement.classList.remove('hidden');
-        return;
-    }
-
     if (!newPassword || !confirmPassword) {
-        errorElement.textContent = 'Vul alstublieft beide nieuwe wachtwoordvelden in.';
+        errorElement.textContent = 'Vul alstublieft beide wachtwoordvelden in.';
         errorElement.classList.remove('hidden');
         return;
     }
@@ -186,7 +180,7 @@ async function saveNewPassword() {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ password: newPassword, current_password: currentPasswordVerify })
+            body: JSON.stringify({ password: newPassword })
         });
 
         if (response.ok) {
@@ -194,7 +188,7 @@ async function saveNewPassword() {
             clearPasswordForm();
         } else {
             const error = await response.json();
-            alert(`Wijzigen van wachtwoord mislukt: ${error.message}`);
+            alert(`Wijzigen van wachtwoord mislukt: ${error.message || 'Onbekende fout'}`);
         }
     } catch (error) {
         console.error('Save password error:', error);

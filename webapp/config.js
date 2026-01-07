@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = 'https://sizzle-backend-9mad.onrender.com:10000';
+const API_BASE_URL = 'https://sizzle-backend-9mad.onrender.com';
 
 // API Endpoints
 const API = {
@@ -16,6 +16,53 @@ const API = {
     FAVORITE_TOGGLE: (id) => `${API_BASE_URL}/api/favorieten/${id}`
 };
 
+// Helper function for making authenticated API requests
+async function apiRequest(url, options = {}) {
+    const token = localStorage.getItem('authToken');
+    
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+    
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    const response = await fetch(url, {
+        ...options,
+        headers
+    });
+    
+    // Handle token expiration
+    if (response.status === 401 || response.status === 422) {
+        const errorData = await response.json().catch(() => ({}));
+        if (errorData.msg && (errorData.msg.includes('expired') || errorData.msg.includes('Invalid'))) {
+            // Token expired or invalid, clear storage and redirect to login
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('username');
+            localStorage.removeItem('fullname');
+            window.location.href = 'login.html';
+            throw new Error('Session expired');
+        }
+    }
+    
+    return response;
+}
+
+// Helper to check if the API is reachable
+async function checkApiHealth() {
+    try {
+        const response = await fetch(API_BASE_URL, { method: 'GET' });
+        return response.ok;
+    } catch (error) {
+        console.error('API health check failed:', error);
+        return false;
+    }
+}
+
 // Export for use in other files
 window.API = API;
 window.API_BASE_URL = API_BASE_URL;
+window.apiRequest = apiRequest;
+window.checkApiHealth = checkApiHealth;

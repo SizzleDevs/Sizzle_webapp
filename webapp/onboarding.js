@@ -1,48 +1,50 @@
-// Dummy tags for user preferences
+// Available tags matching API documentation
 const availableTags = [
-    // Keuken types
-    { name: "Italiaans", icon: "+" },
+    // Cuisine types
     { name: "Aziatisch", icon: "+" },
-    { name: "Mexicaans", icon: "+" },
-    { name: "Frans", icon: "+" },
-    { name: "Grieks", icon: "+" },
-    { name: "Indiaas", icon: "+" },
-    { name: "Hollands", icon: "+" },
+    { name: "Mediterraans", icon: "+" },
+    { name: "Midden-Oosters", icon: "+" },
+    { name: "Latijns-Amerikaans", icon: "+" },
+    { name: "Europees", icon: "+" },
+    { name: "Fusion", icon: "+" },
+    { name: "Comfort food", icon: "+" },
     
-    // Maaltijd types
-    { name: "Ontbijt", icon: "+" },
-    { name: "Lunch", icon: "+" },
-    { name: "Avondeten", icon: "+" },
-    { name: "Snacks", icon: "+" },
-    { name: "Desserts", icon: "+" },
-    
-    // Dieet en levensstijl
+    // Dietary
     { name: "Vegetarisch", icon: "+" },
     { name: "Veganistisch", icon: "+" },
     { name: "Glutenvrij", icon: "+" },
     { name: "Lactosevrij", icon: "+" },
-    { name: "Halal", icon: "+" },
+    { name: "Koolhydraatarm", icon: "+" },
+    { name: "Suikervrij", icon: "+" },
+    { name: "Eiwitrijk", icon: "+" },
+    { name: "Caloriearm", icon: "+" },
     
-    // Eigenschappen
-    { name: "Snel", icon: "+" },
-    { name: "Makkelijk", icon: "+" },
-    { name: "Gezond", icon: "+" },
-    { name: "Budget", icon: "+" },
-    { name: "Comfort food", icon: "+" },
-    { name: "Voor kinderen", icon: "+" },
-    
-    // Ingrediënten focus
-    { name: "Pasta", icon: "+" },
-    { name: "Kip", icon: "+" },
-    { name: "Vis", icon: "+" },
-    { name: "Vlees", icon: "+" },
-    { name: "Groenten", icon: "+" },
-    
-    // Bereidingswijze
-    { name: "BBQ", icon: "+" },
+    // Cooking method
+    { name: "Pittig", icon: "+" },
     { name: "Oven", icon: "+" },
     { name: "Airfryer", icon: "+" },
-    { name: "Wok", icon: "+" }
+    { name: "BBQ", icon: "+" },
+    { name: "Stomen", icon: "+" },
+    { name: "Wokken", icon: "+" },
+    { name: "Slowcooker", icon: "+" },
+    { name: "Eenpansgerecht", icon: "+" },
+    
+    // Meal prep & time
+    { name: "Meal prep", icon: "+" },
+    { name: "Snelle bereiding", icon: "+" },
+    { name: "Geen koken nodig", icon: "+" },
+    { name: "< 15 minuten", icon: "+" },
+    { name: "< 30 minuten", icon: "+" },
+    
+    // Difficulty
+    { name: "Makkelijk", icon: "+" },
+    { name: "Gemiddeld", icon: "+" },
+    { name: "Uitdagend", icon: "+" },
+    
+    // Audience & occasion
+    { name: "Kindvriendelijk", icon: "+" },
+    { name: "Feestelijk koken", icon: "+" },
+    { name: "Budgetvriendelijk", icon: "+" }
 ];
 
 // Selected tags storage

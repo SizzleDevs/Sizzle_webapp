@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('recipe-title').textContent = "Kon het recept niet laden";
     }
 
-    // AI Chat Mock
+    // AI Chat functionality
     const sendBtn = document.getElementById('ai-send');
     const input = document.getElementById('ai-input');
     const messages = document.getElementById('ai-messages');
