@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = 'https://sizzle-backend-9mad.onrender.com';
+const API_BASE_URL = 'https://sizzle-backend-9mad.onrender.com:5000';
 
 // API Endpoints
 const API = {
