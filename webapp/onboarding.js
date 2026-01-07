@@ -130,7 +130,7 @@ function setupNavigation() {
         console.log('User data collected:', userData);
         
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/auth/register', {
+            const response = await fetch(window.API.REGISTER, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -23,14 +23,38 @@ function createRecipeCard(recipe) {
 }
 
 // Global function for favorite toggle
-window.toggleFavorite = function(element, id) {
+window.toggleFavorite = async function(element, id) {
     const icon = element.querySelector('.material-symbols-rounded');
-    if (!icon.classList.contains('favorited')) {
-        icon.classList.add('favorited');
-        console.log(`Added ${id} to favorites`);
-    } else {
-        icon.classList.remove('favorited');
-        console.log(`Removed ${id} from favorites`);
+    const isCurrentlyFavorite = icon.classList.contains('favorited');
+    const method = isCurrentlyFavorite ? 'DELETE' : 'POST';
+    const token = localStorage.getItem('authToken');
+
+    try {
+        const response = await fetch(window.API.FAVORITE_TOGGLE(id), {
+            method: method,
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+            icon.classList.toggle('favorited');
+            // If removed from favorites on favorites page, remove card from view
+            if (isCurrentlyFavorite && window.location.pathname.includes('favorites.html')) {
+                const card = element.closest('.recipe-card');
+                if (card) {
+                    card.remove();
+                    // Check if no favorites left
+                    const favoritesContainer = document.getElementById('favorites-container');
+                    if (favoritesContainer && favoritesContainer.children.length === 0) {
+                        favoritesContainer.innerHTML = '<p class="no-favorites">Nog geen favorieten. Voeg recepten toe door op het hartje te klikken!</p>';
+                    }
+                }
+            }
+        } else {
+            alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
+        }
+    } catch (error) {
+        console.error('Error updating favorites:', error);
+        alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
     }
 };
 
@@ -45,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('authToken');
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/favorieten', {
+        const response = await fetch(window.API.FAVORITES, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -57,6 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 favoritesContainer.innerHTML = '<p class="no-favorites">Nog geen favorieten. Voeg recepten toe door op het hartje te klikken!</p>';
             } else {
                 favoriteRecipes.forEach(recipe => {
+                    recipe.isFavorite = true;
                     favoritesContainer.appendChild(createRecipeCard(recipe));
                 });
             }

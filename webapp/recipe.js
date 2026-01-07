@@ -623,7 +623,7 @@ async function setupFavoriteButton(recipeId) {
 
     const token = localStorage.getItem('authToken');
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/favorieten', {
+        const response = await fetch(window.API.FAVORITES, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -645,7 +645,7 @@ async function setupFavoriteButton(recipeId) {
         const method = isCurrentlyFavorite ? 'DELETE' : 'POST';
 
         try {
-            const response = await fetch(`http://127.0.0.1:5000/api/favorieten/${recipeId}`, {
+            const response = await fetch(window.API.FAVORITE_TOGGLE(recipeId), {
                 method: method,
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -666,7 +666,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const id = getRecipeId();
     
     try {
-        const response = await fetch(`http://127.0.0.1:5000/api/recepten/${id}`);
+        const response = await fetch(window.API.RECIPE_DETAIL(id));
         if (response.ok) {
             const recipe = await response.json();
             renderRecipe(recipe);
@@ -685,15 +685,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching recipe:', error);
         document.getElementById('recipe-title').textContent = "Kon het recept niet laden";
     }
-
-    /*
-       Implementation according to API documentation:
-       
-       // Fetch recipe details
-       fetch(`/api/recepten/${id}`)
-           .then(res => res.json())
-           .then(data => renderRecipe(data));
-    */
 
     // AI Chat Mock
     const sendBtn = document.getElementById('ai-send');
@@ -756,7 +747,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const recipeId = getRecipeId();
         const token = localStorage.getItem('authToken');
 
-        fetch(`http://127.0.0.1:5000/api/recepten/${recipeId}/ask`, {
+        fetch(window.API.RECIPE_ASK(recipeId), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

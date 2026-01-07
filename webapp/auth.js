@@ -18,7 +18,7 @@ window.storeUserData = async function(token, username) {
     localStorage.setItem('username', username);
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/auth/me', {
+        const response = await fetch(window.API.ME, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

@@ -38,7 +38,11 @@ window.toggleFavorite = async function(element, id) {
     const token = localStorage.getItem('authToken');
 
     try {
+<<<<<<< HEAD
         const response = await fetch(`http://127.0.0.1:5000/api/favorieten${id}`, {
+=======
+        const response = await fetch(window.API.FAVORITE_TOGGLE(id), {
+>>>>>>> 78ad7050e6688b5c04bceea10a2709e950844201
             method: method,
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -87,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (isLoggedIn()) {
         const token = localStorage.getItem('authToken');
         try {
-            const favoritesResponse = await fetch('http://127.0.0.1:5000/api/favorieten', {
+            const favoritesResponse = await fetch(window.API.FAVORITES, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (favoritesResponse.ok) {
@@ -100,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/aanbevelingen');
+        const response = await fetch(window.API.RECOMMENDATIONS);
         if (response.ok) {
             const recommendations = await response.json();
             contentArea.appendChild(renderSection('Voor jou', recommendations.voorkeur, 'jou'));

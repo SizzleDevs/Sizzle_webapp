@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const token = localStorage.getItem('authToken');
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/auth/me', {
+        const response = await fetch(window.API.ME, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -34,7 +34,11 @@ function initializeUI() {
     document.getElementById('username').setAttribute('readonly', '');
     document.getElementById('name').setAttribute('readonly', '');
 
-    document.getElementById('edit-username-btn').addEventListener('click', toggleEditUsername);
+    // Username editing is not supported by the API, so hide/disable the button
+    const editUsernameBtn = document.getElementById('edit-username-btn');
+    if (editUsernameBtn) {
+        editUsernameBtn.style.display = 'none';
+    }
     document.getElementById('edit-name-btn').addEventListener('click', toggleEditName);
     document.querySelector('.primary-btn[onclick="saveNewPassword()"]')?.addEventListener('click', saveNewPassword);
     document.querySelector('.secondary-btn[onclick="clearPasswordForm()"]')?.addEventListener('click', clearPasswordForm);
@@ -87,54 +91,6 @@ function initializeTabs() {
     tabContents.forEach(c => c.classList.add('active'));
 } 
 
-function toggleEditUsername() {
-    const usernameInput = document.getElementById('username');
-    const editBtn = document.getElementById('edit-username-btn');
-    
-    if (usernameInput.hasAttribute('readonly')) {
-        usernameInput.removeAttribute('readonly');
-        editBtn.textContent = 'Opslaan';
-        usernameInput.focus();
-    } else {
-        saveUsername();
-    }
-}
-
-async function saveUsername() {
-    const usernameInput = document.getElementById('username');
-    const editBtn = document.getElementById('edit-username-btn');
-    const newUsername = usernameInput.value.trim();
-
-    if (newUsername) {
-        const token = localStorage.getItem('authToken');
-        try {
-            const response = await fetch('http://127.0.0.1:5000/api/auth/me', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ username: newUsername })
-            });
-
-            if (response.ok) {
-                editBtn.textContent = 'Bewerk';
-                usernameInput.setAttribute('readonly', '');
-                alert('Gebruikersnaam succesvol gewijzigd!');
-            } else {
-                const error = await response.json();
-                alert(`Opslaan van gebruikersnaam mislukt: ${error.message}`);
-            }
-        } catch (error) {
-            console.error('Save username error:', error);
-            alert('Er is een fout opgetreden bij het opslaan van de gebruikersnaam.');
-        }
-    } else {
-        alert('Gebruikersnaam mag niet leeg zijn.');
-        usernameInput.focus();
-    }
-}
-
 function toggleEditName() {
     const nameInput = document.getElementById('name');
     const editBtn = document.getElementById('edit-name-btn');
@@ -156,7 +112,7 @@ async function saveName() {
     if (newName) {
         const token = localStorage.getItem('authToken');
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/auth/me', {
+            const response = await fetch(window.API.ME, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -168,6 +124,7 @@ async function saveName() {
             if (response.ok) {
                 editBtn.textContent = 'Bewerk';
                 nameInput.setAttribute('readonly', '');
+                localStorage.setItem('fullname', newName);
                 alert('Naam succesvol gewijzigd!');
             } else {
                 const error = await response.json();
@@ -223,7 +180,7 @@ async function saveNewPassword() {
     const token = localStorage.getItem('authToken');
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/auth/me', {
+        const response = await fetch(window.API.ME, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -252,7 +209,7 @@ async function deleteAccount() {
             const token = localStorage.getItem('authToken');
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/auth/me', {
+                const response = await fetch(window.API.ME, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

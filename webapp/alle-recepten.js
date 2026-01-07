@@ -39,7 +39,7 @@ window.toggleFavorite = async function(element, id) {
     const token = localStorage.getItem('authToken');
 
     try {
-        const response = await fetch(`http://127.0.0.1:5000/api/favorieten/${id}`, {
+        const response = await fetch(window.API.FAVORITE_TOGGLE(id), {
             method: method,
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -141,12 +141,12 @@ function getURLParameters() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const recipesResponse = await fetch('http://127.0.0.1:5000/api/recepten');
+        const recipesResponse = await fetch(window.API.RECIPES);
         recipes = await recipesResponse.json();
 
         if (isLoggedIn()) {
             const token = localStorage.getItem('authToken');
-            const favoritesResponse = await fetch('http://127.0.0.1:5000/api/favorieten', {
+            const favoritesResponse = await fetch(window.API.FAVORITES, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (favoritesResponse.ok) {
