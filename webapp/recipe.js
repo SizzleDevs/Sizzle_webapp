@@ -76,13 +76,22 @@ function renderRecipe(recipe) {
         recipe.stappen.forEach((step, index) => {
             const stepDiv = document.createElement('div');
             stepDiv.className = 'step-card';
+            
+            // Debug logging
+            console.log('Step object:', step);
+            console.log('stapNummer:', step.stapNummer);
+            console.log('duur:', step.duur);
+            
+            const stepNumber = step.stapNummer || (index + 1);
+            const stepDuration = step.duur || 0;
+            
             stepDiv.innerHTML = `
                 <div class="step-header">
                     <div class="checkbox-wrapper" onclick="toggleCheckbox(this)">
                         <div class="custom-checkbox unchecked"><span class="material-symbols-rounded">check</span></div>
-                        <span>Stap ${step.stapNummer}</span>
+                        <span>Stap ${stepNumber}</span>
                     </div>
-                    <span class="step-time">${step.duur} min <span class="material-symbols-rounded" style="font-size: 1rem; vertical-align: text-bottom;">timer</span></span>
+                    <span class="step-time">${stepDuration} min <span class="material-symbols-rounded" style="font-size: 1rem; vertical-align: text-bottom;">timer</span></span>
                 </div>
                 <p>${step.beschrijving}</p>
             `;
@@ -161,13 +170,13 @@ function cookmodeRenderStep(idx) {
             `;
         } else {
             // Render the actual step.
-            const sanitizedDesc = sanitizeStepDescription(step.beschrijving, ingredients);
+            const descriptiveText = step.beschrijving;
             const stepNumberLabel = `Stap ${step.stapNummer} van ${steps.length}`;
             anim.innerHTML = `
                 <div class="cookmode-step-label">${stepNumberLabel}</div>
                 <div class="cookmode-step-main">
                     <div class="cookmode-step-time"><span class="material-symbols-rounded">timer</span> ${step.duur} min</div>
-                    <div class="cookmode-step-desc">${sanitizedDesc}</div>
+                    <div class="cookmode-step-desc">${descriptiveText}</div>
                 </div>
             `;
         }
@@ -233,30 +242,6 @@ function cookmodeRenderStep(idx) {
         // For accessibility, update aria-hidden if desired
         indicatorsEl.setAttribute('aria-hidden', 'false');
     }
-}
-
-// Helper: escape regex special chars for ingredient names
-function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-// Remove ingredient names from step descriptions to avoid duplication in cookmode
-function sanitizeStepDescription(description, ingredients) {
-    if (!description) return '';
-    let out = description;
-    if (ingredients && Array.isArray(ingredients)) {
-        ingredients.forEach(ing => {
-            if (!ing || !ing.naam) return;
-            const name = ing.naam.trim();
-            if (!name) return;
-            const re = new RegExp('\\b' + escapeRegExp(name) + '\\b', 'gi');
-            out = out.replace(re, '');
-        });
-    }
-    // Collapse multiple spaces and clean up stray punctuation
-    out = out.replace(/\s{2,}/g, ' ').trim();
-    out = out.replace(/\s([,.;:!])/g, '$1');
-    return out;
 }
 
 function openCookmode() {
@@ -721,6 +706,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         messages.appendChild(userMsg);
 
         // If there's context, append it inline next to the user message (small, italic, low opacity)
+        let contextToSend = '';
         if (hasContext && contextBoxText) {
             const contextSpan = document.createElement('span');
             contextSpan.classList.add('ai-message-context');
@@ -729,8 +715,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             userMsg.appendChild(contextSpan);
 
-            // Clear the context box above input
+            // Prepare context to send in API call (send the full selected text, not truncated display)
+            contextToSend = currentContextText || '';
+            // Clear the context box above input and reset stored context
             contextBoxInput.classList.add('hidden');
+            currentContextText = '';
         }
         input.value = '';
         
@@ -747,13 +736,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const recipeId = getRecipeId();
         const token = localStorage.getItem('authToken');
 
+        // If we have context, inject it into the question using a simple prompt template
+        let engineeredQuestion = text;
+        if (contextToSend && contextToSend.trim()) {
+            engineeredQuestion = `Context:\n${contextToSend}\n\nQuestion:\n${text}`;
+        }
+
         fetch(window.API.RECIPE_ASK(recipeId), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ question: text })
+            body: JSON.stringify({ question: engineeredQuestion })
         })
         .then(res => {
             if (!res.ok) {
@@ -765,10 +760,73 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Remove loading indicator
             loadingMsg.remove();
 
-            // AI Response
+            // Robustly extract the answer text. API responses vary:
+            // - sometimes a plain string is returned
+            // - sometimes an object with keys like `answer`, `response`, `text`, `message` is returned
+            // - sometimes those fields themselves contain JSON strings
+            let answerText = '';
+
+            try {
+                // If backend returned a raw JSON string, try parse it first
+                if (data == null) {
+                    answerText = '';
+                } else if (typeof data === 'string') {
+                    // Try parse JSON string into object
+                    try {
+                        const parsed = JSON.parse(data);
+                        data = parsed;
+                    } catch (e) {
+                        // Not JSON, use raw string
+                        answerText = data;
+                    }
+                }
+
+                // If data is an object, look for common fields
+                if (!answerText && typeof data === 'object') {
+                    const keys = ['answer', 'response', 'text', 'message', 'output', 'content'];
+                    let found = false;
+                    for (const k of keys) {
+                        if (typeof data[k] !== 'undefined') {
+                            let val = data[k];
+
+                            // If the value is an object, prefer nested `answer`/`response` or stringify
+                            if (typeof val === 'object' && val !== null) {
+                                val = val.answer || val.response || val.text || JSON.stringify(val);
+                            }
+
+                            // If the value is a JSON string, try to parse it
+                            if (typeof val === 'string') {
+                                try {
+                                    const nested = JSON.parse(val);
+                                    if (typeof nested === 'string') {
+                                        val = nested;
+                                    } else if (nested && typeof nested === 'object') {
+                                        val = nested.answer || nested.response || nested.text || JSON.stringify(nested);
+                                    }
+                                } catch (e) {
+                                    // not JSON, keep string
+                                }
+                            }
+
+                            answerText = String(val);
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        // No known keys found; fallback to stringify whole object
+                        try { answerText = JSON.stringify(data); } catch (e) { answerText = String(data); }
+                    }
+                }
+            } catch (e) {
+                console.error('Error extracting AI answer:', e);
+                answerText = '';
+            }
+
             const aiMsg = document.createElement('p');
             aiMsg.classList.add('message', 'ai');
-            aiMsg.textContent = data.answer;
+            aiMsg.textContent = answerText;
             messages.appendChild(aiMsg);
             messages.scrollTop = messages.scrollHeight;
         })

@@ -81,6 +81,25 @@ function renderSection(title, recipesList, highlightWord = '') {
     return section;
 }
 
+function getTimeBasedGreetingAndPrompt(hour) {
+    // Returns appropriate Dutch greeting and question based on local hour
+    if (hour >= 5 && hour < 12) {
+        return { greeting: 'Goedemorgen', prompt: 'Wat wordt het vandaag' };
+    } else if (hour >= 12 && hour < 18) {
+        return { greeting: 'Goedemiddag', prompt: 'Wat wordt het vanavond' };
+    } else {
+        return { greeting: 'Goedenavond', prompt: 'Wat wordt het vanavond' };
+    }
+}
+
+function updateHeroGreeting(name) {
+    const hero = document.getElementById('hero-heading');
+    if (!hero) return;
+    const hour = new Date().getHours();
+    const { greeting, prompt } = getTimeBasedGreetingAndPrompt(hour);
+    hero.innerHTML = `${greeting}, <span id="user-display-name" class="highlight">${name}</span><br>${prompt}?`;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const contentArea = document.getElementById('content-area');
 
@@ -151,18 +170,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Update username display
+    // Update username display and hero greeting
     const userDisplayNameElement = document.getElementById('user-display-name');
     if (userDisplayNameElement) {
+        let displayName = 'Gebruiker';
         if (window.isLoggedIn()) {
             const fullname = window.getFullname();
-            if (fullname) {
-                userDisplayNameElement.textContent = fullname;
-            } else {
-                userDisplayNameElement.textContent = 'Gebruiker';
-            }
-        } else {
-            userDisplayNameElement.textContent = 'Gebruiker';
+            if (fullname) displayName = fullname;
         }
+        userDisplayNameElement.textContent = displayName;
+        // Update hero greeting using the name we just determined
+        updateHeroGreeting(displayName);
     }
 });
