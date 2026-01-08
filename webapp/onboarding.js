@@ -63,10 +63,8 @@ function renderTags() {
     availableTags.forEach(tag => {
         const tagElement = document.createElement('div');
         tagElement.className = 'tag';
-        // render with no icon; the icon will be shown only when selected
         tagElement.innerHTML = `
             <span class="tag-name">${tag.name}</span>
-            <span class="tag-icon"></span>
         `;
         
         tagElement.addEventListener('click', () => toggleTag(tagElement, tag.name));
@@ -80,10 +78,8 @@ function toggleTag(element, tagName) {
     
     if (element.classList.contains('selected')) {
         selectedTags.push(tagName);
-        element.querySelector('.tag-icon').textContent = '×';
     } else {
         selectedTags = selectedTags.filter(t => t !== tagName);
-        element.querySelector('.tag-icon').textContent = '';
     }
 }
 

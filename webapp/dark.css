@@ -309,8 +309,8 @@
 html[data-theme="dark"] {
     --bg-color: #1A1A1A;
     --text-color: #E0E0E0;
-    --accent-color: #766212; /* Gold/Orange */
-    --icon-color: #FFD60A;
+    --accent-color: #9f820e; /* Gold/Orange */
+    --icon-color: #9f820e;
     --card-bg: #222222;
     --border-color: #444444;
     --border-radius: 12px;

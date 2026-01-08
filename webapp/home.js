@@ -97,7 +97,12 @@ function updateHeroGreeting(name) {
     if (!hero) return;
     const hour = new Date().getHours();
     const { greeting, prompt } = getTimeBasedGreetingAndPrompt(hour);
-    hero.innerHTML = `${greeting}, <span id="user-display-name" class="highlight">${name}</span><br>${prompt}?`;
+    const includeName = window.isLoggedIn() && name;
+    if (includeName) {
+        hero.innerHTML = `${greeting}, <span id="user-display-name" class="highlight">${name}</span><br>${prompt}?`;
+    } else {
+        hero.innerHTML = `${greeting}<br>${prompt}?`;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -171,15 +176,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Update username display and hero greeting
+    let displayName = '';
+    if (window.isLoggedIn()) {
+        const fullname = window.getFullname();
+        if (fullname) displayName = fullname;
+    }
     const userDisplayNameElement = document.getElementById('user-display-name');
     if (userDisplayNameElement) {
-        let displayName = 'Gebruiker';
-        if (window.isLoggedIn()) {
-            const fullname = window.getFullname();
-            if (fullname) displayName = fullname;
-        }
-        userDisplayNameElement.textContent = displayName;
-        // Update hero greeting using the name we just determined
-        updateHeroGreeting(displayName);
+        userDisplayNameElement.textContent = displayName || 'Gebruiker';
     }
+    // Always update hero greeting; name will only be shown when logged in
+    updateHeroGreeting(displayName);
 });
