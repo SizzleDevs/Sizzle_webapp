@@ -5,41 +5,95 @@ function getRecipeId() {
     return id; // Default to 1 if not found
 }
 
-// Constrain sidebar so it doesn't scroll past the last step
-function constrainSidebar() {
+// AI Box Positioning Logic
+function updateAIBoxPosition() {
+    const aiBox = document.querySelector('.ai-chat-box');
+    const ingredients = document.querySelector('.ingredients-box');
+    const container = document.querySelector('.recipe-detail-container');
     const sidebar = document.querySelector('.recipe-sidebar');
-    const stepsContainer = document.querySelector('.steps-container');
+    const stepCards = document.querySelectorAll('.step-card');
     
-    if (!sidebar || !stepsContainer) return;
-    
-    const stepsRect = stepsContainer.getBoundingClientRect();
-    const sidebarRect = sidebar.getBoundingClientRect();
-    const stickyTop = 55; // matches CSS sticky top value
-    
-    // Calculate the bottom of the steps container relative to viewport
-    const stepsBottom = stepsRect.bottom;
-    
-    // Calculate max height so sidebar bottom aligns with steps bottom
-    const availableHeight = stepsBottom - stickyTop;
-    
-    if (availableHeight > 0) {
-        sidebar.style.maxHeight = `${Math.max(availableHeight, 200)}px`;
-    } else {
-        // Steps are above viewport, hide or minimize sidebar
-        sidebar.style.maxHeight = '200px';
+    if (!aiBox || !ingredients || !container || !sidebar) return;
+
+    // Reset styles on mobile
+    if (window.innerWidth <= 900) {
+        aiBox.style.marginTop = '';
+        aiBox.style.top = '';
+        aiBox.style.position = '';
+        aiBox.style.width = '';
+        sidebar.style.height = ''; 
+        return;
+    }
+
+    // --- 1. Top Boundary Logic (Initial Alignment) ---
+    // Calculate margin-top so the box starts aligned with ingredients
+    const containerTop = container.getBoundingClientRect().top;
+    const ingredientsTop = ingredients.getBoundingClientRect().top;
+    const offset = Math.max(0, ingredientsTop - containerTop);
+    aiBox.style.marginTop = `${offset}px`;
+
+    // --- 2. Calculate Sticky Target (Vertical Centering) ---
+    const boxHeight = aiBox.offsetHeight || 560;
+    const viewportHeight = window.innerHeight;
+    let targetTop = (viewportHeight - boxHeight) / 2;
+    if (targetTop < 20) targetTop = 20; // Minimum clearance
+
+    // --- 3. Strict Bottom Clamping Logic ---
+    // We must manually clamp position because 'sticky' can sometimes overshoot 
+    // depending on container heights or margin interactions.
+    if (stepCards.length > 0) {
+        const lastStep = stepCards[stepCards.length - 1];
+        const lastStepRect = lastStep.getBoundingClientRect();
+        
+        // Calculate where the AI box WOULD be if it were sticky at targetTop
+        // (The 'ideal' sticky bottom position in the viewport)
+        const stickyBottomLimit = targetTop + boxHeight;
+        
+        // If the bottom of the last step (in viewport space) is HIGHER than 
+        // where we want the AI box bottom to be, we must STOP scrolling.
+        // i.e., the content has scrolled up past the stop point.
+        if (lastStepRect.bottom <= stickyBottomLimit) {
+             // SWITCH TO ABSOLUTE (CLAMPED)
+             aiBox.style.position = 'absolute';
+             aiBox.style.width = '100%'; // Maintain width in absolute
+
+             // Calculate 'top' relative to the sidebar container
+             // Formula: TotalDistance - BoxHeight - MarginTopOffset
+             // TotalDistance = Top of sidebar to Bottom of last step
+             
+             // Get sidebar absolute top (relative to document to be safe against scroll)
+             const sidebarRect = sidebar.getBoundingClientRect();
+             const scrollY = window.scrollY;
+             const sidebarTopAbs = sidebarRect.top + scrollY;
+             const lastStepBottomAbs = lastStepRect.bottom + scrollY;
+             
+             // The absolute pixel value where the box border-top should physically sit
+             // to make the border-bottom align with lastStepBottomAbs
+             const absoluteStopTop = lastStepBottomAbs - sidebarTopAbs - boxHeight - offset;
+             
+             aiBox.style.top = `${absoluteStopTop}px`;
+        } else {
+             // NORMAL STICKY BEHAVIOR
+             aiBox.style.position = 'sticky';
+             aiBox.style.top = `${targetTop}px`;
+             aiBox.style.width = ''; // Reset width
+        }
     }
 }
 
 // Setup scroll and resize listeners for sidebar constraint
 function setupSidebarConstraint() {
-    // Initial constraint
-    constrainSidebar();
+    // Initial calculation
+    updateAIBoxPosition();
     
-    // Update on scroll
-    window.addEventListener('scroll', constrainSidebar, { passive: true });
+    // Update on scroll (Crucial for the clamp check)
+    window.addEventListener('scroll', updateAIBoxPosition, { passive: true });
     
     // Update on resize
-    window.addEventListener('resize', constrainSidebar, { passive: true });
+    window.addEventListener('resize', updateAIBoxPosition, { passive: true });
+    
+    // Update on load
+    window.addEventListener('load', updateAIBoxPosition);
 }
 
 function renderRecipe(recipe) {
@@ -104,6 +158,9 @@ function renderRecipe(recipe) {
     // Store steps and ingredients globally for cookmode
     window._sizzleRecipeSteps = recipe.stappen;
     window._sizzleRecipeIngredients = recipe.ingrediënten;
+
+    // Recalculate sticky positioning now that content is populated
+    requestAnimationFrame(updateAIBoxPosition);
 }
 
 // --- Cookmode Step-by-Step Overlay ---

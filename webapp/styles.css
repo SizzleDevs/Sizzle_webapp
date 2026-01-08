@@ -774,13 +774,9 @@ cent color */
 }
 
 .recipe-sidebar {
-    /* Right side */
-    position: sticky;
-    top: 55px;
-    height: fit-content;
-    align-self: flex-start;
-    max-height: calc(100vh - 75px);
-    transition: max-height 0.1s ease-out;
+    /* Right side container */
+    position: relative;
+    height: auto;
 }
 
 .recipe-header {
@@ -961,6 +957,11 @@ cent color */
     display: flex;
     flex-direction: column;
     box-shadow: none; /* removed shadow around AI box */
+    
+    /* Sticky behavior inside the sidebar track */
+    position: sticky;
+    top: 20px; /* Default fallback; overridden by JS */
+    z-index: 10;
 }
 
 /* Robot icon shown when there are no messages yet */
@@ -1700,6 +1701,10 @@ cent color */
     .ai-chat-box {
         height: auto;
         min-height: 400px;
+    }
+
+    .ai-selection-btn {
+        display: none !important;
     }
 }
 
