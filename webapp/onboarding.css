@@ -218,18 +218,7 @@ h1 {
     background-color: var(--accent-color);
 }
 
-.tag .tag-icon {
-    /* hidden by default, will show only when selected */
-    display: none;
-    font-size: 0.95rem;
-    color: var(--text-color);
-    margin-left: var(--spacing-xs);
-    line-height: 1;
-}
 
-.tag.selected .tag-icon {
-    display: inline-block; /* show the X without a circle */
-}
 
 /* Footer */
 .step-footer {
