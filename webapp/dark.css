@@ -309,7 +309,7 @@
 html[data-theme="dark"] {
     --bg-color: #1A1A1A;
     --text-color: #E0E0E0;
-    --accent-color: #E6B800; /* Gold/Orange */
+    --accent-color: #766212; /* Gold/Orange */
     --icon-color: #FFD60A;
     --card-bg: #222222;
     --border-color: #444444;
@@ -457,6 +457,7 @@ header {
 .search-button {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: #FFFFFF;
     padding: 8px 14px; /* slightly reduced internal padding to control width when height is fixed */
     height: 36px; /* match the ai-send-btn height for consistent alignment */
     font-weight: bold;
@@ -940,6 +941,7 @@ cent color */
 .discover-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: #FFFFFF;
     padding: var(--spacing-sm) var(--spacing-xl);
     font-weight: bold;
     cursor: pointer;
@@ -1080,6 +1082,7 @@ cent color */
 .edit-username-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: #FFFFFF;
     padding: 10px 16px;
     font-weight: bold;
     cursor: pointer;
@@ -1101,6 +1104,7 @@ cent color */
 .edit-password-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: #FFFFFF;
     padding: 10px 16px;
     font-weight: bold;
     cursor: pointer;
@@ -1126,6 +1130,7 @@ cent color */
 .change-password-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: #FFFFFF;
     padding: var(--spacing-sm) var(--spacing-md);
     font-weight: bold;
     cursor: pointer;
@@ -1165,6 +1170,7 @@ cent color */
 .change-password-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: #FFFFFF;
     padding: var(--spacing-sm) var(--spacing-md);
     font-weight: bold;
     cursor: pointer;
@@ -1209,6 +1215,7 @@ cent color */
 .primary-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: #FFFFFF;
     padding: var(--spacing-sm) var(--container-padding);
     font-weight: bold;
     cursor: pointer;
@@ -1366,6 +1373,7 @@ cent color */
     position: absolute;
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: #FFFFFF;
     padding: 8px 14px;
     font-weight: bold;
     cursor: pointer;
