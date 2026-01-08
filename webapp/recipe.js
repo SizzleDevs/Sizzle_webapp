@@ -473,10 +473,31 @@ function setupCookmode() {
         });
     }
     
-    // ESC closes
+    // ESC closes and arrow-key navigation for cookmode when overlay is open
     document.addEventListener('keydown', (e) => {
-        if (overlay && !overlay.classList.contains('hidden') && e.key === 'Escape') {
+        // Only handle when overlay is open
+        if (!overlay || overlay.classList.contains('hidden')) return;
+        // Ignore key combos with modifiers to avoid interfering with browser/app shortcuts
+        if (e.altKey || e.ctrlKey || e.metaKey) return;
+        // Ignore when focus is in an input/textarea or contenteditable region
+        const active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+
+        if (e.key === 'Escape') {
             closeCookmode();
+            return;
+        }
+
+        // Arrow keys: right/down -> next, left/up -> previous
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            cookmodeNext();
+            return;
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            cookmodePrev();
+            return;
         }
     });
     
