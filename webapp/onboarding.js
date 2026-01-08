@@ -93,12 +93,27 @@ function setupNavigation() {
     const step2 = document.getElementById('step-2');
     const toStep2Btn = document.getElementById('to-step-2');
     const finishBtn = document.getElementById('finish-btn');
+    const passwordInput = document.getElementById('password');
+    const passwordWrapper = passwordInput.parentElement;
+    
+    // Real-time password validation
+    passwordInput.addEventListener('input', () => {
+        if (passwordInput.value.length < 8 && passwordInput.value.length > 0) {
+            passwordWrapper.classList.add('invalid');
+        } else {
+            passwordWrapper.classList.remove('invalid');
+        }
+    });
     
     toStep2Btn.addEventListener('click', () => {
         // Validate form
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         const name = document.getElementById('name').value;
+        const passwordWrapper = document.getElementById('password').parentElement;
+        
+        // Reset validation state
+        passwordWrapper.classList.remove('invalid');
         
         if (!username || !password || !name) {
             alert('Vul alle velden in om door te gaan.');
@@ -106,6 +121,7 @@ function setupNavigation() {
         }
         
         if (password.length < 8) {
+            passwordWrapper.classList.add('invalid');
             alert('Wachtwoord moet minimaal 8 karakters bevatten.');
             return;
         }

@@ -38,4 +38,10 @@
     window.getPreferredTheme = () => localStorage.getItem('theme') || 'light';
 })();
 
+// Network connectivity detection
+window.addEventListener('offline', function() {
+    // Redirect to 404.html when user goes offline
+    window.location.href = '404.html';
+});
+
 
