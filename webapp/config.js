@@ -47,6 +47,12 @@ async function apiRequest(url, options = {}) {
         }
     }
     
+    // Handle 404 errors - redirect to 404 page
+    if (response.status === 404) {
+        window.location.href = '404.html';
+        throw new Error('Resource not found');
+    }
+    
     return response;
 }
 
