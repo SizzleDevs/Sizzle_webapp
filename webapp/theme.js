@@ -38,71 +38,56 @@
     window.getPreferredTheme = () => localStorage.getItem('theme') || 'light';
 })();
 
-// Create loading overlay
-function createLoadingOverlay() {
-    const overlay = document.createElement('div');
-    overlay.className = 'loading-overlay';
-    overlay.innerHTML = `
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <p class="loading-text">Laden...</p>
-        </div>
-    `;
-    document.body.appendChild(overlay);
-    return overlay;
-}
-
-// Show loading screen
-function showLoading() {
-    let overlay = document.querySelector('.loading-overlay');
-    if (!overlay) {
-        overlay = createLoadingOverlay();
-    }
-    overlay.classList.add('show');
-}
-
-// Hide loading screen
-function hideLoading() {
-    const overlay = document.querySelector('.loading-overlay');
-    if (overlay) {
-        overlay.classList.remove('show');
+// Button loading functionality
+function showButtonLoading(button) {
+    if (button) {
+        button.classList.add('loading');
     }
 }
 
-// Export functions for use in other scripts
-window.showLoading = showLoading;
-window.hideLoading = hideLoading;
+function hideButtonLoading(button) {
+    if (button) {
+        button.classList.remove('loading');
+    }
+}
 
-// Add loading screen to all button clicks
+// Add loading state to buttons on click
 document.addEventListener('DOMContentLoaded', function() {
-    // Create the loading overlay
-    createLoadingOverlay();
-    
-    // Add click listeners to all buttons
     document.addEventListener('click', function(event) {
         const target = event.target;
-        
-        // Check if clicked element is a button or has button-like behavior
-        if (target.tagName === 'BUTTON' || 
-            target.closest('button') || 
-            target.classList.contains('filter-tag') ||
-            target.classList.contains('primary-btn') ||
-            target.classList.contains('secondary-btn') ||
-            target.classList.contains('discover-btn') ||
-            target.classList.contains('ai-send-btn') ||
-            target.classList.contains('search-button') ||
-            target.closest('.tag') ||
-            target.getAttribute('onclick')) {
-            
-            showLoading();
-            
-            // Hide loading after a short delay (you can adjust this based on your needs)
+        let button = null;
+
+        // Find the button element that was clicked
+        if (target.tagName === 'BUTTON') {
+            button = target;
+        } else if (target.closest('button')) {
+            button = target.closest('button');
+        } else if (target.classList.contains('filter-tag') ||
+                   target.classList.contains('primary-btn') ||
+                   target.classList.contains('secondary-btn') ||
+                   target.classList.contains('discover-btn') ||
+                   target.classList.contains('ai-send-btn') ||
+                   target.classList.contains('search-button')) {
+            button = target;
+        } else if (target.closest('.tag')) {
+            button = target.closest('.tag');
+        }
+
+        // Add loading state to the button
+        if (button) {
+            showButtonLoading(button);
+
+            // Remove loading state after 2 seconds (adjust as needed)
             setTimeout(() => {
-                hideLoading();
-            }, 1000);
+                hideButtonLoading(button);
+            }, 2000);
         }
     });
 });
+
+// Export functions for manual control
+window.showButtonLoading = showButtonLoading;
+window.hideButtonLoading = hideButtonLoading;
 
 // Network connectivity detection
 window.addEventListener('offline', function() {
