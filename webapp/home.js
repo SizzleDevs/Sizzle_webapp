@@ -119,21 +119,6 @@ async function loadData() {
         } catch (error) {
             console.error('Error fetching favorites:', error);
         }
-
-        // If fullname isn't already stored, fetch it from /me so UI can show the proper name
-        if (!localStorage.getItem('fullname')) {
-            try {
-                const meResp = await window.apiRequest(window.API.ME);
-                if (meResp.ok) {
-                    const me = await meResp.json();
-                    if (me.name) {
-                        localStorage.setItem('fullname', me.name);
-                    }
-                }
-            } catch (err) {
-                console.error('Error fetching profile on home load:', err);
-            }
-        }
     }
 
     try {
