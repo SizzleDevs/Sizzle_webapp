@@ -44,4 +44,22 @@ window.addEventListener('offline', function() {
     window.location.href = '404.html';
 });
 
+// Handle navigation errors (404 pages)
+window.addEventListener('error', function(event) {
+    // Check if it's a resource loading error (like a missing script, image, etc.)
+    if (event.target && (event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK' || event.target.tagName === 'IMG')) {
+        // Don't redirect for missing resources, just log
+        console.warn('Resource failed to load:', event.target.src || event.target.href);
+        return;
+    }
+});
+
+// Handle unhandled promise rejections that might indicate 404 errors
+window.addEventListener('unhandledrejection', function(event) {
+    // Check if the rejection is due to a 404
+    if (event.reason && event.reason.message && event.reason.message.includes('404')) {
+        window.location.href = '404.html';
+    }
+});
+
 
