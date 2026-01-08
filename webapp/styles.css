@@ -231,7 +231,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s, opacity 0.15s;
     outline: none;
 }
@@ -240,7 +240,7 @@
 }
 .cookmode-nav-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 .cookmode-nav-btn:disabled {
     opacity: 0.5;
@@ -269,7 +269,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
     z-index: 10;
 }
@@ -278,7 +278,7 @@
 }
 .cookmode-exit-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 @keyframes cookmode-fadein {
     from { opacity: 0; }
@@ -606,7 +606,7 @@ header {
     gap: 5px;
     border-radius: calc(var(--border-radius) - 4px);
     /* shadow straight down, same width as button, reduced depth */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, box-shadow 0.1s, transform 0.1s;
 }
 
@@ -616,7 +616,7 @@ header {
 
 .search-button:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 .filters {
@@ -697,7 +697,7 @@ header {
 .recipe-card:hover {
     transform: translateY(-2px);
     /* shadow straight down, same width as card, reduced depth */
-    box-shadow: 0px 6px 0px rgba(0,0,0,0.95); /* slightly larger for cards */
+    box-shadow: 0px 6px 0px var(--border-color); /* slightly larger for cards */
 }
 
 .card-header {
@@ -1062,7 +1062,7 @@ cent color */
     cursor: pointer;
     border-radius: 8px;
     /* shadow straight down, same width as button, reduced depth */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, box-shadow 0.1s, transform 0.1s;
 }
 
@@ -1072,7 +1072,7 @@ cent color */
 
 .ai-send-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 /* Footer Button */
@@ -1094,13 +1094,13 @@ cent color */
     gap: var(--spacing-sm);
     border-radius: var(--border-radius);
     /* shadow straight down, same width as button, reduced depth */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
 .discover-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 /* Give a little more breathing room under the discover heading */
@@ -1228,7 +1228,7 @@ cent color */
     font-weight: bold;
     cursor: pointer;
     border-radius: calc(var(--border-radius) - 4px);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
@@ -1238,7 +1238,7 @@ cent color */
 
 .edit-username-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 .edit-password-btn {
@@ -1248,7 +1248,7 @@ cent color */
     font-weight: bold;
     cursor: pointer;
     border-radius: calc(var(--border-radius) - 4px);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
@@ -1258,7 +1258,7 @@ cent color */
 
 .edit-password-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 .password-group {
@@ -1275,7 +1275,7 @@ cent color */
     font-size: 0.95rem;
     margin-top: var(--spacing-sm);
     display: inline-block;
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
@@ -1285,7 +1285,7 @@ cent color */
 
 .change-password-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 .password-change-form {
@@ -1312,7 +1312,7 @@ cent color */
     font-size: 0.95rem;
     margin-top: var(--spacing-sm);
     display: inline-block;
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
@@ -1322,7 +1322,7 @@ cent color */
 
 .change-password-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 .password-error {
@@ -1352,7 +1352,7 @@ cent color */
     font-weight: bold;
     cursor: pointer;
     border-radius: calc(var(--border-radius) - 4px);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
     font-size: 1rem;
     display: inline-flex;
@@ -1366,7 +1366,7 @@ cent color */
 
 .primary-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 .secondary-btn {
@@ -1507,7 +1507,7 @@ cent color */
     font-weight: bold;
     cursor: pointer;
     border-radius: var(--border-radius);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
     font-size: 0.85rem;
     display: flex;
@@ -1524,7 +1524,7 @@ cent color */
 
 .ai-selection-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 .ai-selection-btn.hidden {
@@ -1535,7 +1535,7 @@ cent color */
 .ai-selection-btn.pressed {
     transform: translateY(2px);
     opacity: 0.95;
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
 }
 
 /* AI Context Box above input - shows selected text */
@@ -2123,7 +2123,7 @@ cent color */
     background: var(--accent-color) !important;
     color: var(--text-color) !important; /* use normal text color, not white */
     border: 1px solid var(--border-color) !important; /* visible outline like other buttons */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95) !important;
+    box-shadow: 0px 4px 0px var(--border-color) !important;
 }
 
 /* Override primary-btn for clear and theme buttons to not be yellow but keep shadow */
@@ -2138,7 +2138,7 @@ cent color */
     background: var(--card-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 .logout-btn:hover {
@@ -2146,7 +2146,7 @@ cent color */
 }
 .logout-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -2193,7 +2193,7 @@ cent color */
     font-weight: bold;
     cursor: pointer;
     border-radius: calc(var(--border-radius) - 4px);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
     font-size: 1rem;
     display: inline-flex;
@@ -2208,7 +2208,7 @@ cent color */
 
 .theme-toggle-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -2224,7 +2224,7 @@ cent color */
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
     color: var(--text-color); /* use normal text color inside active button */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
 }
 
 .theme-toggle-btn.active:hover {
@@ -2233,7 +2233,7 @@ cent color */
 
 .theme-toggle-btn.active:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 

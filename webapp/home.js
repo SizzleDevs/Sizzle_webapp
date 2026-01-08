@@ -170,7 +170,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const filterName = tag.textContent.trim();
             if (filterName !== 'Meer filters...') {
                 // Navigate to alle-recepten page with filter query
-                window.location.href = `alle-recepten.html?filter=${encodeURIComponent(filterName)}`;
+                // Preserve optional current search input
+                const searchTerm = searchInput.value.trim();
+                let url = `alle-recepten.html?filter=${encodeURIComponent(filterName)}`;
+                if (searchTerm) {
+                    url += `&search=${encodeURIComponent(searchTerm)}`;
+                }
+                window.location.href = url;
             }
         });
     });
