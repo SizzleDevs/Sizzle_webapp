@@ -39,7 +39,7 @@ window.toggleFavorite = async function(element, id) {
     const token = localStorage.getItem('authToken');
 
     try {
-        const response = await fetch(window.API.FAVORITE_TOGGLE(id), {
+        const response = await fetch(`http://127.0.0.1:5000/api/favorieten${id}`, {
             method: method,
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -91,13 +91,12 @@ function renderFilters() {
 function toggleFilter(tag, button) {
     if (selectedFilters.has(tag)) {
         selectedFilters.delete(tag);
-        if (button) button.classList.remove('active');
+        button.classList.remove('active');
     } else {
         selectedFilters.add(tag);
-        if (button) button.classList.add('active');
+        button.classList.add('active');
     }
     applyFilters();
-    updateURLParams();
 }
 
 function applyFilters() {
@@ -108,34 +107,14 @@ function applyFilters() {
         const matchesSearch = recipe.titel.toLowerCase().includes(searchInput) ||
                             recipe.tags.some(tag => tag.toLowerCase().includes(searchInput));
         
-        // Tags filter - when filters are selected, recipe must contain ALL selected tags
+        // Tags filter
         const matchesTags = selectedFilters.size === 0 || 
-                           Array.from(selectedFilters).every(filter => recipe.tags.map(t => t.toLowerCase()).includes(filter.toLowerCase()));
+                           recipe.tags.some(tag => selectedFilters.has(tag));
         
         return matchesSearch && matchesTags;
     });
     
     renderRecipes();
-}
-
-function updateURLParams() {
-    const params = new URLSearchParams();
-    if (selectedFilters.size > 0) {
-        // Encode filter values so special characters are safe in the URL
-        params.set('filter', Array.from(selectedFilters).map(encodeURIComponent).join(','));
-    }
-    const searchVal = document.getElementById('search-input').value.trim();
-    if (searchVal) params.set('search', searchVal);
-    const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
-    history.replaceState({}, '', newUrl);
-}
-
-function findFilterButton(tag) {
-    const buttons = document.querySelectorAll('#filters-container .filter-tag');
-    for (const btn of buttons) {
-        if (btn.textContent.trim() === tag) return btn;
-    }
-    return null;
 }
 
 function renderRecipes() {
@@ -150,39 +129,24 @@ function renderRecipes() {
     filteredRecipes.forEach(recipe => {
         grid.appendChild(createRecipeCard(recipe));
     });
-
-    // Make card tags clickable to toggle filters
-    document.querySelectorAll('.card-tag').forEach(el => {
-        el.style.cursor = 'pointer';
-        el.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const tag = el.textContent.trim();
-            const btn = findFilterButton(tag);
-            toggleFilter(tag, btn);
-        });
-    });
 }
 
 function getURLParameters() {
     const params = new URLSearchParams(window.location.search);
-    // Support comma-separated filters so multiple tags can be pre-selected
-    const filterParam = params.get('filter') || '';
-    // Decode each value in case the filter names were URL-encoded when set
-    const filters = filterParam ? filterParam.split(',').map(f => decodeURIComponent(f).trim()).filter(Boolean) : [];
     return {
         search: params.get('search') || '',
-        filters
+        filter: params.get('filter') || ''
     };
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const recipesResponse = await fetch(window.API.RECIPES);
+        const recipesResponse = await fetch('http://127.0.0.1:5000/api/recepten');
         recipes = await recipesResponse.json();
 
         if (isLoggedIn()) {
             const token = localStorage.getItem('authToken');
-            const favoritesResponse = await fetch(window.API.FAVORITES, {
+            const favoritesResponse = await fetch('http://127.0.0.1:5000/api/favorieten', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (favoritesResponse.ok) {
@@ -192,9 +156,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         // Get URL parameters
-        const { search, filters } = getURLParameters();
+        const { search, filter } = getURLParameters();
         
-        // Initial render of filters
+        // Initial render
         renderFilters();
         
         // Apply search parameter if provided
@@ -202,16 +166,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('search-input').value = search;
         }
         
-        // Apply filter parameters (support multiple)
-        // Match incoming filters to available tags case-insensitively so the correct
-        // filter buttons get the `.active` class applied using the canonical tag
-        if (filters && filters.length) {
-            const allTags = getAllUniqueTags();
-            filters.forEach(f => {
-                const match = allTags.find(t => t.toLowerCase() === f.toLowerCase());
-                if (match) selectedFilters.add(match);
-                else selectedFilters.add(f);
-            });
+        // Apply filter parameter if provided
+        if (filter) {
+            selectedFilters.add(filter);
             renderFilters();
         }
         
