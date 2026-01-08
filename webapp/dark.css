@@ -448,6 +448,7 @@ header {
 .search-input-wrapper input {
     flex: 1;
     border: none;
+    color: #FFFFFF;
     padding: 10px;
     font-size: 1rem;
     outline: none;
@@ -490,6 +491,7 @@ header {
 
 .filter-tag {
     border: 1px solid var(--border-color);
+    color: #FFFFFF;
     padding: var(--spacing-xs) var(--container-padding);
     border-radius: 50px; /* Pill shape */
     font-size: 0.9rem;
@@ -902,6 +904,7 @@ cent color */
     flex: 1;
     border: none;
     outline: none;
+    color: #FFFFFF;
     padding: 8px;
     background: transparent;
 }
@@ -1033,6 +1036,7 @@ cent color */
 
 .username-wrapper input {
     flex: 1;
+    color: #FFFFFF;
     max-width: 400px;
 }
 
@@ -1044,6 +1048,7 @@ cent color */
 
 .password-wrapper input {
     flex: 1;
+    color: #FFFFFF;
     max-width: 400px;
 }
 
@@ -1055,6 +1060,7 @@ cent color */
 
 .password-input-wrapper input {
     flex: 1;
+    color: #FFFFFF;
     max-width: 400px;
     padding-right: var(--section-margin);
 }
