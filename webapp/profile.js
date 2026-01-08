@@ -4,8 +4,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    const token = localStorage.getItem('authToken');
+    initializeUI();
+    initializeTabs();
+    
+    // Populate data
+    await loadProfileData();
+});
+
+async function loadProfileData() {
+    // 1. Load from local storage immediately for speed
+    const usernameInput = document.getElementById('username');
+    const nameInput = document.getElementById('name');
+    
+    const storedUsername = localStorage.getItem('username');
+    const storedName = localStorage.getItem('fullname');
+
+    if (storedUsername) usernameInput.value = storedUsername;
+    if (storedName) nameInput.value = storedName;
+
+    // 2. Fetch fresh data from API
     try {
+        const token = localStorage.getItem('authToken');
         const response = await fetch(window.API.ME, {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -14,35 +33,55 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (response.ok) {
             const profile = await response.json();
-            document.getElementById('username').value = profile.username;
-            document.getElementById('name').value = profile.name;
-        } else {
-            console.error('Failed to fetch profile');
-            if(response.status === 401) {
-                logout();
+            
+            // Update fields if distinct
+            if (profile.username) {
+                usernameInput.value = profile.username;
+                localStorage.setItem('username', profile.username);
             }
+            if (profile.name) {
+                nameInput.value = profile.name;
+                localStorage.setItem('fullname', profile.name);
+            }
+        } else if (response.status === 401) {
+            logout();
         }
     } catch (error) {
         console.error('Error fetching profile:', error);
     }
-    
-    initializeUI();
-    initializeTabs();
-});
+}
 
 function initializeUI() {
+    // Set fields to readonly initially
     document.getElementById('username').setAttribute('readonly', '');
     document.getElementById('name').setAttribute('readonly', '');
 
-    // Username editing is not supported by the API, so hide/disable the button
+    // Setup Edit Buttons
+    // Note: profile.html uses onclick="toggleEditUsername()" which we need to define globally
+    // or attach here. We attach here for cleaner code, overriding inline if necessary.
+    
     const editUsernameBtn = document.getElementById('edit-username-btn');
     if (editUsernameBtn) {
-        editUsernameBtn.style.display = 'none';
+        // Ensure it is visible
+        editUsernameBtn.style.display = 'block';
+        editUsernameBtn.onclick = toggleEditUsername; // Assign function directly
     }
-    document.getElementById('edit-name-btn').addEventListener('click', toggleEditName);
-    document.querySelector('.primary-btn[onclick="saveNewPassword()"]')?.addEventListener('click', saveNewPassword);
-    document.querySelector('.secondary-btn[onclick="clearPasswordForm()"]')?.addEventListener('click', clearPasswordForm);
-    document.getElementById('delete-account-btn')?.addEventListener('click', deleteAccount);
+
+    const editNameBtn = document.getElementById('edit-name-btn');
+    if (editNameBtn) {
+        editNameBtn.onclick = toggleEditName;
+    }
+
+    // Other listeners
+    const savePasswordBtn = document.querySelector('.primary-btn[onclick="saveNewPassword()"]');
+    if (savePasswordBtn) savePasswordBtn.onclick = saveNewPassword;
+
+    const clearPasswordBtn = document.querySelector('.secondary-btn[onclick="clearPasswordForm()"]');
+    if (clearPasswordBtn) clearPasswordBtn.onclick = clearPasswordForm;
+
+    const deleteBtn = document.getElementById('delete-account-btn');
+    if (deleteBtn) deleteBtn.addEventListener('click', deleteAccount);
+
     document.getElementById('logout-btn').addEventListener('click', () => {
         if (confirm('Weet je zeker dat je uit wilt loggen?')) {
             logout();
@@ -51,6 +90,78 @@ function initializeUI() {
 
     initializeThemeControls();
 }
+
+// Make these functions available globally for HTML onclick attributes if needed
+window.toggleEditUsername = function() {
+    const input = document.getElementById('username');
+    const btn = document.getElementById('edit-username-btn');
+    
+    if (input.hasAttribute('readonly')) {
+        input.removeAttribute('readonly');
+        input.focus();
+        btn.textContent = 'Opslaan';
+        btn.classList.add('editing');
+    } else {
+        // Here you would typically save to API
+        // For now, we just lock it back and update button
+        input.setAttribute('readonly', '');
+        btn.textContent = 'Bewerk';
+        btn.classList.remove('editing');
+        
+        // Ensure we save the new value to local storage at least
+        // In a real app, call API update endpoint here
+        localStorage.setItem('username', input.value);
+        alert('Gebruikersnaam bijgewerkt (lokaal). API update niet geïmplementeerd.');
+    }
+};
+
+window.toggleEditName = async function() {
+    const input = document.getElementById('name');
+    const btn = document.getElementById('edit-name-btn');
+
+    if (input.hasAttribute('readonly')) {
+        input.removeAttribute('readonly');
+        input.focus();
+        btn.textContent = 'Opslaan';
+        btn.classList.add('editing');
+    } else {
+        const newName = input.value.trim();
+        if (!newName) {
+            alert('Naam mag niet leeg zijn.');
+            input.focus();
+            return;
+        }
+
+        const token = localStorage.getItem('authToken');
+        try {
+            const response = await fetch(window.API.ME, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ name: newName })
+            });
+
+            if (response.ok) {
+                input.setAttribute('readonly', '');
+                btn.textContent = 'Bewerk';
+                btn.classList.remove('editing');
+                
+                localStorage.setItem('fullname', newName);
+                alert('Naam succesvol gewijzigd!');
+                
+                // Update header immediately if possible (though redundant as home refreshes)
+            } else {
+                const error = await response.json();
+                alert(`Opslaan van naam mislukt: ${error.message || 'Onbekende fout'}`);
+            }
+        } catch (error) {
+            console.error('Save name error:', error);
+            alert('Er is een fout opgetreden bij het opslaan van de naam.');
+        }
+    }
+};
 
 function initializeThemeControls() {
     const btns = document.querySelectorAll('.theme-toggle-btn');
@@ -91,54 +202,14 @@ function initializeTabs() {
     tabContents.forEach(c => c.classList.add('active'));
 } 
 
-function toggleEditName() {
-    const nameInput = document.getElementById('name');
-    const editBtn = document.getElementById('edit-name-btn');
+// Note: toggleEditName is redundant if window.toggleEditName covers it,
+// but we keep the event listener attachment in initializeUI.
+// The previous implementation of toggleEditName is below, we replace/remove duplicate if necessary.
+// Since we defined window.toggleEditName above (in the new code block), we should remove or update this one to avoid conflict 
+// if it defines a local function with the same name.
+// However, the `oldString` below targets the old function definition to remove it cleanly.
 
-    if (nameInput.hasAttribute('readonly')) {
-        nameInput.removeAttribute('readonly');
-        editBtn.textContent = 'Opslaan';
-        nameInput.focus();
-    } else {
-        saveName();
-    }
-}
-
-async function saveName() {
-    const nameInput = document.getElementById('name');
-    const editBtn = document.getElementById('edit-name-btn');
-    const newName = nameInput.value.trim();
-
-    if (newName) {
-        const token = localStorage.getItem('authToken');
-        try {
-            const response = await fetch(window.API.ME, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ name: newName })
-            });
-
-            if (response.ok) {
-                editBtn.textContent = 'Bewerk';
-                nameInput.setAttribute('readonly', '');
-                localStorage.setItem('fullname', newName);
-                alert('Naam succesvol gewijzigd!');
-            } else {
-                const error = await response.json();
-                alert(`Opslaan van naam mislukt: ${error.message}`);
-            }
-        } catch (error) {
-            console.error('Save name error:', error);
-            alert('Er is een fout opgetreden bij het opslaan van de naam.');
-        }
-    } else {
-        alert('Naam mag niet leeg zijn.');
-        nameInput.focus();
-    }
-}
+/* Removed old toggleEditName function as it is replaced by window.toggleEditName */
 
 function clearPasswordForm() {
     const currentPwField = document.getElementById('current-password-verify');

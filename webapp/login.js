@@ -36,7 +36,19 @@ function setupLogin() {
             
             if (response.ok) {
                 const result = await response.json();
-                await window.storeUserData(result.token, result.username);
+
+                // Normalize possible response shapes
+                const token = result.token || result.accessToken || result.data?.token || result.user?.token;
+                const usernameFromResponse = result.username || result.user?.username || result.data?.username || result.username || username;
+                const nameFromResponse = result.name || result.fullname || result.user?.name || result.user?.fullname || result.data?.name || null;
+
+                if (!token) {
+                    console.error('Login response missing token:', result);
+                    alert('Inloggen mislukt: geen autorisatietoken ontvangen.');
+                    return;
+                }
+
+                await window.storeUserData(token, usernameFromResponse || username, nameFromResponse);
                 window.location.href = 'index.html';
             } else {
                 const error = await response.json();

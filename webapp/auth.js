@@ -13,9 +13,19 @@ window.getFullname = function() {
     return localStorage.getItem('fullname');
 }
 
-window.storeUserData = async function(token, username) {
+window.storeUserData = async function(token, username, name = null) {
+    if (!token) {
+        console.error('storeUserData called without token');
+        return;
+    }
+
     localStorage.setItem('authToken', token);
-    localStorage.setItem('username', username);
+    if (username) localStorage.setItem('username', username);
+    if (name) {
+        localStorage.setItem('fullname', name);
+    }
+
+    console.log('storeUserData saved', { username: localStorage.getItem('username'), fullname: localStorage.getItem('fullname') });
 
     try {
         const response = await fetch(window.API.ME, {
@@ -27,17 +37,24 @@ window.storeUserData = async function(token, username) {
             const userData = await response.json();
             if (userData.name) {
                 localStorage.setItem('fullname', userData.name);
-            } else {
+                console.log('Updated fullname from /me:', userData.name);
+            } else if (!name) {
+                // Only remove if we didn't initially have a name and the API also didn't return one
                 localStorage.removeItem('fullname');
             }
         } else {
             console.error('Failed to fetch user profile after login:', response.statusText);
-            localStorage.removeItem('fullname');
+            if (!name) localStorage.removeItem('fullname');
         }
     } catch (error) {
         console.error('Error fetching user profile after login:', error);
-        localStorage.removeItem('fullname');
+        if (!name) localStorage.removeItem('fullname');
     }
+} 
+
+// Return a sensible display name: fullname if available, else username or empty string
+window.getFullname = function() {
+    return localStorage.getItem('fullname') || localStorage.getItem('username') || '';
 }
 
 window.logout = function() {

@@ -105,15 +105,13 @@ function updateHeroGreeting(name) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+async function loadData() {
     const contentArea = document.getElementById('content-area');
+    contentArea.innerHTML = '';
 
-    if (isLoggedIn()) {
-        const token = localStorage.getItem('authToken');
+    if (window.isLoggedIn()) {
         try {
-            const favoritesResponse = await fetch(window.API.FAVORITES, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            const favoritesResponse = await window.apiRequest(window.API.FAVORITES);
             if (favoritesResponse.ok) {
                 const favoriteRecipes = await favoritesResponse.json();
                 favoriteRecipeIds = new Set(favoriteRecipes.map(r => r.id));
@@ -121,16 +119,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             console.error('Error fetching favorites:', error);
         }
+
+        // If fullname isn't already stored, fetch it from /me so UI can show the proper name
+        if (!localStorage.getItem('fullname')) {
+            try {
+                const meResp = await window.apiRequest(window.API.ME);
+                if (meResp.ok) {
+                    const me = await meResp.json();
+                    if (me.name) {
+                        localStorage.setItem('fullname', me.name);
+                    }
+                }
+            } catch (err) {
+                console.error('Error fetching profile on home load:', err);
+            }
+        }
     }
 
     try {
-        // Send auth header if logged in for personalized recommendations
-        const headers = {};
-        if (isLoggedIn()) {
-            headers['Authorization'] = `Bearer ${localStorage.getItem('authToken')}`;
-        }
-        
-        const response = await fetch(window.API.RECOMMENDATIONS, { headers });
+        const response = await window.apiRequest(window.API.RECOMMENDATIONS);
         if (response.ok) {
             const recommendations = await response.json();
             contentArea.appendChild(renderSection('Voor jou', recommendations.voorkeur, 'jou'));
@@ -143,6 +150,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching recommendations:', error);
         contentArea.innerHTML = '<p>Kon de aanbevelingen niet laden.</p>';
     }
+
+    // Update greeting
+    let displayName = '';
+    if (window.isLoggedIn()) {
+        const fullname = window.getFullname();
+        if (fullname) displayName = fullname;
+    }
+    const userDisplayNameElement = document.getElementById('user-display-name');
+    if (userDisplayNameElement) {
+        userDisplayNameElement.textContent = displayName || 'Gebruiker';
+    }
+    updateHeroGreeting(displayName);
+}
+
+// Initialize immediately if module, checking for readiness
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadData);
+} else {
+    loadData();
+}
+
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        loadData();
+    }
+});
+
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+            loadData();
+        }
+    });
 
     // Search bar functionality
     const searchInput = document.querySelector('.search-input-wrapper input');
@@ -180,17 +219,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
-
-    // Update username display and hero greeting
-    let displayName = '';
-    if (window.isLoggedIn()) {
-        const fullname = window.getFullname();
-        if (fullname) displayName = fullname;
-    }
-    const userDisplayNameElement = document.getElementById('user-display-name');
-    if (userDisplayNameElement) {
-        userDisplayNameElement.textContent = displayName || 'Gebruiker';
-    }
-    // Always update hero greeting; name will only be shown when logged in
-    updateHeroGreeting(displayName);
 });
