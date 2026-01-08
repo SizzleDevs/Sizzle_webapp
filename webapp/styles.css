@@ -1,47 +1,50 @@
-/* --- Loading Screen Overlay --- */
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+/* --- Button Loading States --- */
+button.loading,
+.btn-loading,
+.filter-tag.loading,
+.primary-btn.loading,
+.secondary-btn.loading,
+.discover-btn.loading,
+.ai-send-btn.loading,
+.search-button.loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
 }
 
-.loading-overlay.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.loading-content {
-    text-align: center;
-    color: white;
-}
-
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid #ffffff;
+button.loading::after,
+.btn-loading::after,
+.filter-tag.loading::after,
+.primary-btn.loading::after,
+.secondary-btn.loading::after,
+.discover-btn.loading::after,
+.ai-send-btn.loading::after,
+.search-button.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid currentColor;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
+    animation: button-spin 1s linear infinite;
 }
 
-.loading-text {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 0;
+button.loading span,
+.btn-loading span,
+.filter-tag.loading span,
+.primary-btn.loading span,
+.secondary-btn.loading span,
+.discover-btn.loading span,
+.ai-send-btn.loading span,
+.search-button.loading span {
+    opacity: 0;
 }
 
-@keyframes spin {
+@keyframes button-spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }

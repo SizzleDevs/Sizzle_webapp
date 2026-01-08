@@ -1,15 +1,14 @@
-/* --- Loading Screen Overlay (Dark Mode) --- */
-.loading-overlay {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-.loading-content {
-    color: var(--text-color);
-}
-
-.loading-spinner {
+/* --- Button Loading States (Dark Mode) --- */
+button.loading::after,
+.btn-loading::after,
+.filter-tag.loading::after,
+.primary-btn.loading::after,
+.secondary-btn.loading::after,
+.discover-btn.loading::after,
+.ai-send-btn.loading::after,
+.search-button.loading::after {
     border-color: rgba(255, 255, 255, 0.3);
-    border-top-color: var(--accent-color);
+    border-top-color: var(--text-color);
 }
 
 /* --- Cookmode Fullscreen Overlay --- */
