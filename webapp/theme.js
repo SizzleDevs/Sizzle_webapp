@@ -73,8 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
             button = target.closest('.tag');
         }
 
-        // Add loading state to the button
-        if (button) {
+        // Add loading state to the button, unless explicitly opted out with .no-loading
+        if (button && !button.classList.contains('no-loading')) {
             showButtonLoading(button);
 
             // Remove loading state after 2 seconds (adjust as needed)

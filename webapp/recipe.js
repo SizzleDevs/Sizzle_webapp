@@ -366,6 +366,26 @@ function setupCookmodeServingsControl() {
             setCookmodeServings((window._cookmodeServings || 4) + 1);
         };
     }
+
+    // Allow clicking the servings count in cookmode to open a native selector (1-20)
+    const scCook = document.getElementById('cookmode-servings-count');
+    if (scCook) {
+        // Prefer attaching to the full control for a larger hit target
+        const scCookContainer = scCook.closest('.cookmode-servings-control') || scCook.parentElement;
+        if (scCookContainer) {
+            scCookContainer.style.cursor = 'pointer';
+            scCookContainer.addEventListener('click', (e) => {
+                if (e.target.closest('button')) return; // ignore +/- clicks
+                openNumberSelector(scCook, window._cookmodeServings || window._cookmodeBaseServings || 4, 1, 20, (n) => setCookmodeServings(n));
+            });
+        } else {
+            scCook.style.cursor = 'pointer';
+            scCook.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openNumberSelector(scCook, window._cookmodeServings || window._cookmodeBaseServings || 4, 1, 20, (n) => setCookmodeServings(n));
+            });
+        }
+    }
 }
 
 function showConfetti() {
@@ -609,6 +629,23 @@ document.addEventListener('DOMContentLoaded', () => {
             baseServings = parseInt(match[1], 10) || baseServings;
             currentServings = baseServings;
         }
+
+        // Make the whole servings control clickable (not just the text)
+        const scContainer = sc.closest('.servings-control') || sc.parentElement;
+        if (scContainer) {
+            scContainer.style.cursor = 'pointer';
+            scContainer.addEventListener('click', (e) => {
+                // Ignore clicks on the +/- buttons inside the control
+                if (e.target.closest('button')) return;
+                openNumberSelector(sc, currentServings || baseServings || 4, 1, 20, (n) => setServings(n));
+            });
+        } else {
+            sc.style.cursor = 'pointer';
+            sc.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openNumberSelector(sc, currentServings || baseServings || 4, 1, 20, (n) => setServings(n));
+            });
+        }
     }
 
     // Decrease button events
@@ -657,6 +694,61 @@ function stopServingsInterval() {
         servingsIntervalId = null;
     }
     servingsDirection = 0;
+}
+
+// Create an ephemeral native <select> (1..20), position it near anchorEl, open the OS selector,
+// and call onSelect(number) when a value is chosen. Removes itself after use.
+function openNumberSelector(anchorEl, initial = 4, min = 1, max = 20, onSelect) {
+    // Create select element
+    const sel = document.createElement('select');
+    sel.className = 'ephemeral-number-select';
+    sel.setAttribute('aria-label', 'Kies aantal personen');
+    for (let i = min; i <= max; i++) {
+        const opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = String(i);
+        if (i === initial) opt.selected = true;
+        sel.appendChild(opt);
+    }
+
+    // Position it near the anchor element
+    const rect = anchorEl.getBoundingClientRect();
+    sel.style.position = 'absolute';
+    sel.style.left = `${Math.max(8, rect.left + window.scrollX)}px`;
+    sel.style.top = `${Math.max(8, rect.top + window.scrollY)}px`;
+    sel.style.zIndex = '999999';
+    sel.style.opacity = '0'; // hide visually but keep native UI available
+    sel.style.width = '60px';
+    sel.style.height = '34px';
+
+    document.body.appendChild(sel);
+
+    // Focus and try to open the native picker. Some browsers will open on click/focus.
+    sel.focus({ preventScroll: true });
+    try { sel.click(); } catch (e) { /* ignore */ }
+
+    const cleanup = () => {
+        if (sel && sel.parentNode) sel.parentNode.removeChild(sel);
+        window.removeEventListener('scroll', cleanup);
+        window.removeEventListener('resize', cleanup);
+    };
+
+    sel.addEventListener('change', () => {
+        const n = parseInt(sel.value, 10);
+        if (!isNaN(n)) {
+            onSelect(n);
+        }
+        cleanup();
+    });
+
+    sel.addEventListener('blur', () => {
+        // Delay removal slightly to allow change event to fire first
+        setTimeout(cleanup, 150);
+    });
+
+    // If the user scrolls or resizes, remove the select to avoid orphaned elements
+    window.addEventListener('scroll', cleanup, { passive: true });
+    window.addEventListener('resize', cleanup, { passive: true });
 }
 
 // Global function for onclick handlers (since module scope is not global)
