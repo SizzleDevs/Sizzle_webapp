@@ -54,12 +54,29 @@
             color: var(--accent-color);
             margin-bottom: 20px;
         }
+        .header-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-color);
+            margin: 0 15px;
+            transition: transform 0.2s ease;
+        }
+        .header-photo:hover {
+            transform: scale(1.1);
+        }
         @media (max-width: 480px) {
             .error-code {
                 font-size: 7rem;
             }
             .error-title {
                 font-size: 1.8rem;
+            }
+            .header-photo {
+                width: 30px;
+                height: 30px;
+                margin: 0 10px;
             }
         }
     </style>
@@ -68,6 +85,7 @@
     <div class="container">
         <header>
             <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">Sizzle</div>
+            <img src="foto's/foto Niek Vogelaar.jpeg" alt="Niek Vogelaar" class="header-photo" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color); margin: 0 15px;">
             <div class="header-icons">
                 <span class="material-symbols-rounded" onclick="window.location.href='index.html'" style="cursor: pointer;">home</span>
                 <span class="material-symbols-rounded" onclick="window.location.href='favorites.html'" style="cursor: pointer;">favorite</span>
