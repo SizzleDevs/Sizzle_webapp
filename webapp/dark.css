@@ -1,3 +1,17 @@
+/* --- Loading Screen Overlay (Dark Mode) --- */
+.loading-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.loading-content {
+    color: var(--text-color);
+}
+
+.loading-spinner {
+    border-color: rgba(255, 255, 255, 0.3);
+    border-top-color: var(--accent-color);
+}
+
 /* --- Cookmode Fullscreen Overlay --- */
 .cookmode-overlay {
     position: fixed;
@@ -229,7 +243,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s, opacity 0.15s;
     outline: none;
 }
@@ -238,7 +252,7 @@
 }
 .cookmode-nav-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 .cookmode-nav-btn:disabled {
@@ -268,7 +282,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
     z-index: 10;
 }
@@ -277,7 +291,7 @@
 }
 .cookmode-exit-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 @keyframes cookmode-fadein {
@@ -309,10 +323,10 @@
 html[data-theme="dark"] {
     --bg-color: #1A1A1A;
     --text-color: #E0E0E0;
-    --accent-color: #E6B800; /* Gold/Orange */
-    --icon-color: #FFD60A;
-    --card-bg: #222222;
-    --border-color: #444444;
+    --accent-color: #caa200;
+    --icon-color: #caa200;
+    --card-bg: #1A1A1A;
+    --border-color: #E0E0E0;
     --border-radius: 12px;
     --font-serif: 'Playfair Display', serif;
     --font-sans: 'DM Sans', sans-serif;
@@ -448,6 +462,7 @@ header {
 .search-input-wrapper input {
     flex: 1;
     border: none;
+    color: var(--text-color);
     padding: 10px;
     font-size: 1rem;
     outline: none;
@@ -457,6 +472,7 @@ header {
 .search-button {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: 8px 14px; /* slightly reduced internal padding to control width when height is fixed */
     height: 36px; /* match the ai-send-btn height for consistent alignment */
     font-weight: bold;
@@ -466,7 +482,7 @@ header {
     gap: 5px;
     border-radius: calc(var(--border-radius) - 4px);
     /* shadow straight down, same width as button, reduced depth */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, box-shadow 0.1s, transform 0.1s;
 }
 
@@ -476,7 +492,7 @@ header {
 
 .search-button:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -489,6 +505,7 @@ header {
 
 .filter-tag {
     border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: var(--spacing-xs) var(--container-padding);
     border-radius: 50px; /* Pill shape */
     font-size: 0.9rem;
@@ -556,7 +573,7 @@ header {
 .recipe-card:hover {
     transform: translateY(-2px);
     /* shadow straight down, same width as card, reduced depth */
-    box-shadow: 0px 6px 0px rgba(0,0,0,0.95); /* slightly larger for cards */
+    box-shadow: 0px 6px 0px var(--border-color); /* slightly larger for cards */
 }
 
 .card-header {
@@ -901,6 +918,7 @@ cent color */
     flex: 1;
     border: none;
     outline: none;
+    color: var(--text-color);
     padding: 8px;
     background: transparent;
 }
@@ -916,7 +934,7 @@ cent color */
     cursor: pointer;
     border-radius: 8px;
     /* shadow straight down, same width as button, reduced depth */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, box-shadow 0.1s, transform 0.1s;
 }
 
@@ -926,7 +944,7 @@ cent color */
 
 .ai-send-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -940,6 +958,7 @@ cent color */
 .discover-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: var(--spacing-sm) var(--spacing-xl);
     font-weight: bold;
     cursor: pointer;
@@ -949,13 +968,13 @@ cent color */
     gap: var(--spacing-sm);
     border-radius: var(--border-radius);
     /* shadow straight down, same width as button, reduced depth */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
 .discover-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -1031,6 +1050,7 @@ cent color */
 
 .username-wrapper input {
     flex: 1;
+    color: var(--text-color);
     max-width: 400px;
 }
 
@@ -1042,6 +1062,7 @@ cent color */
 
 .password-wrapper input {
     flex: 1;
+    color: var(--text-color);
     max-width: 400px;
 }
 
@@ -1053,6 +1074,7 @@ cent color */
 
 .password-input-wrapper input {
     flex: 1;
+    color: var(--text-color);
     max-width: 400px;
     padding-right: var(--section-margin);
 }
@@ -1080,11 +1102,12 @@ cent color */
 .edit-username-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: 10px 16px;
     font-weight: bold;
     cursor: pointer;
     border-radius: calc(var(--border-radius) - 4px);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
@@ -1094,18 +1117,19 @@ cent color */
 
 .edit-username-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
 .edit-password-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: 10px 16px;
     font-weight: bold;
     cursor: pointer;
     border-radius: calc(var(--border-radius) - 4px);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
@@ -1115,7 +1139,7 @@ cent color */
 
 .edit-password-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -1126,6 +1150,7 @@ cent color */
 .change-password-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: var(--spacing-sm) var(--spacing-md);
     font-weight: bold;
     cursor: pointer;
@@ -1133,7 +1158,7 @@ cent color */
     font-size: 0.95rem;
     margin-top: var(--spacing-sm);
     display: inline-block;
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
@@ -1143,7 +1168,7 @@ cent color */
 
 .change-password-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
     filter: brightness(1.15);
 }
@@ -1165,6 +1190,7 @@ cent color */
 .change-password-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: var(--spacing-sm) var(--spacing-md);
     font-weight: bold;
     cursor: pointer;
@@ -1172,7 +1198,7 @@ cent color */
     font-size: 0.95rem;
     margin-top: var(--spacing-sm);
     display: inline-block;
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 
@@ -1182,7 +1208,7 @@ cent color */
 
 .change-password-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -1209,11 +1235,12 @@ cent color */
 .primary-btn {
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: var(--spacing-sm) var(--container-padding);
     font-weight: bold;
     cursor: pointer;
     border-radius: calc(var(--border-radius) - 4px);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
     font-size: 1rem;
     display: inline-flex;
@@ -1227,7 +1254,7 @@ cent color */
 
 .primary-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -1366,11 +1393,12 @@ cent color */
     position: absolute;
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: 8px 14px;
     font-weight: bold;
     cursor: pointer;
     border-radius: var(--border-radius);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
     font-size: 0.85rem;
     display: flex;
@@ -1387,7 +1415,7 @@ cent color */
 
 .ai-selection-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -1399,7 +1427,7 @@ cent color */
 .ai-selection-btn.pressed {
     transform: translateY(2px);
     opacity: 0.95;
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -1988,7 +2016,7 @@ cent color */
     background: var(--accent-color) !important;
     color: var(--text-color) !important; /* use normal text color, not white */
     border: 1px solid var(--border-color) !important; /* visible outline like other buttons */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95) !important;
+    box-shadow: 0px 4px 0px var(--border-color) !important;
 }
 
 /* Override primary-btn for clear and theme buttons to not be yellow but keep shadow */
@@ -2003,7 +2031,7 @@ cent color */
     background: var(--card-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
 }
 .logout-btn:hover {
@@ -2011,7 +2039,7 @@ cent color */
 }
 .logout-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -2045,7 +2073,7 @@ cent color */
     font-weight: bold;
     cursor: pointer;
     border-radius: calc(var(--border-radius) - 4px);
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
     transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
     font-size: 1rem;
     display: inline-flex;
@@ -2060,7 +2088,7 @@ cent color */
 
 .theme-toggle-btn:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 
@@ -2076,7 +2104,7 @@ cent color */
     background-color: var(--accent-color);
     border: 1px solid var(--border-color);
     color: var(--text-color); /* use normal text color inside active button */
-    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    box-shadow: 0px 4px 0px var(--border-color);
 }
 
 .theme-toggle-btn.active:hover {
@@ -2085,7 +2113,7 @@ cent color */
 
 .theme-toggle-btn.active:active {
     transform: translateY(2px);
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+    box-shadow: 0px 2px 0px var(--border-color);
     filter: brightness(1.15);
 }
 

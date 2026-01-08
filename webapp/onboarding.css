@@ -150,6 +150,11 @@ h1 {
     position: relative;
 }
 
+.form-group .input-wrapper.invalid {
+    border-color: #d32f2f;
+    background: rgba(211, 47, 47, 0.05);
+}
+
 .form-group .input-wrapper input {
     flex: 1;
     border: none;
@@ -218,18 +223,7 @@ h1 {
     background-color: var(--accent-color);
 }
 
-.tag .tag-icon {
-    /* hidden by default, will show only when selected */
-    display: none;
-    font-size: 0.95rem;
-    color: var(--text-color);
-    margin-left: var(--spacing-xs);
-    line-height: 1;
-}
 
-.tag.selected .tag-icon {
-    display: inline-block; /* show the X without a circle */
-}
 
 /* Footer */
 .step-footer {
