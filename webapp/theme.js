@@ -38,6 +38,72 @@
     window.getPreferredTheme = () => localStorage.getItem('theme') || 'light';
 })();
 
+// Create loading overlay
+function createLoadingOverlay() {
+    const overlay = document.createElement('div');
+    overlay.className = 'loading-overlay';
+    overlay.innerHTML = `
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Laden...</p>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    return overlay;
+}
+
+// Show loading screen
+function showLoading() {
+    let overlay = document.querySelector('.loading-overlay');
+    if (!overlay) {
+        overlay = createLoadingOverlay();
+    }
+    overlay.classList.add('show');
+}
+
+// Hide loading screen
+function hideLoading() {
+    const overlay = document.querySelector('.loading-overlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+    }
+}
+
+// Export functions for use in other scripts
+window.showLoading = showLoading;
+window.hideLoading = hideLoading;
+
+// Add loading screen to all button clicks
+document.addEventListener('DOMContentLoaded', function() {
+    // Create the loading overlay
+    createLoadingOverlay();
+    
+    // Add click listeners to all buttons
+    document.addEventListener('click', function(event) {
+        const target = event.target;
+        
+        // Check if clicked element is a button or has button-like behavior
+        if (target.tagName === 'BUTTON' || 
+            target.closest('button') || 
+            target.classList.contains('filter-tag') ||
+            target.classList.contains('primary-btn') ||
+            target.classList.contains('secondary-btn') ||
+            target.classList.contains('discover-btn') ||
+            target.classList.contains('ai-send-btn') ||
+            target.classList.contains('search-button') ||
+            target.closest('.tag') ||
+            target.getAttribute('onclick')) {
+            
+            showLoading();
+            
+            // Hide loading after a short delay (you can adjust this based on your needs)
+            setTimeout(() => {
+                hideLoading();
+            }, 1000);
+        }
+    });
+});
+
 // Network connectivity detection
 window.addEventListener('offline', function() {
     // Redirect to 404.html when user goes offline

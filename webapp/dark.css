@@ -1,3 +1,17 @@
+/* --- Loading Screen Overlay (Dark Mode) --- */
+.loading-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.loading-content {
+    color: var(--text-color);
+}
+
+.loading-spinner {
+    border-color: rgba(255, 255, 255, 0.3);
+    border-top-color: var(--accent-color);
+}
+
 /* --- Cookmode Fullscreen Overlay --- */
 .cookmode-overlay {
     position: fixed;
