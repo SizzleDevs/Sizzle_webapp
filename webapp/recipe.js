@@ -25,60 +25,60 @@ function updateAIBoxPosition() {
         return;
     }
 
-    // --- 1. Top Boundary Logic (Initial Alignment) ---
-    // Calculate margin-top so the box starts aligned with ingredients
-    const containerTop = container.getBoundingClientRect().top;
-    const ingredientsTop = ingredients.getBoundingClientRect().top;
-    const offset = Math.max(0, ingredientsTop - containerTop);
-    aiBox.style.marginTop = `${offset}px`;
+    // --- Absolute Positioning Logic for Perfect Centering ---
+    
+    const scrollY = window.scrollY;
+    
+    // 1. Get Geometry (Absolute Document Coordinates)
+    const sidebarRect = sidebar.getBoundingClientRect();
+    const sidebarTopAbs = sidebarRect.top + scrollY;
 
-    // --- 2. Calculate Sticky Target (Vertical Centering) ---
-    const boxHeight = aiBox.offsetHeight || 560;
-    const viewportHeight = window.innerHeight;
-    let targetTop = (viewportHeight - boxHeight) / 2;
-    if (targetTop < 20) targetTop = 20; // Minimum clearance
+    const ingredientsRect = ingredients.getBoundingClientRect();
+    const ingredientsTopAbs = ingredientsRect.top + scrollY;
 
-    // --- 3. Strict Bottom Clamping Logic ---
-    // We must manually clamp position because 'sticky' can sometimes overshoot 
-    // depending on container heights or margin interactions.
+    // Determine Bottom Limit (Absolute)
+    // Constraint: bottom of AI box <= bottom of last step
+    let limitBottomAbs = ingredientsTopAbs + 2000; // Fallback
     if (stepCards.length > 0) {
         const lastStep = stepCards[stepCards.length - 1];
         const lastStepRect = lastStep.getBoundingClientRect();
-        
-        // Calculate where the AI box WOULD be if it were sticky at targetTop
-        // (The 'ideal' sticky bottom position in the viewport)
-        const stickyBottomLimit = targetTop + boxHeight;
-        
-        // If the bottom of the last step (in viewport space) is HIGHER than 
-        // where we want the AI box bottom to be, we must STOP scrolling.
-        // i.e., the content has scrolled up past the stop point.
-        if (lastStepRect.bottom <= stickyBottomLimit) {
-             // SWITCH TO ABSOLUTE (CLAMPED)
-             aiBox.style.position = 'absolute';
-             aiBox.style.width = '100%'; // Maintain width in absolute
-
-             // Calculate 'top' relative to the sidebar container
-             // Formula: TotalDistance - BoxHeight - MarginTopOffset
-             // TotalDistance = Top of sidebar to Bottom of last step
-             
-             // Get sidebar absolute top (relative to document to be safe against scroll)
-             const sidebarRect = sidebar.getBoundingClientRect();
-             const scrollY = window.scrollY;
-             const sidebarTopAbs = sidebarRect.top + scrollY;
-             const lastStepBottomAbs = lastStepRect.bottom + scrollY;
-             
-             // The absolute pixel value where the box border-top should physically sit
-             // to make the border-bottom align with lastStepBottomAbs
-             const absoluteStopTop = lastStepBottomAbs - sidebarTopAbs - boxHeight - offset;
-             
-             aiBox.style.top = `${absoluteStopTop}px`;
-        } else {
-             // NORMAL STICKY BEHAVIOR
-             aiBox.style.position = 'sticky';
-             aiBox.style.top = `${targetTop}px`;
-             aiBox.style.width = ''; // Reset width
-        }
+        limitBottomAbs = lastStepRect.bottom + scrollY;
+    } else {
+        limitBottomAbs = sidebarTopAbs + sidebar.offsetHeight;
     }
+
+    const boxHeight = aiBox.offsetHeight || 560;
+    const viewportHeight = window.innerHeight;
+
+    // 2. Calculate Ideal Document Top (Visual Center)
+    // We want the box center to align with Viewport center.
+    // Document Top = ScrollY + (Viewport / 2) - (Box / 2)
+    let idealTopAbs = scrollY + (viewportHeight - boxHeight) / 2;
+
+    // 3. Define Constraints 
+    // Constraint A: Top cannot be higher than Ingredients Top
+    const minTopAbs = ingredientsTopAbs;
+    
+    // Constraint B: Bottom cannot be lower than Last Step Bottom
+    // Therefore Top cannot be lower than (Last Step Bottom - Box Height)
+    const maxTopAbs = limitBottomAbs - boxHeight;
+
+    // 4. Apply Constraints
+    // Ensure max >= min to handle edge cases (e.g. content shorter than box)
+    // If content is shorter, we anchor to the top (minTopAbs)
+    const safeMaxTopAbs = Math.max(maxTopAbs, minTopAbs);
+    
+    let finalTopAbs = Math.min(Math.max(idealTopAbs, minTopAbs), safeMaxTopAbs);
+
+    // 5. Convert to Relative Position inside Sidebar
+    // The sidebar container is position: relative (from CSS)
+    const relativeTop = finalTopAbs - sidebarTopAbs;
+
+    // 6. Apply Styles
+    aiBox.style.position = 'absolute';
+    aiBox.style.top = `${relativeTop}px`;
+    aiBox.style.width = '100%'; 
+    aiBox.style.marginTop = '0'; // Clear previous margin logic
 }
 
 // Setup scroll and resize listeners for sidebar constraint
