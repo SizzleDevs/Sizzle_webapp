@@ -204,4 +204,3 @@ document.addEventListener('visibilitychange', () => {
             }
         });
     });
-});
