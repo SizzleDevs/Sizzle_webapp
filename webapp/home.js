@@ -51,11 +51,11 @@ window.toggleFavorite = async function(element, id) {
                 favoriteRecipeIds.add(id);
             }
         } else {
-            alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
+            notifyError('Er is een fout opgetreden bij het bijwerken van je favorieten.');
         }
     } catch (error) {
         console.error('Error updating favorites:', error);
-        alert('Er is een fout opgetreden bij het bijwerken van je favorieten.');
+        notifyError('Er is een fout opgetreden bij het bijwerken van je favorieten.');
     }
 };
 

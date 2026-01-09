@@ -14,7 +14,7 @@ function setupLogin() {
         const password = document.getElementById('password').value;
         
         if (!username || !password) {
-            alert('Vul alle velden in om in te loggen.');
+            notifyError('Vul alle velden in om in te loggen.');
             return;
         }
         
@@ -40,11 +40,11 @@ function setupLogin() {
                 window.location.href = 'index.html';
             } else {
                 const error = await response.json();
-                alert(`Inloggen mislukt: ${error.message || 'Ongeldige gebruikersnaam of wachtwoord'}`);
+                notifyError(`Inloggen mislukt: ${error.message || 'Ongeldige gebruikersnaam of wachtwoord'}`);
             }
         } catch (error) {
             console.error('Login error:', error);
-            alert('Er is een fout opgetreden bij het inloggen. Controleer je internetverbinding en probeer het opnieuw.');
+            notifyError('Er is een fout opgetreden bij het inloggen. Controleer je internetverbinding en probeer het opnieuw.');
         }
     });
 }

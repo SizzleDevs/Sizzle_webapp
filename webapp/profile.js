@@ -111,7 +111,7 @@ window.toggleEditUsername = function() {
         // Ensure we save the new value to local storage at least
         // In a real app, call API update endpoint here
         localStorage.setItem('username', input.value);
-        alert('Gebruikersnaam bijgewerkt (lokaal). API update niet geïmplementeerd.');
+        notifySuccess('Gebruikersnaam bijgewerkt (lokaal). API update niet geïmplementeerd.');
     }
 };
 
@@ -127,7 +127,7 @@ window.toggleEditName = async function() {
     } else {
         const newName = input.value.trim();
         if (!newName) {
-            alert('Naam mag niet leeg zijn.');
+            notifyError('Naam mag niet leeg zijn.');
             input.focus();
             return;
         }
@@ -143,22 +143,22 @@ window.toggleEditName = async function() {
                 body: JSON.stringify({ name: newName })
             });
 
-            if (response.ok) {
+                if (response.ok) {
                 input.setAttribute('readonly', '');
                 btn.textContent = 'Bewerk';
                 btn.classList.remove('editing');
                 
                 localStorage.setItem('fullname', newName);
-                alert('Naam succesvol gewijzigd!');
+                    notifySuccess('Naam succesvol gewijzigd!');
                 
                 // Update header immediately if possible (though redundant as home refreshes)
             } else {
                 const error = await response.json();
-                alert(`Opslaan van naam mislukt: ${error.message || 'Onbekende fout'}`);
+                notifyError(`Opslaan van naam mislukt: ${error.message || 'Onbekende fout'}`);
             }
         } catch (error) {
             console.error('Save name error:', error);
-            alert('Er is een fout opgetreden bij het opslaan van de naam.');
+            notifyError('Er is een fout opgetreden bij het opslaan van de naam.');
         }
     }
 };
@@ -255,15 +255,15 @@ async function saveNewPassword() {
         });
 
         if (response.ok) {
-            alert('Wachtwoord succesvol gewijzigd!');
+            notifySuccess('Wachtwoord succesvol gewijzigd!');
             clearPasswordForm();
         } else {
             const error = await response.json();
-            alert(`Wijzigen van wachtwoord mislukt: ${error.message || 'Onbekende fout'}`);
+            notifyError(`Wijzigen van wachtwoord mislukt: ${error.message || 'Onbekende fout'}`);
         }
     } catch (error) {
         console.error('Save password error:', error);
-        alert('Er is een fout opgetreden bij het wijzigen van het wachtwoord.');
+        notifyError('Er is een fout opgetreden bij het wijzigen van het wachtwoord.');
     }
 }
 
@@ -284,15 +284,15 @@ async function deleteAccount() {
                 });
 
                 if (response.ok) {
-                    alert('Account succesvol verwijderd.');
+                    notifySuccess('Account succesvol verwijderd.');
                     logout();
                 } else {
                     const error = await response.json();
-                    alert(`Verwijderen van account mislukt: ${error.message}`);
+                    notifyError(`Verwijderen van account mislukt: ${error.message}`);
                 }
             } catch (error) {
                 console.error('Delete account error:', error);
-                alert('Er is een fout opgetreden bij het verwijderen van het account.');
+                notifyError('Er is een fout opgetreden bij het verwijderen van het account.');
             }
         }
     }
