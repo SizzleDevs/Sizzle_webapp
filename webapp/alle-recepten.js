@@ -39,7 +39,7 @@ window.toggleFavorite = async function(element, id) {
     const token = localStorage.getItem('authToken');
 
     try {
-        const response = await fetch(`http://127.0.0.1:5000/api/favorieten${id}`, {
+        const response = await fetch(window.API.FAVORITE_TOGGLE(id), {
             method: method,
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -141,12 +141,28 @@ function getURLParameters() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const recipesResponse = await fetch('http://127.0.0.1:5000/api/recepten');
-        recipes = await recipesResponse.json();
+        const recipesResponse = await fetch(window.API.RECIPES);
+        let data = await recipesResponse.json();
+
+        // Handle case where API returns a stringified JSON
+        if (typeof data === 'string') {
+            try {
+                data = JSON.parse(data);
+            } catch (e) {
+                console.error('Error parsing JSON string from API:', e);
+            }
+        }
+
+        if (Array.isArray(data)) {
+            recipes = data;
+        } else {
+            console.error('API response is not an array:', data);
+            recipes = [];
+        }
 
         if (isLoggedIn()) {
             const token = localStorage.getItem('authToken');
-            const favoritesResponse = await fetch('http://127.0.0.1:5000/api/favorieten', {
+            const favoritesResponse = await fetch(window.API.FAVORITES, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (favoritesResponse.ok) {

@@ -820,26 +820,55 @@ async function setupFavoriteButton(recipeId) {
 document.addEventListener('DOMContentLoaded', async () => {
     const id = getRecipeId();
     
-    try {
-        const response = await fetch(window.API.RECIPE_DETAIL(id));
-        if (response.ok) {
-            const recipe = await response.json();
-            renderRecipe(recipe);
-            // Apply unit conversion immediately after rendering
-            updateIngredientAmounts();
-            // Initialize cookmode after recipe is rendered
-            setupCookmode();
-            // Initialize favorite button
-            setupFavoriteButton(id);
-            // Setup sidebar constraint to stop at last step
-            setupSidebarConstraint();
+    // --- START GENERATED RECIPE HANDLING ---
+    if (id === 'generated') {
+        const storedRecipe = localStorage.getItem('sizzle_generated_recipe');
+        if (storedRecipe) {
+            try {
+                const recipe = JSON.parse(storedRecipe);
+                renderRecipe(recipe);
+                updateIngredientAmounts();
+                setupCookmode();
+                setupSidebarConstraint();
+                
+                // Disable/Hide Favorite Button for temporary generated recipes
+                const favBtn = document.getElementById('favorite-btn');
+                if (favBtn) favBtn.style.display = 'none';
+                
+                // Update title to indicate it's generated
+                document.title = `Sizzle - ${recipe.titel} (AI)`;
+                
+            } catch (e) {
+                console.error("Error parsing generated recipe", e);
+                document.getElementById('recipe-title').textContent = "Kon gegenereerd recept niet laden";
+            }
         } else {
-            document.getElementById('recipe-title').textContent = "Recept niet gevonden";
+            document.getElementById('recipe-title').textContent = "Geen gegenereerd recept gevonden";
         }
-    } catch (error) {
-        console.error('Error fetching recipe:', error);
-        document.getElementById('recipe-title').textContent = "Kon het recept niet laden";
+    } else {
+        // --- EXISTING LOGIC ---
+        try {
+            const response = await fetch(window.API.RECIPE_DETAIL(id));
+            if (response.ok) {
+                const recipe = await response.json();
+                renderRecipe(recipe);
+                // Apply unit conversion immediately after rendering
+                updateIngredientAmounts();
+                // Initialize cookmode after recipe is rendered
+                setupCookmode();
+                // Initialize favorite button
+                setupFavoriteButton(id);
+                // Setup sidebar constraint to stop at last step
+                setupSidebarConstraint();
+            } else {
+                document.getElementById('recipe-title').textContent = "Recept niet gevonden";
+            }
+        } catch (error) {
+            console.error('Error fetching recipe:', error);
+            document.getElementById('recipe-title').textContent = "Kon het recept niet laden";
+        }
     }
+    // --- END LOGIC ---
 
     // AI Chat functionality
     const sendBtn = document.getElementById('ai-send');
