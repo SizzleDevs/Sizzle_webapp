@@ -1,7 +1,6 @@
 /* --- Button Loading States (Dark Mode) --- */
 button.loading::after,
 .btn-loading::after,
-.filter-tag.loading::after,
 .primary-btn.loading::after,
 .secondary-btn.loading::after,
 .discover-btn.loading::after,

@@ -1,7 +1,6 @@
 /* --- Button Loading States --- */
 button.loading,
 .btn-loading,
-.filter-tag.loading,
 .primary-btn.loading,
 .secondary-btn.loading,
 .discover-btn.loading,
@@ -14,7 +13,6 @@ button.loading,
 
 button.loading::after,
 .btn-loading::after,
-.filter-tag.loading::after,
 .primary-btn.loading::after,
 .secondary-btn.loading::after,
 .discover-btn.loading::after,
@@ -35,7 +33,6 @@ button.loading::after,
 
 button.loading span,
 .btn-loading span,
-.filter-tag.loading span,
 .primary-btn.loading span,
 .secondary-btn.loading span,
 .discover-btn.loading span,
