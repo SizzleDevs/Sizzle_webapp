@@ -8,7 +8,18 @@ function createRecipeCard(recipe) {
     card.className = 'recipe-card';
     card.setAttribute('onclick', `window.location.href = 'recipe.html?id=${recipe.id}'`);
 
-    const tagsHtml = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
+    // Deduplicate tags case-insensitively and preserve first-seen display form
+    const rawTags = Array.isArray(recipe.tags) ? recipe.tags : [];
+    const displayMap = new Map();
+    rawTags.forEach(t => {
+        const normalized = normalizeTag(t);
+        const display = (t || '').toString().trim();
+        if (normalized && !displayMap.has(normalized)) {
+            displayMap.set(normalized, display);
+        }
+    });
+    const uniqueTags = Array.from(displayMap.values());
+    const tagsHtml = uniqueTags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
     const isFavorite = favoriteRecipeIds.has(recipe.id);
     const heartClass = isFavorite ? 'favorited' : '';
 
@@ -60,12 +71,23 @@ window.toggleFavorite = async function(element, id) {
     }
 };
 
+function normalizeTag(tag) {
+    return (tag || '').toString().trim().toLowerCase();
+}
+
 function getAllUniqueTags() {
-    const tags = new Set();
+    // Use a Map to deduplicate tags case-insensitively and by trimming
+    const map = new Map();
     recipes.forEach(recipe => {
-        recipe.tags.forEach(tag => tags.add(tag));
+        (Array.isArray(recipe.tags) ? recipe.tags : []).forEach(tag => {
+            const normalized = normalizeTag(tag);
+            if (normalized && !map.has(normalized)) {
+                map.set(normalized, tag.toString().trim());
+            }
+        });
     });
-    return Array.from(tags).sort();
+    // Preserve first-seen casing for display, sort locale-aware
+    return Array.from(map.values()).sort((a, b) => a.localeCompare(b, 'nl', { sensitivity: 'base' }));
 }
 
 function renderFilters() {
@@ -73,28 +95,31 @@ function renderFilters() {
     filtersContainer.innerHTML = '';
     
     const allTags = getAllUniqueTags();
+    
     allTags.forEach(tag => {
         const button = document.createElement('button');
         button.className = 'filter-tag';
-        if (selectedFilters.has(tag)) {
+        const normalized = normalizeTag(tag);
+        button.dataset.normalized = normalized;
+        if (selectedFilters.has(normalized)) {
             button.classList.add('active');
         }
         button.textContent = tag;
         button.onclick = (e) => {
             e.preventDefault();
-            toggleFilter(tag, button);
+            toggleFilter(normalized, button);
         };
         filtersContainer.appendChild(button);
     });
 }
 
-function toggleFilter(tag, button) {
-    if (selectedFilters.has(tag)) {
-        selectedFilters.delete(tag);
-        button.classList.remove('active');
+function toggleFilter(normalizedTag, button) {
+    if (selectedFilters.has(normalizedTag)) {
+        selectedFilters.delete(normalizedTag);
+        if (button) button.classList.remove('active');
     } else {
-        selectedFilters.add(tag);
-        button.classList.add('active');
+        selectedFilters.add(normalizedTag);
+        if (button) button.classList.add('active');
     }
     applyFilters();
 }
@@ -105,11 +130,12 @@ function applyFilters() {
     filteredRecipes = recipes.filter(recipe => {
         // Search filter
         const matchesSearch = recipe.titel.toLowerCase().includes(searchInput) ||
-                            recipe.tags.some(tag => tag.toLowerCase().includes(searchInput));
+                            (Array.isArray(recipe.tags) && recipe.tags.some(tag => normalizeTag(tag).includes(searchInput)));
         
-        // Tags filter
-        const matchesTags = selectedFilters.size === 0 || 
-                           recipe.tags.every(tag => selectedFilters.has(tag));
+        // Tags filter: ensure every selected filter is present in the recipe's normalized tags (AND behavior)
+        const recipeTags = Array.isArray(recipe.normalizedTags) ? recipe.normalizedTags : (Array.isArray(recipe.tags) ? recipe.tags.map(normalizeTag) : []);
+        const matchesTags = selectedFilters.size === 0 ||
+            Array.from(selectedFilters).every(filter => recipeTags.includes(filter));
         
         return matchesSearch && matchesTags;
     });
@@ -155,6 +181,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (Array.isArray(data)) {
             recipes = data;
+            // Precompute normalized tags for each recipe to make filtering robust and efficient
+            recipes.forEach(r => {
+                const raw = Array.isArray(r.tags) ? r.tags : [];
+                r.normalizedTags = Array.from(new Set(raw.map(normalizeTag).filter(Boolean)));
+            });
         } else {
             console.error('API response is not an array:', data);
             recipes = [];
@@ -174,19 +205,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Get URL parameters
         const { search, filter } = getURLParameters();
         
-        // Initial render
-        renderFilters();
-        
         // Apply search parameter if provided
         if (search) {
             document.getElementById('search-input').value = search;
         }
         
-        // Apply filter parameter if provided
+        // Apply filter parameter if provided (support comma-separated list)
         if (filter) {
-            selectedFilters.add(filter);
-            renderFilters();
+            const parts = filter.split(',').map(s => s.trim()).filter(Boolean);
+            parts.forEach(p => selectedFilters.add(normalizeTag(p)));
         }
+        
+        // Initial render (after setting selected filters)
+        renderFilters();
         
         // Apply filters and render recipes
         applyFilters();

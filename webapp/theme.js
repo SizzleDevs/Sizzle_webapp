@@ -73,8 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
             button = target.closest('.tag');
         }
 
-        // Add loading state to the button
+        // Add loading state to the button (skip filter tags)
         if (button) {
+            // Don't show loading for filter tags — they update the UI instantly
+            if (button.classList && button.classList.contains('filter-tag')) return;
+
             showButtonLoading(button);
 
             // Remove loading state after 2 seconds (adjust as needed)
