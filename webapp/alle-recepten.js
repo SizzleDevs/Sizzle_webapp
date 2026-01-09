@@ -109,7 +109,7 @@ function applyFilters() {
         
         // Tags filter
         const matchesTags = selectedFilters.size === 0 || 
-                           recipe.tags.some(tag => selectedFilters.has(tag));
+                           recipe.tags.every(tag => selectedFilters.has(tag));
         
         return matchesSearch && matchesTags;
     });
