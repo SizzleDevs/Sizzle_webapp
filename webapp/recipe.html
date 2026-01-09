@@ -94,25 +94,31 @@
             </div>
 
             <aside class="recipe-sidebar">
-                    <div class="ai-chat-box">
-                    <div class="ai-robot-wrapper">
-                        <span class="material-symbols-rounded ai-robot">robot_2</span>
-                        <div class="ai-robot-text">Vraag AI iets over dit recept</div>
+                <div class="ai-chat-box">
+                    <div id="ai-login-required" class="ai-login-required" style="display:none;">
+                        <h2 class="ai-login-heading">Je moet <span class="highlight">inloggen</span> om AI te gebruiken</h2>
+                        <button class="primary-btn" onclick="window.location.href='login.html'">Naar login</button>
                     </div>
-                    <div class="ai-messages" id="ai-messages"></div>
-                    <div class="ai-context-box-input hidden" id="ai-context-box-input">
-                        <div class="ai-context-box-header">
-                            <span>Vraag over:</span>
-                            <button class="ai-context-box-close" id="ai-context-box-close" title="Verwijder context">
-                                <span class="material-symbols-rounded" style="font-size: 0.9rem;">close</span>
-                            </button>
+                    <div id="ai-chat-ui">
+                        <div class="ai-robot-wrapper">
+                            <span class="material-symbols-rounded ai-robot">robot_2</span>
+                            <div class="ai-robot-text">Vraag AI iets over dit recept</div>
                         </div>
-                        <div class="ai-context-box-text" id="ai-context-box-text"></div>
-                    </div>
-                    <div class="ai-input-wrapper">
-                        <div class="ai-input-row">
-                            <input type="text" id="ai-input" placeholder="Stel een vraag...">
-                            <button class="ai-send-btn" id="ai-send" title="Stuur vraag"><span class="material-symbols-rounded" style="font-size: 1.2rem; color: var(--text-color);">send</span></button>
+                        <div class="ai-messages" id="ai-messages"></div>
+                        <div class="ai-context-box-input hidden" id="ai-context-box-input">
+                            <div class="ai-context-box-header">
+                                <span>Vraag over:</span>
+                                <button class="ai-context-box-close" id="ai-context-box-close" title="Verwijder context">
+                                    <span class="material-symbols-rounded" style="font-size: 0.9rem;">close</span>
+                                </button>
+                            </div>
+                            <div class="ai-context-box-text" id="ai-context-box-text"></div>
+                        </div>
+                        <div class="ai-input-wrapper">
+                            <div class="ai-input-row">
+                                <input type="text" id="ai-input" placeholder="Stel een vraag...">
+                                <button class="ai-send-btn" id="ai-send" title="Stuur vraag"><span class="material-symbols-rounded" style="font-size: 1.2rem; color: var(--text-color);">send</span></button>
+                            </div>
                         </div>
                     </div>
                 </div>

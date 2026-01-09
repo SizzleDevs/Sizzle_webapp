@@ -819,6 +819,17 @@ async function setupFavoriteButton(recipeId) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const id = getRecipeId();
+
+    // --- AI Login Check ---
+    const aiLoginRequired = document.getElementById('ai-login-required');
+    const aiChatUI = document.getElementById('ai-chat-ui');
+    if (typeof window.isLoggedIn === 'function' && !window.isLoggedIn()) {
+        if (aiLoginRequired) aiLoginRequired.style.display = 'flex';
+        if (aiChatUI) aiChatUI.style.display = 'none';
+    } else {
+        if (aiLoginRequired) aiLoginRequired.style.display = 'none';
+        if (aiChatUI) aiChatUI.style.display = '';
+    }
     
     // --- START GENERATED RECIPE HANDLING ---
     if (id === 'generated') {
