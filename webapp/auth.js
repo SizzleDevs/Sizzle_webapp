@@ -50,6 +50,13 @@ window.logout = function() {
     localStorage.removeItem('username');
     localStorage.removeItem('fullname');
     console.log('User data removed from localStorage');
+    try{
+        if (typeof notifySuccess === 'function') {
+            notifySuccess('Je bent uitgelogd');
+            setTimeout(() => { window.location.href = 'login.html'; }, 350);
+            return;
+        }
+    } catch(e){}
     window.location.href = 'login.html';
 }
 

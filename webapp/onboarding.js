@@ -112,13 +112,13 @@ function setupNavigation() {
         passwordWrapper.classList.remove('invalid');
         
         if (!username || !password || !name) {
-            alert('Vul alle velden in om door te gaan.');
+            notifyError('Vul alle velden in om door te gaan.');
             return;
         }
         
         if (password.length < 8) {
             passwordWrapper.classList.add('invalid');
-            alert('Wachtwoord moet minimaal 8 karakters bevatten.');
+            notifyError('Wachtwoord moet minimaal 8 karakters bevatten.');
             return;
         }
         
@@ -129,7 +129,7 @@ function setupNavigation() {
     
     finishBtn.addEventListener('click', async () => {
         if (selectedTags.length === 0) {
-            alert('Selecteer minimaal één interesse om door te gaan.');
+            notifyError('Selecteer minimaal één interesse om door te gaan.');
             return;
         }
         
@@ -158,11 +158,11 @@ function setupNavigation() {
                 window.location.href = 'index.html';
             } else {
                 const error = await response.json();
-                alert(`Registratie mislukt: ${error.message}`);
+                notifyError(`Registratie mislukt: ${error.message}`);
             }
         } catch (error) {
             console.error('Registration error:', error);
-            alert('Er is een fout opgetreden bij de registratie. Controleer de console voor meer informatie.');
+            notifyError('Er is een fout opgetreden bij de registratie. Controleer de console voor meer informatie.');
         }
     });
 }
