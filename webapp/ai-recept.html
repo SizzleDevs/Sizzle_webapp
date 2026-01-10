@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AI Recept - Sizzle</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dark.css">
+    <script src="theme.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0" />
+    <style>
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(100, 100, 255, 0.1);
+            color: #646cff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">Sizzle</div>
+            <div class="header-icons">
+                <span class="material-symbols-rounded" onclick="window.location.href='index.html'" style="cursor: pointer;">home</span>
+                <span class="material-symbols-rounded filled" onclick="window.location.href='favorites.html'" style="cursor: pointer;">favorite</span>
+                <span class="material-symbols-rounded" onclick="window.location.href='ai-chef.html'" style="cursor: pointer;">smart_toy</span>
+                <span class="material-symbols-rounded" onclick="window.location.href='about.html'" style="cursor: pointer;">info</span>
+                <span class="material-symbols-rounded" onclick="redirectToProfileIfLoggedIn()" style="cursor: pointer;">person</span>
+            </div>
+        </header>
+
+        <div class="recipe-detail-container" id="recipe-content">
+            <!-- Content will be injected -->
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+             // Check if logged in
+            if (!isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const recipeId = urlParams.get('id');
+
+            if (!recipeId) {
+                window.location.href = 'favorites.html';
+                return;
+            }
+
+            const recipes = JSON.parse(localStorage.getItem('aiRecipes') || '[]');
+            const recipe = recipes.find(r => r.id === recipeId);
+
+            const container = document.getElementById('recipe-content');
+
+            if (!recipe) {
+                container.innerHTML = '<h2>Recept niet gevonden</h2><p><a href="favorites.html">Terug naar favorieten</a></p>';
+                return;
+            }
+
+            // Render Recipe using standard layout structure
+            const ingredientsHtml = recipe.ingredients.map(ing => `<li>${ing}</li>`).join('');
+            
+            // Steps need consistent styling
+            const stepsHtml = recipe.steps.map((step, index) => `
+                <div class="step-card">
+                    <div class="step-number">${index + 1}</div>
+                    <div class="step-content">
+                        <p>${step}</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = `
+                <div class="recipe-content">
+                    <div class="recipe-header">
+                        <div class="ai-badge" style="margin-bottom: 1rem;">
+                            <span class="material-symbols-rounded" style="font-size: 18px;">smart_toy</span>
+                            AI Chef Recept
+                        </div>
+                        <h1 id="recipe-title">${recipe.title}</h1>
+                        
+                        <div class="recipe-meta-tags">
+                            <span class="tag"><span class="material-symbols-rounded">timer</span> ${recipe.cooking_time}</span>
+                            <span class="tag"><span class="material-symbols-rounded">signal_cellular_alt</span> ${recipe.difficulty}</span>
+                        </div>
+                    </div>
+
+                    <div class="ingredients-box">
+                        <div class="ingredients-header">
+                            <h3>Ingrediënten</h3>
+                        </div>
+                        <ul class="ingredient-list">
+                            ${ingredientsHtml}
+                        </ul>
+                    </div>
+
+                    <div class="steps-container">
+                        <h3>Stappen</h3>
+                        <div id="steps-list">
+                            ${stepsHtml}
+                        </div>
+                    </div>
+                </div>
+                
+                 <aside class="recipe-sidebar" style="height: auto;">
+                    <div class="ai-chat-box" style="position: static; margin-top: 0;">
+                        <div class="ai-robot-wrapper">
+                            <span class="material-symbols-rounded ai-robot">info</span>
+                            <div class="ai-robot-text">Dit is een AI recept</div>
+                        </div>
+                        <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
+                            Dit recept is speciaal voor jou gegenereerd door de Sizzle AI Chef op basis van je ingrediënten. 
+                            Omdat het live gegenereerd is, kunnen we geen garanties geven over de smaak, maar het klinkt zeker lekker!
+                        </p>
+                        <button onclick="if(confirm('Wil je dit recept verwijderen?')) { removeAIRecipe('${recipe.id}'); window.location.href='favorites.html'; }" class="secondary-btn" style="width: 100%; justify-content: center; color: var(--error-color, #ff4444); border-color: var(--error-color, #ff4444);">
+                            <span class="material-symbols-rounded">delete</span> Verwijder Recept
+                        </button>
+                    </div>
+                </aside>
+            `;
+        });
+
+        function removeAIRecipe(id) {
+            let recipes = JSON.parse(localStorage.getItem('aiRecipes') || '[]');
+            recipes = recipes.filter(r => r.id !== id);
+            localStorage.setItem('aiRecipes', JSON.stringify(recipes));
+        }
+    </script>
+</body>
+</html>

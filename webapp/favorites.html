@@ -21,16 +21,29 @@
             <div class="header-icons">
                 <span class="material-symbols-rounded" onclick="window.location.href='index.html'" style="cursor: pointer;">home</span>
                 <span class="material-symbols-rounded filled" onclick="window.location.href='favorites.html'" style="cursor: pointer;">favorite</span>
+                <span class="material-symbols-rounded" onclick="window.location.href='ai-chef.html'" style="cursor: pointer; color: #000000;">smart_toy</span>
                 <span class="material-symbols-rounded" onclick="window.location.href='about.html'" style="cursor: pointer;">info</span>
                 <span class="material-symbols-rounded" onclick="redirectToProfileIfLoggedIn()" style="cursor: pointer;">person</span>
             </div>
         </header>
 
         <section class="favorites-section">
-            <h1>Mijn Favorieten</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1>Mijn Favorieten</h1>
+                <button onclick="window.location.href='ai-chef.html'" style="padding: 8px 16px; background: var(--primary-color); border-radius: 20px; color: white; border: none; font-size: 0.9rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <span class="material-symbols-rounded" style="font-size: 18px; color:#000000">add</span> Nieuw AI Recept
+                </button>
+            </div>
             
             <div id="favorites-container" class="recipe-scroll-container">
                 <!-- Favorites will be injected here -->
+            </div>
+        </section>
+
+        <section class="favorites-section ai-recipes-section" style="display: none;" id="ai-section">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 1rem;">AI Recepten</h2>
+            <div id="ai-favorites-container" class="recipe-scroll-container">
+                <!-- AI Favorites will be injected here -->
             </div>
         </section>
 

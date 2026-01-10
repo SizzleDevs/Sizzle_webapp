@@ -5,95 +5,20 @@ function getRecipeId() {
     return id; // Default to 1 if not found
 }
 
-// AI Box Positioning Logic
+// AI Box Positioning Logic - Restored to CSS control
 function updateAIBoxPosition() {
     const aiBox = document.querySelector('.ai-chat-box');
-    const ingredients = document.querySelector('.ingredients-box');
-    const container = document.querySelector('.recipe-detail-container');
-    const sidebar = document.querySelector('.recipe-sidebar');
-    const stepCards = document.querySelectorAll('.step-card');
     
-    if (!aiBox || !ingredients || !container || !sidebar) return;
-
-    // Reset styles on mobile
-    if (window.innerWidth <= 900) {
-        aiBox.style.marginTop = '';
-        aiBox.style.top = '';
-        aiBox.style.position = '';
-        aiBox.style.width = '';
-        sidebar.style.height = ''; 
-        return;
+    // Clear any inline styles so CSS can handle the layout
+    if (aiBox) {
+        aiBox.removeAttribute('style'); 
     }
-
-    // --- Absolute Positioning Logic for Perfect Centering ---
-    
-    const scrollY = window.scrollY;
-    
-    // 1. Get Geometry (Absolute Document Coordinates)
-    const sidebarRect = sidebar.getBoundingClientRect();
-    const sidebarTopAbs = sidebarRect.top + scrollY;
-
-    const ingredientsRect = ingredients.getBoundingClientRect();
-    const ingredientsTopAbs = ingredientsRect.top + scrollY;
-
-    // Determine Bottom Limit (Absolute)
-    // Constraint: bottom of AI box <= bottom of last step
-    let limitBottomAbs = ingredientsTopAbs + 2000; // Fallback
-    if (stepCards.length > 0) {
-        const lastStep = stepCards[stepCards.length - 1];
-        const lastStepRect = lastStep.getBoundingClientRect();
-        limitBottomAbs = lastStepRect.bottom + scrollY;
-    } else {
-        limitBottomAbs = sidebarTopAbs + sidebar.offsetHeight;
-    }
-
-    const boxHeight = aiBox.offsetHeight || 560;
-    const viewportHeight = window.innerHeight;
-
-    // 2. Calculate Ideal Document Top (Visual Center)
-    // We want the box center to align with Viewport center.
-    // Document Top = ScrollY + (Viewport / 2) - (Box / 2)
-    let idealTopAbs = scrollY + (viewportHeight - boxHeight) / 2;
-
-    // 3. Define Constraints 
-    // Constraint A: Top cannot be higher than Ingredients Top
-    const minTopAbs = ingredientsTopAbs;
-    
-    // Constraint B: Bottom cannot be lower than Last Step Bottom
-    // Therefore Top cannot be lower than (Last Step Bottom - Box Height)
-    const maxTopAbs = limitBottomAbs - boxHeight;
-
-    // 4. Apply Constraints
-    // Ensure max >= min to handle edge cases (e.g. content shorter than box)
-    // If content is shorter, we anchor to the top (minTopAbs)
-    const safeMaxTopAbs = Math.max(maxTopAbs, minTopAbs);
-    
-    let finalTopAbs = Math.min(Math.max(idealTopAbs, minTopAbs), safeMaxTopAbs);
-
-    // 5. Convert to Relative Position inside Sidebar
-    // The sidebar container is position: relative (from CSS)
-    const relativeTop = finalTopAbs - sidebarTopAbs;
-
-    // 6. Apply Styles
-    aiBox.style.position = 'absolute';
-    aiBox.style.top = `${relativeTop}px`;
-    aiBox.style.width = '100%'; 
-    aiBox.style.marginTop = '0'; // Clear previous margin logic
 }
 
-// Setup scroll and resize listeners for sidebar constraint
+// Setup scroll and resize listeners - Disabled to prevent inline style injection
 function setupSidebarConstraint() {
-    // Initial calculation
-    updateAIBoxPosition();
-    
-    // Update on scroll (Crucial for the clamp check)
-    window.addEventListener('scroll', updateAIBoxPosition, { passive: true });
-    
-    // Update on resize
-    window.addEventListener('resize', updateAIBoxPosition, { passive: true });
-    
-    // Update on load
-    window.addEventListener('load', updateAIBoxPosition);
+    // Logic removed to adhere to "No inline styles" requirement.
+    // Layout is now handled purely by CSS classes.
 }
 
 function renderRecipe(recipe) {
@@ -159,8 +84,7 @@ function renderRecipe(recipe) {
     window._sizzleRecipeSteps = recipe.stappen;
     window._sizzleRecipeIngredients = recipe.ingrediënten;
 
-    // Recalculate sticky positioning now that content is populated
-    requestAnimationFrame(updateAIBoxPosition);
+    // Recalculate sticky positioning removed to respect CSS layout
 }
 
 // --- Cookmode Step-by-Step Overlay ---
@@ -829,11 +753,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 renderRecipe(recipe);
                 updateIngredientAmounts();
                 setupCookmode();
-                setupSidebarConstraint();
+                // setupSidebarConstraint(); // Disabled
                 
                 // Disable/Hide Favorite Button for temporary generated recipes
                 const favBtn = document.getElementById('favorite-btn');
-                if (favBtn) favBtn.style.display = 'none';
+                if (favBtn) favBtn.classList.add('hidden');
                 
                 // Update title to indicate it's generated
                 document.title = `Sizzle - ${recipe.titel} (AI)`;
@@ -858,8 +782,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setupCookmode();
                 // Initialize favorite button
                 setupFavoriteButton(id);
-                // Setup sidebar constraint to stop at last step
-                setupSidebarConstraint();
+                // Setup sidebar constraint disabled
+                // setupSidebarConstraint(); 
             } else {
                 document.getElementById('recipe-title').textContent = "Recept niet gevonden";
             }
@@ -900,7 +824,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         // User message (plain text, dimmed)
         const userMsg = document.createElement('p');
         userMsg.classList.add('message', 'user');
-        userMsg.style.marginTop = '10px';
         userMsg.textContent = text;
         messages.appendChild(userMsg);
 

@@ -58,6 +58,17 @@ window.toggleFavorite = async function(element, id) {
     }
 };
 
+// Helper to get AI recipes from localStorage
+function getAIRecipes() {
+    try {
+        const stored = localStorage.getItem('aiRecipes');
+        return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        console.error("Failed to parsing AI recipes", e);
+        return [];
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     // Check if logged in
     if (!isLoggedIn()) {
@@ -65,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
     
+    // --- Load Standard Favorites ---
     const favoritesContainer = document.getElementById('favorites-container');
     const token = localStorage.getItem('authToken');
 
@@ -92,4 +104,55 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching favorites:', error);
         favoritesContainer.innerHTML = '<p class="no-favorites">Kon je favorieten niet laden. Probeer het later opnieuw.</p>';
     }
+
+    // --- Load AI Favorites ---
+    const aiContainer = document.getElementById('ai-favorites-container');
+    const aiSection = document.getElementById('ai-section');
+    const aiRecipes = getAIRecipes();
+
+    if (aiRecipes.length > 0 && aiContainer && aiSection) {
+        aiSection.style.display = 'block';
+        aiRecipes.forEach(recipe => {
+            // Ensure source is marked for card click handling differences if needed
+            recipe.isAi = true; 
+            const card = createRecipeCard(recipe);
+            
+            // Override onclick for AI recipes to point to custom detail view
+            card.onclick = () => {
+                window.location.href = `ai-recept.html?id=${recipe.id}`;
+            };
+            
+            // Override heart behavior for AI recipes (local delete)
+            const heartDiv = card.querySelector('.favorite-icon');
+            if (heartDiv) {
+                // Remove existing listeners by cloning
+                const newHeart = heartDiv.cloneNode(true);
+                heartDiv.parentNode.replaceChild(newHeart, heartDiv);
+                
+                // Force filled heart
+                const icon = newHeart.querySelector('.material-symbols-rounded');
+                icon.classList.add('favorited');
+                
+                newHeart.onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm('Wil je dit AI recept verwijderen?')) {
+                        removeAIRecipe(recipe.id);
+                        card.remove();
+                        if (getAIRecipes().length === 0) {
+                            aiSection.style.display = 'none';
+                        }
+                    }
+                };
+            }
+
+            aiContainer.appendChild(card);
+        });
+    }
 });
+
+function removeAIRecipe(id) {
+    let recipes = getAIRecipes();
+    recipes = recipes.filter(r => r.id !== id);
+    localStorage.setItem('aiRecipes', JSON.stringify(recipes));
+}
+
