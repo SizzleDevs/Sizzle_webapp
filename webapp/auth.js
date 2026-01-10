@@ -13,6 +13,34 @@ window.getFullname = function() {
     return localStorage.getItem('fullname');
 }
 
+window.isAdmin = async function() {
+    if (!isLoggedIn()) {
+        return false;
+    }
+
+    const cachedAdminStatus = sessionStorage.getItem('isAdmin');
+    if (cachedAdminStatus) {
+        return JSON.parse(cachedAdminStatus);
+    }
+
+    try {
+        const response = await fetch(window.API.ME, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+        });
+        if (response.ok) {
+            const userData = await response.json();
+            const isAdmin = userData.is_admin || false;
+            sessionStorage.setItem('isAdmin', JSON.stringify(isAdmin));
+            return isAdmin;
+        }
+    } catch (error) {
+        console.error('Error checking admin status:', error);
+    }
+    return false;
+}
+
 window.storeUserData = async function(token, username, name = null) {
     localStorage.setItem('authToken', token);
     localStorage.setItem('username', username);
@@ -31,8 +59,10 @@ window.storeUserData = async function(token, username, name = null) {
             if (userData.name) {
                 localStorage.setItem('fullname', userData.name);
             } else if (!name) {
-                // Only remove if we didn't initially have a name and the API also didn't return one
                 localStorage.removeItem('fullname');
+            }
+            if (userData.is_admin) {
+                sessionStorage.setItem('isAdmin', JSON.stringify(userData.is_admin));
             }
         } else {
             console.error('Failed to fetch user profile after login:', response.statusText);
@@ -49,6 +79,7 @@ window.logout = function() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('username');
     localStorage.removeItem('fullname');
+    sessionStorage.removeItem('isAdmin'); // Clear admin status
     console.log('User data removed from localStorage');
     try{
         if (typeof notifySuccess === 'function') {
@@ -79,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleIcons = document.querySelectorAll('.password-toggle-icon');
 
     toggleIcons.forEach(icon => {
-        // Find sibling input
         const wrapper = icon.parentElement;
         const input = wrapper.querySelector('input');
 
@@ -97,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
             icon.style.opacity = '';
         };
 
-        // Mouse events
         icon.addEventListener('mousedown', (e) => {
             e.preventDefault();
             showPassword();
@@ -106,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.addEventListener('mouseup', hidePassword);
         icon.addEventListener('mouseleave', hidePassword);
 
-        // Touch events for mobile
         icon.addEventListener('touchstart', (e) => {
             e.preventDefault();
             showPassword();

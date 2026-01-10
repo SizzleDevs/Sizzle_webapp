@@ -1,5 +1,4 @@
-import { apiRequest, isLoggedIn } from './config.js'; // Assuming apiRequest and isLoggedIn are exported or globally available
-import { notifyError, notifySuccess } from './notifications.js'; // Assuming notification functions are available
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (!isLoggedIn()) {
@@ -10,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Check if the user is an admin
     const isAdmin = await checkAdminStatus();
     if (!isAdmin) {
-        document.getElementById('admin-content').innerHTML = '<p>Access Denied: You do not have administrator privileges.</p>';
+        window.location.href = 'index.html';
         return;
     }
 
@@ -44,18 +43,26 @@ async function loadUsers() {
             }
         });
 
+        console.log('API Response Status:', response.status);
+
         if (response.ok) {
             const users = await response.json();
+            console.log('Users data:', users);
             renderUsersTable(users);
         } else {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({ message: 'Could not parse error JSON' }));
+            console.error('Error loading users:', errorData);
             usersTableContainer.innerHTML = `<p>Error loading users: ${errorData.message || 'Unknown error'}</p>`;
-            notifyError(`Error loading users: ${errorData.message || 'Unknown error'}`);
+            if (typeof notifyError === 'function') {
+                notifyError(`Error loading users: ${errorData.message || 'Unknown error'}`);
+            }
         }
     } catch (error) {
-        console.error('Error loading users:', error);
-        usersTableContainer.innerHTML = '<p>Error loading users.</p>';
-        notifyError('Error loading users.');
+        console.error('Caught error loading users:', error);
+        usersTableContainer.innerHTML = '<p>An error occurred while loading users. Check the console for details.</p>';
+        if (typeof notifyError === 'function') {
+            notifyError('An error occurred. See console for details.');
+        }
     }
 }
 
