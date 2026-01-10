@@ -1,7 +1,6 @@
 /* --- Button Loading States (Dark Mode) --- */
 button.loading::after,
 .btn-loading::after,
-.filter-tag.loading::after,
 .primary-btn.loading::after,
 .secondary-btn.loading::after,
 .discover-btn.loading::after,
@@ -876,8 +875,17 @@ cent color */
 
 .ai-messages::-webkit-scrollbar { display: none; }
 
+/* When AI UI is shown (logged-in) ensure the chat UI fills the box
+   and input is pinned to the bottom for consistent behavior */
+#ai-chat-ui {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 /* Ensure input wrapper stays at bottom */
 .ai-input-wrapper {
+    margin-top: auto;
     flex-shrink: 0;
 }
 
@@ -2289,4 +2297,76 @@ input:checked + .slider:before {
     .container {
         overflow-x: hidden;
     }
+}
+/* --- Onboarding & Login Dark Overrides --- */
+.subtitle {
+    color: #AAA;
+}
+
+.onboarding-form .input-wrapper {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+.onboarding-form .input-wrapper input {
+    color: var(--text-color);
+}
+
+.onboarding-form .input-wrapper input::placeholder {
+    color: #777;
+}
+
+.indicator {
+    background-color: #444;
+}
+
+.tag {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.tag:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tag.selected {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+.tags-container::-webkit-scrollbar-thumb {
+    background: #444;
+}
+
+/* Next Button Dark Mode */
+.next-btn {
+    background-color: var(--accent-color);
+    border-color: var(--border-color);
+    color: var(--text-color); /* use theme text color (consistent white in dark) */
+    box-shadow: 0px 4px 0px var(--border-color);
+}
+
+.next-btn:hover {
+    filter: brightness(1.1);
+}
+
+.next-btn:active {
+    box-shadow: 0px 2px 0px var(--border-color);
+}
+
+/* Login Options Secondary Button Dark Mode */
+.login-options .secondary-btn {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+    box-shadow: 0px 4px 0px var(--border-color);
+}
+
+.login-options .secondary-btn:hover {
+    filter: brightness(1.1);
+}
+
+.login-options .secondary-btn:active {
+    box-shadow: 0px 2px 0px var(--border-color);
 }

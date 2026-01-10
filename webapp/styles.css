@@ -1,7 +1,6 @@
 /* --- Button Loading States --- */
 button.loading,
 .btn-loading,
-.filter-tag.loading,
 .primary-btn.loading,
 .secondary-btn.loading,
 .discover-btn.loading,
@@ -14,7 +13,6 @@ button.loading,
 
 button.loading::after,
 .btn-loading::after,
-.filter-tag.loading::after,
 .primary-btn.loading::after,
 .secondary-btn.loading::after,
 .discover-btn.loading::after,
@@ -35,7 +33,6 @@ button.loading::after,
 
 button.loading span,
 .btn-loading span,
-.filter-tag.loading span,
 .primary-btn.loading span,
 .secondary-btn.loading span,
 .discover-btn.loading span,
@@ -1095,6 +1092,35 @@ cent color */
     font-size: 0.95rem;
 }
 
+/* AI login prompt styling — reuse home highlight & button aesthetics */
+.ai-login-required {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    /* ensure it fills the AI box and centers vertically */
+    flex: 1 1 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-login-heading {
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    text-align: center;
+}
+
+.ai-login-required .primary-btn {
+    font-size: 1.1rem; /* keep text size */
+    padding: 0.6em 1.4em; /* slightly smaller button */
+    margin-top: 0.5em;
+    align-self: center;
+}
+
 .ai-robot.hidden,
 .ai-robot-wrapper.hidden {
     display: none;
@@ -1114,9 +1140,30 @@ cent color */
 
 .ai-messages::-webkit-scrollbar { display: none; }
 
+
+/* Ensure authorized content fills the AI box so input stays at the bottom */
+#ai-authorized-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#ai-chat-ui {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 /* Ensure input wrapper stays at bottom */
 .ai-input-wrapper {
+    margin-top: auto;
     flex-shrink: 0;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    padding: 8px; /* increase padding so send button shadow is visually inside the wrapper */
+    background: var(--card-bg);
 }
 
 .ai-chat-header {
@@ -2510,6 +2557,364 @@ input:checked + .slider:before {
     }
 }
 
+/* ========================================
+   ONBOARDING & LOGIN STYLES
+   ======================================== */
+
+.onboarding-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--container-padding);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.onboarding-step {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    animation: onboarding-fadeIn 0.3s ease-out;
+}
+
+.onboarding-step.active {
+    display: flex;
+}
+
+@keyframes onboarding-fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.onboarding-container h1 {
+    font-size: 3.5rem; /* one heading larger */
+    margin-bottom: var(--container-padding);
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: var(--spacing-xl);
+    font-size: 1rem;
+} 
+
+/* Onboarding Form Styles */
+.onboarding-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--container-padding);
+    width: 100%;
+    text-align: left;
+}
+
+.onboarding-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.onboarding-form .form-group label {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.onboarding-form .input-wrapper {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--card-bg);
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    position: relative;
+}
+
+.onboarding-form .input-wrapper.invalid {
+    border-color: #d32f2f;
+    background: rgba(211, 47, 47, 0.05);
+}
+
+.onboarding-form .input-wrapper input {
+    flex: 1;
+    border: none;
+    padding: var(--spacing-sm);
+    padding-right: 32px;
+    font-size: 1rem;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    color: var(--text-color);
+}
+
+.onboarding-form .input-wrapper input::placeholder {
+    color: #999;
+}
+
+/* Onboarding Tags Container */
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-self: flex-start;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: var(--spacing-xs);
+    width: 100%;
+}
+
+.tags-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.tags-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tags-container::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 4px;
+}
+
+/* Onboarding Tag Styles */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-xs) var(--container-padding);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    user-select: none;
+    text-transform: capitalize;
+    color: var(--text-color);
+}
+
+.tag:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.tag.selected {
+    background-color: var(--accent-color);
+}
+
+/* Onboarding Footer */
+.step-footer {
+    padding-top: var(--container-padding);
+    padding-bottom: var(--section-margin);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--container-padding);
+    width: 100%;
+}
+
+.step-indicators {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xs);
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ddd;
+    transition: background-color 0.2s;
+}
+
+.indicator.active {
+    background-color: var(--text-color);
+}
+
+/* Next Button (Primary action in onboarding/login) */
+.next-btn {
+    background-color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm) var(--spacing-xl);
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+    font-family: var(--font-sans);
+    color: #ffffff; /* force white text for primary onboarding button */
+}
+
+.next-btn:hover {
+    filter: brightness(0.92);
+}
+
+.next-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+/* Login Options */
+.login-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--section-margin);
+    width: 100%;
+}
+
+/* Onboarding Secondary Button */
+.login-options .secondary-btn {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm) var(--spacing-xl);
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.95);
+    transition: filter 0.08s, transform 0.1s, box-shadow 0.1s;
+    font-family: var(--font-sans);
+    color: var(--text-color);
+}
+
+.login-options .secondary-btn:hover {
+    filter: brightness(0.95);
+}
+
+.login-options .secondary-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.9);
+}
+
+/* ========================================
+   ONBOARDING MOBILE RESPONSIVE STYLES
+   ======================================== */
+
+@media (max-width: 480px) {
+    .onboarding-container {
+        padding: var(--spacing-md);
+    }
+
+    .onboarding-container header {
+        padding: var(--spacing-md) 0;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .onboarding-container .logo {
+        font-size: 1.6rem;
+    }
+
+    .onboarding-container h1 {
+        font-size: 2rem; /* increased for mobile */
+        margin-bottom: var(--spacing-md);
+    }
+
+    .onboarding-container .subtitle {
+        font-size: 0.95rem;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .onboarding-container .step-content {
+        padding: 0;
+    }
+
+    .onboarding-form {
+        gap: var(--spacing-md);
+    }
+
+    .onboarding-form .input-wrapper {
+        padding: var(--spacing-xs);
+    }
+
+    .onboarding-form .input-wrapper input {
+        padding: var(--spacing-sm) var(--spacing-xs);
+        font-size: 1rem;
+    }
+
+    .tag {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.85rem;
+    }
+
+    .tags-container {
+        gap: var(--spacing-xs);
+        max-height: 40vh;
+    }
+
+    .step-footer {
+        padding-bottom: var(--spacing-lg);
+    }
+
+    .next-btn,
+    .login-options .secondary-btn {
+        width: 100%;
+        justify-content: center;
+        padding: var(--spacing-sm) var(--spacing-lg);
+        min-height: 48px;
+    }
+
+    .login-options {
+        margin-top: var(--spacing-lg);
+        gap: var(--spacing-sm);
+    }
+}
+
+/* Extra small phones */
+@media (max-width: 360px) {
+    .onboarding-container {
+        padding: var(--spacing-sm);
+    }
+
+    .onboarding-container h1 {
+        font-size: 1.75rem;
+    }
+
+    .tag {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.8rem;
+    }
+}
+
+/* Safe area insets for onboarding on iPhone */
+@supports (padding: max(0px)) {
+    @media (max-width: 480px) {
+        .onboarding-container {
+            padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+            padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+            padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+        }
+
+        .step-footer {
+            padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
+        }
+    }
+}
+
 /* Touch-friendly tap targets */
 @media (hover: none) and (pointer: coarse) {
     .filter-tag,
@@ -2519,7 +2924,9 @@ input:checked + .slider:before {
     .secondary-btn,
     .danger-btn,
     .ai-send-btn,
-    .cookmode-nav-btn {
+    .cookmode-nav-btn,
+    .tag,
+    .next-btn {
         min-height: 44px;
     }
 
