@@ -13,6 +13,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadStats();
     await loadUsers();
     await loadRecipes();
+
+    const createRecipeForm = document.getElementById('create-recipe-form');
+    createRecipeForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        await createRecipe(createRecipeForm);
+    });
 });
 
 async function checkAdminStatus() {
@@ -219,6 +225,7 @@ function renderRecipesTable(recipes) {
                 <th>Title</th>
                 <th>Tags</th>
                 <th>Difficulty</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -228,10 +235,96 @@ function renderRecipesTable(recipes) {
                     <td>${recipe.titel}</td>
                     <td>${recipe.tags.join(', ')}</td>
                     <td>${recipe.moeilijkheid}</td>
+                    <td>
+                        <button class="delete-recipe-btn" data-recipe-id="${recipe.id}" data-recipe-title="${recipe.titel}">Delete</button>
+                    </td>
                 </tr>
             `).join('')}
         </tbody>
     `;
     recipesTableContainer.innerHTML = '';
     recipesTableContainer.appendChild(table);
+
+    table.querySelectorAll('.delete-recipe-btn').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            const recipeId = event.target.dataset.recipeId;
+            const recipeTitle = event.target.dataset.recipeTitle;
+            if (confirm(`Are you sure you want to delete recipe "${recipeTitle}" (ID: ${recipeId})?`)) {
+                await deleteRecipe(recipeId);
+            }
+        });
+    });
+}
+
+async function createRecipe(form) {
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+        const recipeData = {
+            titel: data.titel,
+            bereidingstijd: parseInt(data.bereidingstijd),
+            moeilijkheid: data.moeilijkheid,
+            tags: data.tags.split(',').map(tag => tag.trim()),
+            ingredienten: JSON.parse(data.ingredienten),
+            stappen: JSON.parse(data.stappen)
+        };
+
+        const response = await fetch(window.API_BASE_URL + '/api/admin/recipes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            },
+            body: JSON.stringify(recipeData)
+        });
+
+        if (response.ok) {
+            if (typeof notifySuccess === 'function') {
+                notifySuccess('Recipe created successfully.');
+            }
+            form.reset();
+            await loadRecipes();
+            await loadStats();
+        } else {
+            const errorData = await response.json();
+            if (typeof notifyError === 'function') {
+                notifyError(`Error creating recipe: ${errorData.message || 'Unknown error'}`);
+            }
+        }
+    } catch (error) {
+        console.error('Error creating recipe:', error);
+        if (typeof notifyError === 'function') {
+            notifyError('Error creating recipe. Please check the console for details.');
+        }
+    }
+}
+
+async function deleteRecipe(recipeId) {
+    try {
+        const response = await fetch(window.API_BASE_URL + `/api/admin/recipes/${recipeId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+        });
+
+        if (response.ok) {
+            if (typeof notifySuccess === 'function') {
+                notifySuccess(`Recipe ID ${recipeId} deleted successfully.`);
+            }
+            await loadRecipes();
+            await loadStats();
+        } else {
+            const errorData = await response.json();
+            if (typeof notifyError === 'function') {
+                notifyError(`Error deleting recipe ID ${recipeId}: ${errorData.message || 'Unknown error'}`);
+            }
+        }
+    } catch (error) {
+        console.error('Error deleting recipe:', error);
+        if (typeof notifyError === 'function') {
+            notifyError('Error deleting recipe.');
+        }
+    }
 }

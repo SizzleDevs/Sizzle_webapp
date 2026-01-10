@@ -2955,3 +2955,45 @@ input:checked + .slider:before {
         overflow-x: hidden;
     }
 }
+
+@ -1,2957 +1,40 @@
+
+
+/* Admin Create Recipe Form */
+#create-recipe-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+#create-recipe-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+#create-recipe-form label {
+    font-weight: 600;
+}
+
+#create-recipe-form input,
+#create-recipe-form textarea {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: calc(var(--border-radius) - 4px);
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+#create-recipe-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+#create-recipe-form button {
+    margin-top: var(--spacing-sm);
+    align-self: flex-start;
+}
