@@ -92,7 +92,7 @@ function initializeUI() {
 }
 
 // Make these functions available globally for HTML onclick attributes if needed
-window.toggleEditUsername = function() {
+window.toggleEditUsername = async function() {
     const input = document.getElementById('username');
     const btn = document.getElementById('edit-username-btn');
     
@@ -102,16 +102,44 @@ window.toggleEditUsername = function() {
         btn.textContent = 'Opslaan';
         btn.classList.add('editing');
     } else {
-        // Here you would typically save to API
-        // For now, we just lock it back and update button
-        input.setAttribute('readonly', '');
-        btn.textContent = 'Bewerk';
-        btn.classList.remove('editing');
-        
-        // Ensure we save the new value to local storage at least
-        // In a real app, call API update endpoint here
-        localStorage.setItem('username', input.value);
-        notifySuccess('Gebruikersnaam bijgewerkt (lokaal). API update niet geïmplementeerd.');
+        const newUsername = input.value.trim();
+        if (!newUsername) {
+            notifyError('Gebruikersnaam mag niet leeg zijn.');
+            input.focus();
+            return;
+        }
+
+        const token = localStorage.getItem('authToken');
+        try {
+            const response = await fetch(window.API.ME, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ username: newUsername })
+            });
+
+            if (response.ok) {
+                input.setAttribute('readonly', '');
+                btn.textContent = 'Bewerk';
+                btn.classList.remove('editing');
+                
+                notifySuccess('Gebruikersnaam succesvol gewijzigd! Je wordt nu uitgelogd.');
+                
+                // Wacht even zodat de gebruiker de melding kan lezen
+                setTimeout(() => {
+                    logout();
+                }, 2000);
+
+            } else {
+                const error = await response.json();
+                notifyError(`Opslaan van gebruikersnaam mislukt: ${error.message || 'Onbekende fout'}`);
+            }
+        } catch (error) {
+            console.error('Save username error:', error);
+            notifyError('Er is een fout opgetreden bij het opslaan van de gebruikersnaam.');
+        }
     }
 };
 
