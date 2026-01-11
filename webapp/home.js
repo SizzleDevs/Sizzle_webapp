@@ -84,11 +84,11 @@ function renderSection(title, recipesList, highlightWord = '') {
 function getTimeBasedGreetingAndPrompt(hour) {
     // Returns appropriate Dutch greeting and question based on local hour
     if (hour >= 5 && hour < 12) {
-        return { greeting: 'Goedemorgen', prompt: 'Wat wordt het vandaag' };
+        return { greeting: 'Goedemorgen', prompt: 'Wat wordt het voor ontbijt' };
     } else if (hour >= 12 && hour < 18) {
-        return { greeting: 'Goedemiddag', prompt: 'Wat wordt het vanavond' };
+        return { greeting: 'Goedemiddag', prompt: 'Wat wordt het voor de lunch' };
     } else {
-        return { greeting: 'Goedenavond', prompt: 'Wat wordt het vanavond' };
+        return { greeting: 'Goedenavond', prompt: 'Wat wordt het voor avondeten' };
     }
 }
 
@@ -125,8 +125,16 @@ async function loadData() {
         const response = await window.apiRequest(window.API.RECOMMENDATIONS);
         if (response.ok) {
             const recommendations = await response.json();
+            const hour = new Date().getHours();
+
             contentArea.appendChild(renderSection('Voor jou', recommendations.voorkeur, 'jou'));
-            contentArea.appendChild(renderSection('Als avondeten', recommendations.avondeten, 'avondeten'));
+            if (hour >= 5 && hour < 12) {
+                contentArea.appendChild(renderSection('Als ontbijt', recommendations.ontbijt, 'ontbijt'));
+            } else if (hour >= 12 && hour < 18) {
+                contentArea.appendChild(renderSection('Als lunch', recommendations.lunch, 'lunch'));
+            } else {
+                contentArea.appendChild(renderSection('Als avondeten', recommendations.avondeten, 'avondeten'));
+            }
             contentArea.appendChild(renderSection('Trending nu', recommendations.trending, 'Trending'));
         } else {
             contentArea.innerHTML = '<p>Kon de aanbevelingen niet laden.</p>';
