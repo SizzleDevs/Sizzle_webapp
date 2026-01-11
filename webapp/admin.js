@@ -14,12 +14,59 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadUsers();
     await loadRecipes();
 
+    // Modal handling
+    const modal = document.getElementById('add-recipe-modal');
+    const addRecipeBtn = document.getElementById('add-recipe-btn');
+    const closeBtn = document.querySelector('.close-btn');
+
+    addRecipeBtn.onclick = () => modal.style.display = 'block';
+    closeBtn.onclick = () => modal.style.display = 'none';
+    window.onclick = (event) => {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // Dynamic form fields
+    document.getElementById('add-ingredient-btn').addEventListener('click', addIngredientField);
+    document.getElementById('add-step-btn').addEventListener('click', addStepField);
+
     const createRecipeForm = document.getElementById('create-recipe-form');
     createRecipeForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         await createRecipe(createRecipeForm);
+        modal.style.display = 'none';
     });
 });
+
+function addIngredientField() {
+    const container = document.getElementById('ingredients-container');
+    const ingredientField = document.createElement('div');
+    ingredientField.className = 'ingredient-field';
+    ingredientField.innerHTML = `
+        <input type="text" placeholder="Name" class="ingredient-name" required>
+        <input type="text" placeholder="Quantity" class="ingredient-quantity" required>
+        <button type="button" class="remove-btn">&times;</button>
+    `;
+    container.appendChild(ingredientField);
+    ingredientField.querySelector('.remove-btn').addEventListener('click', () => {
+        ingredientField.remove();
+    });
+}
+
+function addStepField() {
+    const container = document.getElementById('steps-container');
+    const stepField = document.createElement('div');
+    stepField.className = 'step-field';
+    stepField.innerHTML = `
+        <input type="text" placeholder="Description" class="step-description" required>
+        <button type="button" class="remove-btn">&times;</button>
+    `;
+    container.appendChild(stepField);
+    stepField.querySelector('.remove-btn').addEventListener('click', () => {
+        stepField.remove();
+    });
+}
 
 async function checkAdminStatus() {
     try {
@@ -260,14 +307,31 @@ async function createRecipe(form) {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
+    const ingredients = [];
+    document.querySelectorAll('#ingredients-container .ingredient-field').forEach(field => {
+        const name = field.querySelector('.ingredient-name').value;
+        const quantity = field.querySelector('.ingredient-quantity').value;
+        if (name && quantity) {
+            ingredients.push({ naam: name, hoeveelheid: quantity });
+        }
+    });
+
+    const steps = [];
+    document.querySelectorAll('#steps-container .step-field').forEach((field, index) => {
+        const description = field.querySelector('.step-description').value;
+        if (description) {
+            steps.push({ stapNummer: index + 1, beschrijving: description });
+        }
+    });
+
     try {
         const recipeData = {
             titel: data.titel,
             bereidingstijd: parseInt(data.bereidingstijd),
             moeilijkheid: data.moeilijkheid,
             tags: data.tags.split(',').map(tag => tag.trim()),
-            ingredienten: JSON.parse(data.ingredienten),
-            stappen: JSON.parse(data.stappen)
+            ingredienten: ingredients,
+            stappen: steps
         };
 
         const response = await fetch(window.API_BASE_URL + '/api/admin/recipes', {
@@ -284,6 +348,8 @@ async function createRecipe(form) {
                 notifySuccess('Recipe created successfully.');
             }
             form.reset();
+            document.getElementById('ingredients-container').innerHTML = '';
+            document.getElementById('steps-container').innerHTML = '';
             await loadRecipes();
             await loadStats();
         } else {

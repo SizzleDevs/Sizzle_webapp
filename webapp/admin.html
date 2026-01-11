@@ -49,45 +49,57 @@
 
                 <!-- Recipe Management Section -->
                 <div class="admin-card">
-                    <h2 class="admin-card-title">Recipe Management</h2>
+                    <div class="admin-card-header">
+                        <h2 class="admin-card-title">Recipe Management</h2>
+                        <button id="add-recipe-btn" class="primary-btn">Add New Recipe</button>
+                    </div>
                     <div id="recipes-table-container">
                         <p>Loading recipes...</p>
                     </div>
                 </div>
-
-                <!-- Create Recipe Section -->
-                <div class="admin-card">
-                    <h2 class="admin-card-title">Create Recipe</h2>
-                    <form id="create-recipe-form">
-                        <div class="form-group">
-                            <label for="titel">Title</label>
-                            <input type="text" id="titel" name="titel" placeholder="Recipe Title" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="bereidingstijd">Preparation Time (minutes)</label>
-                            <input type="number" id="bereidingstijd" name="bereidingstijd" placeholder="e.g., 30" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="moeilijkheid">Difficulty</label>
-                            <input type="text" id="moeilijkheid" name="moeilijkheid" placeholder="e.g., Makkelijk, Gemiddeld, Moeilijk" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tags">Tags (comma-separated)</label>
-                            <textarea id="tags" name="tags" placeholder="e.g., Avondeten, Snel, Italiaans" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="ingredienten">Ingredients (JSON format)</label>
-                            <textarea id="ingredienten" name="ingredienten" rows="5" placeholder='[{"naam": "Spaghetti", "hoeveelheid": "250g"}]' required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="stappen">Steps (JSON format)</label>
-                            <textarea id="stappen" name="stappen" rows="5" placeholder='[{"stapNummer": 1, "beschrijving": "Kook de spaghetti."}]' required></textarea>
-                        </div>
-                        <button type="submit" class="primary-btn">Create Recipe</button>
-                    </form>
-                </div>
             </div>
         </section>
+
+        <!-- Add Recipe Modal -->
+        <div id="add-recipe-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Create Recipe</h2>
+                <form id="create-recipe-form">
+                    <div class="form-group">
+                        <label for="titel">Title</label>
+                        <input type="text" id="titel" name="titel" placeholder="Recipe Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bereidingstijd">Preparation Time (minutes)</label>
+                        <input type="number" id="bereidingstijd" name="bereidingstijd" placeholder="e.g., 30" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="moeilijkheid">Difficulty</label>
+                        <input type="text" id="moeilijkheid" name="moeilijkheid" placeholder="e.g., Makkelijk, Gemiddeld, Moeilijk" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tags">Tags (comma-separated)</label>
+                        <textarea id="tags" name="tags" placeholder="e.g., Avondeten, Snel, Italiaans" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Ingredients</label>
+                        <div id="ingredients-container">
+                            <!-- Dynamic ingredient fields will be added here -->
+                        </div>
+                        <button type="button" id="add-ingredient-btn" class="secondary-btn">Add Ingredient</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Steps</label>
+                        <div id="steps-container">
+                            <!-- Dynamic step fields will be added here -->
+                        </div>
+                        <button type="button" id="add-step-btn" class="secondary-btn">Add Step</button>
+                    </div>
+                    <button type="submit" class="primary-btn">Create Recipe</button>
+                </form>
+            </div>
+        </div>
 
         <footer class="page-footer">
             <p>Made by Team Sizzle Devs 2026 ©</p>
