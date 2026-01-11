@@ -2956,7 +2956,6 @@ input:checked + .slider:before {
     }
 }
 
-
 /* Admin Create Recipe Form */
 #create-recipe-form {
     display: flex;
@@ -2994,31 +2993,4 @@ input:checked + .slider:before {
 #create-recipe-form button {
     margin-top: var(--spacing-sm);
     align-self: flex-start;
-}
-
-/* Dynamic form fields */
-#ingredients-container .ingredient-field,
-#steps-container .step-field {
-    display: flex;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
-}
-
-#ingredients-container .ingredient-field input,
-#steps-container .step-field input {
-    flex: 1;
-}
-
-.remove-btn {
-    background: #ef4444;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-weight: bold;
 }
