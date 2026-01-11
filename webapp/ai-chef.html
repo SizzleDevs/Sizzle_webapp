@@ -5,228 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>AI Chef - Sizzle</title>
+
+    <title>AI Chef – Sizzle</title>
+
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="dark.css">
     <script src="theme.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0" />
-    <style>
-        .ai-chef-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            padding-bottom: 80px;
-        }
-        
-        .ai-chef-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .ai-chef-header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .ai-input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .ai-input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .ai-input-group input,
-        .ai-input-group textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: var(--card-bg);
-            color: var(--text-color);
-            font-family: inherit;
-            font-size: 1rem;
-            resize: vertical;
-        }
-
-        .ai-input-group textarea {
-            min-height: 120px;
-        }
-
-        .generate-btn {
-            width: 100%;
-            padding: 16px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .generate-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-        
-        .result-container {
-            margin-top: 2rem;
-            display: none;
-        }
-
-        .result-container.visible {
-            display: block;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .generated-recipe {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-
-        .recipe-meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
-            margin: 1.5rem 0;
-            padding: 12px;
-            background: var(--bg-color);
-            border-radius: 8px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        .recipe-actions {
-            margin-top: 2rem;
-            display: flex;
-            gap: 12px;
-        }
-
-        .save-btn {
-            flex: 1;
-            padding: 12px;
-            background: var(--secondary-color, #e0e0e0);
-            color: var(--text-color);
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .save-btn.saved {
-            background: var(--success-color, #4CAF50);
-            color: white;
-        }
-    </style>
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">Sizzle</div>
-            <div class="header-icons">
-                <span class="material-symbols-rounded" onclick="window.location.href='index.html'" style="cursor: pointer;">home</span>
-                <span class="material-symbols-rounded" onclick="window.location.href='favorites.html'" style="cursor: pointer;">favorite</span>
-                <span class="material-symbols-rounded filled" style="color: var(--primary-color);">smart_toy</span>
-                <span class="material-symbols-rounded" onclick="window.location.href='about.html'" style="cursor: pointer;">info</span>
-                <span class="material-symbols-rounded" onclick="redirectToProfileIfLoggedIn()" style="cursor: pointer;">person</span>
-            </div>
-        </header>
-
-        <div class="ai-chef-container">
-            <div class="ai-chef-header">
-                <h1>AI Chefkok</h1>
-                <p>Wat heb je in huis? Laat Sizzle een recept bedenken!</p>
-            </div>
-
-            <form id="ai-chef-form">
-                <div class="ai-input-group">
-                    <label for="dish-name">Naam van het gerecht (optioneel)</label>
-                    <input type="text" id="dish-name" placeholder="bv. Pasta Surprise">
-                </div>
-
-                <div class="ai-input-group">
-                    <label for="ingredients">Ingrediënten (in huis)</label>
-                    <textarea id="ingredients" placeholder="bv. pasta, tomaten, ui, knoflook, beetje kip..." required></textarea>
-                </div>
-
-                <button type="submit" class="generate-btn" id="generate-btn">
-                    <span class="material-symbols-rounded">automotion</span>
-                    Genereer Recept
-                </button>
-            </form>
-
-            <div id="result-container" class="result-container">
-                <div class="generated-recipe">
-                    <h2 id="recipe-title"></h2>
-                    
-                    <div class="recipe-meta-grid">
-                        <div class="meta-item">
-                            <span class="material-symbols-rounded">timer</span>
-                            <span id="recipe-time"></span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="material-symbols-rounded">signal_cellular_alt</span>
-                            <span id="recipe-difficulty"></span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="material-symbols-rounded">smart_toy</span>
-                            <span>AI Generated</span>
-                        </div>
-                    </div>
-
-                    <h3>Ingrediënten</h3>
-                    <ul id="recipe-ingredients"></ul>
-
-                    <h3>Bereiding</h3>
-                    <ol id="recipe-steps"></ol>
-
-                    <div class="recipe-actions">
-                        <button id="save-recipe-btn" class="save-btn">
-                            <span class="material-symbols-rounded">favorite</span>
-                            Opslaan in Favorieten
-                        </button>
-                    </div>
-                </div>
-            </div>
+<div class="container">
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">Sizzle</div>
+        <div class="header-icons">
+            <span class="material-symbols-rounded" onclick="window.location.href='index.html'" style="cursor: pointer;">home</span>
+            <span class="material-symbols-rounded" onclick="window.location.href='favorites.html'" style="cursor: pointer;">favorite</span>
+            <span class="material-symbols-rounded filled" onclick="window.location.href='ai-chef.html'" style="cursor: pointer;">smart_toy</span>
+            <span class="material-symbols-rounded" onclick="window.location.href='about.html'" style="cursor: pointer;">info</span>
+            <span class="material-symbols-rounded" onclick="redirectToProfileIfLoggedIn()" style="cursor: pointer;">person</span>
         </div>
+    </header>
 
-        <footer class="page-footer">
-            <p>Made by Team Sizzle 2026 copyright sizzle devs</p>
-        </footer>
-    </div>
+    
+    <main class="ai-chef-container">
 
-    <script src="notifications.js"></script>
-    <script src="config.js"></script>
-    <script src="auth.js"></script>
-    <script src="ai-chef.js"></script>
+        <h1 class="ai-chef-title">AI Chefkok</h1>
+
+        <form id="ai-chef-form">
+
+            <div class="ai-chef-field">
+                <input
+                    type="text"
+                    class="ai-chef-input"
+                    placeholder="Naam van het gerecht (optioneel)">
+            </div>
+
+            <div class="ai-chef-field">
+                <textarea
+                    class="ai-chef-textarea"
+                    required
+                    placeholder="Ingrediënten die je in huis hebt..."></textarea>
+            </div>
+
+            <button type="submit" class="ai-chef-generate-btn">
+                <span class="material-symbols-rounded">auto_fix_high</span>
+                genereer recept
+            </button>
+
+        </form>
+
+    </main>
+
+
+    <footer class="page-footer">
+        <p>Made by Team Sizzle 2026 copyright sizzle devs</p>
+    </footer>
+
+</div>
+
+<script src="notifications.js"></script>
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="ai-chef.js"></script>
 </body>
 </html>

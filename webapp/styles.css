@@ -2994,3 +2994,54 @@ input:checked + .slider:before {
     margin-top: var(--spacing-sm);
     align-self: flex-start;
 }
+
+.ai-chef-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+    text-align: center;
+}
+
+.ai-chef-title {
+    font-family: var(--font-serif);
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 2.5rem;
+}
+
+.ai-chef-field {
+    margin-bottom: 1.8rem;
+}
+
+.ai-chef-input,
+.ai-chef-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.ai-chef-textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+.ai-chef-generate-btn {
+    margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: var(--primary-color);
+    color: #000;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+}
