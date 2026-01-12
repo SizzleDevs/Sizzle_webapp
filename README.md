@@ -1,5 +1,5 @@
 # Sizzle-De_ultieme_kookhulp
-![Sizzle-Mockup](<webapp/foto's/sizzle Mockup.png>)
+![Sizzle-Mockup](<README-foto's/sizzle Mockup.png>)
 
 Sizzle is jouw ultieme partner in het ontdekken van heerlijke recepten voor elke gelegenheid. Of je nu op zoek bent naar een snel avondmaal, een verfijnd gerecht voor een speciale gelegenheid, of gewoon inspiratie nodig hebt voor je volgende maaltijd, Sizzle staat voor je klaar.
 
