@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
     <style>
         .ai-badge {
             display: inline-flex;
@@ -39,16 +40,131 @@
             </div>
         </header>
 
-        <div class="recipe-detail-container" id="recipe-content">
-            <!-- Content will be injected -->
+        <div class="recipe-detail-container">
+            <div class="recipe-content">
+                <div class="recipe-header">
+                    <h4 style="font-family: var(--font-serif); margin-bottom: 10px;">Recept</h4>
+                    <div class="ai-badge" style="margin-bottom: 1rem;">
+                        <span class="material-symbols-rounded" style="font-size: 18px;">auto_awesome</span>
+                        AI Chef Recept
+                    </div>
+                    <h1 id="recipe-title">Laden...</h1>
+                    
+                    <div class="recipe-meta-tags" id="recipe-tags">
+                        <!-- Tags injected here -->
+                    </div>
+                    
+                    <div class="recipe-actions">
+                        <button id="cookmode-btn" class="primary-btn" style="font-size:1rem; padding: 8px 18px; display: flex; align-items: center; gap: 8px;">
+                            <span class="material-symbols-rounded">play_circle</span> Kookmodus
+                        </button>
+                        <button id="favorite-btn" class="secondary-btn" style="font-size:1rem; padding: 8px; display: flex; align-items: center; gap: 8px; background: var(--bg-color); border: none;" title="Favoriet">
+                            <span class="material-symbols-rounded favorite-btn-icon" id="favorite-icon">favorite</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ingredients-box">
+                    <div class="ingredients-header">
+                        <h3>Ingrediënten</h3>
+                        <div class="servings-control">
+                            <button id="decrease-servings" class="no-loading"><span class="material-symbols-rounded" style="font-size: 1rem;">remove</span></button>
+                            <span id="servings-count">4 Personen</span>
+                            <button id="increase-servings" class="no-loading"><span class="material-symbols-rounded" style="font-size: 1rem;">add</span></button>
+                        </div>
+                    </div>
+                    <ul class="ingredient-list" id="ingredient-list">
+                        <!-- Ingredients injected here -->
+                    </ul>
+                </div>
+
+                <div class="steps-container">
+                    <h3>Stappen</h3>
+                    <div id="steps-list">
+                        <!-- Steps injected here -->
+                    </div>
+                </div>
+
+                <!-- Fullscreen Cook Mode Overlay -->
+                <div id="cookmode-overlay" class="cookmode-overlay hidden">
+                    <div class="cookmode-content">
+                        <button id="cookmode-exit" class="cookmode-exit-btn" title="Sluiten"><span class="material-symbols-rounded">close</span></button>
+                        <div class="cookmode-body">
+                            <div class="cookmode-step-section">
+                                <div class="cookmode-step-anim" id="cookmode-step-anim">
+                                    <!-- Step content injected here -->
+                                </div>
+                            </div>
+                            <div class="cookmode-ingredients-section" id="cookmode-ingredients">
+                                <!-- Ingredients injected here -->
+                            </div>
+                        </div>
+                        <div class="cookmode-controls">
+                            <button id="cookmode-prev" class="cookmode-nav-btn left"><span class="material-symbols-rounded">arrow_back</span> Vorige stap</button>
+                            <div class="cookmode-step-indicators" id="cookmode-step-indicators" aria-hidden="false" role="status" aria-label="Stap indicatoren">
+                                <!-- Step indicators (dots) will be injected here by JS -->
+                            </div>
+                            <button id="cookmode-next" class="cookmode-nav-btn right">Volgende stap <span class="material-symbols-rounded">arrow_forward</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="recipe-sidebar">
+                <div class="ai-chat-box">
+                    <div id="ai-login-required" class="ai-login-required" style="display:none;">
+                        <h2 class="ai-login-heading">Je moet <span class="highlight">inloggen</span> om AI te gebruiken</h2>
+                        <button class="primary-btn" onclick="window.location.href='login.html'">Naar login</button>
+                    </div>
+                    <div id="ai-chat-ui">
+                        <div class="ai-spark-wrapper">
+                            <span class="material-symbols-rounded ai-spark">auto_awesome</span>
+                            <div class="ai-spark-text">Vraag AI iets over dit recept</div>
+                        </div>
+                        <div class="ai-messages" id="ai-messages"></div>
+                        <div class="ai-context-box-input hidden" id="ai-context-box-input">
+                            <div class="ai-context-box-header">
+                                <span>Vraag over:</span>
+                                <button class="ai-context-box-close" id="ai-context-box-close" title="Verwijder context">
+                                    <span class="material-symbols-rounded" style="font-size: 0.9rem;">close</span>
+                                </button>
+                            </div>
+                            <div class="ai-context-box-text" id="ai-context-box-text"></div>
+                        </div>
+                        <div class="ai-input-wrapper">
+                            <div class="ai-input-row">
+                                <input type="text" id="ai-input" placeholder="Stel een vraag...">
+                                <button class="ai-send-btn" id="ai-send" title="Stuur vraag"><span class="material-symbols-rounded" style="font-size: 1.2rem; color: var(--text-color);">send</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
         </div>
+
+        <div class="discover-more">
+            <h2>Nog meer gerechten<br>ontdekken?</h2>
+            <button class="discover-btn" onclick="window.location.href='alle-recepten.html'"><span class="material-symbols-rounded">list</span> Alle gerechten</button>
+        </div>
+
+        <footer class="page-footer">
+            <p>Made by Team Sizzle Devs 2026 ©</p>
+        </footer>
     </div>
 
-    <script src="auth.js"></script>
+    <!-- Floating AI Selection Button -->
+    <div id="ai-selection-btn" class="ai-selection-btn hidden">
+        <span class="material-symbols-rounded" style="font-size: 1rem;">auto_awesome</span>
+        Vraag AI
+    </div>
+
+    <script src="notifications.js"></script>
     <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="header.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-             // Check if logged in
+            // Check if logged in
             if (!isLoggedIn()) {
                 window.location.href = 'login.html';
                 return;
@@ -65,75 +181,274 @@
             const recipes = JSON.parse(localStorage.getItem('aiRecipes') || '[]');
             const recipe = recipes.find(r => r.id === recipeId);
 
-            const container = document.getElementById('recipe-content');
-
             if (!recipe) {
-                container.innerHTML = '<h2>Recept niet gevonden</h2><p><a href="favorites.html">Terug naar favorieten</a></p>';
+                document.getElementById('recipe-title').textContent = 'Recept niet gevonden';
+                document.querySelector('.recipe-content').innerHTML = '<p><a href="favorites.html">Terug naar favorieten</a></p>';
                 return;
             }
 
-            // Render Recipe using standard layout structure
-            const ingredientsHtml = recipe.ingredients.map(ing => `<li>${ing}</li>`).join('');
+            // Convert AI recipe to standard format for compatibility
+            const standardRecipe = convertAIRecipeToStandard(recipe);
             
-            // Steps need consistent styling
-            const stepsHtml = recipe.steps.map((step, index) => `
-                <div class="step-card">
-                    <div class="step-number">${index + 1}</div>
-                    <div class="step-content">
-                        <p>${step}</p>
-                    </div>
-                </div>
-            `).join('');
+            // Render recipe using standard format
+            renderAIRecipe(standardRecipe);
             
-            container.innerHTML = `
-                <div class="recipe-content">
-                    <div class="recipe-header">
-                        <div class="ai-badge" style="margin-bottom: 1rem;">
-                            <span class="material-symbols-rounded" style="font-size: 18px;">auto_awesome</span>
-                            AI Chef Recept
-                        </div>
-                        <h1 id="recipe-title">${recipe.title}</h1>
-                        
-                        <div class="recipe-meta-tags">
-                            <span class="tag"><span class="material-symbols-rounded">timer</span> ${recipe.cooking_time}</span>
-                            <span class="tag"><span class="material-symbols-rounded">signal_cellular_alt</span> ${recipe.difficulty}</span>
-                        </div>
-                    </div>
-
-                    <div class="ingredients-box">
-                        <div class="ingredients-header">
-                            <h3>Ingrediënten</h3>
-                        </div>
-                        <ul class="ingredient-list">
-                            ${ingredientsHtml}
-                        </ul>
-                    </div>
-
-                    <div class="steps-container">
-                        <h3>Stappen</h3>
-                        <div id="steps-list">
-                            ${stepsHtml}
-                        </div>
-                    </div>
-                </div>
-                
-                 <aside class="recipe-sidebar" style="height: auto;">
-                    <div class="ai-chat-box" style="position: static; margin-top: 0;">
-                        <div class="ai-spark-wrapper">
-                            <span class="material-symbols-rounded ai-spark">auto_awesome</span>
-                            <div class="ai-spark-text">Dit is een AI recept</div>
-                        </div>
-                        <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
-                            Dit recept is speciaal voor jou gegenereerd door de Sizzle AI Chef op basis van je ingrediënten. 
-                            Omdat het live gegenereerd is, kunnen we geen garanties geven over de smaak, maar het klinkt zeker lekker!
-                        </p>
-                        <button onclick="if(confirm('Wil je dit recept verwijderen?')) { removeAIRecipe('${recipe.id}'); window.location.href='favorites.html'; }" class="secondary-btn" style="width: 100%; justify-content: center; color: var(--error-color, #ff4444); border-color: var(--error-color, #ff4444);">
-                            <span class="material-symbols-rounded">delete</span> Verwijder Recept
-                        </button>
-                    </div>
-                </aside>
-            `;
+            // Setup interactions
+            setupRecipeInteractions(standardRecipe);
         });
+
+        function convertAIRecipeToStandard(aiRecipe) {
+            return {
+                titel: aiRecipe.title || aiRecipe.titel,
+                tags: aiRecipe.tags || ['ai', 'gegenereerd'],
+                ingredienten: (aiRecipe.ingredients || aiRecipe.ingrediënten || []).map(ing => {
+                    // If it's already an object, use it
+                    if (typeof ing === 'object' && ing.naam) {
+                        return ing;
+                    }
+                    // If it's a string, try to parse amount and name
+                    const match = ing.match(/^([\d\s\w]+)\s+(.+)$/);
+                    if (match) {
+                        return {
+                            naam: match[2],
+                            hoeveelheid: match[1]
+                        };
+                    }
+                    // Default fallback
+                    return {
+                        naam: ing,
+                        hoeveelheid: ''
+                    };
+                }),
+                stappen: (aiRecipe.steps || aiRecipe.stappen || []).map((step, index) => {
+                    // If it's already an object, use it
+                    if (typeof step === 'object' && step.beschrijving) {
+                        return step;
+                    }
+                    // If it's a string, convert to object
+                    return {
+                        stapnummer: index + 1,
+                        beschrijving: step,
+                        duur: 0
+                    };
+                }),
+                cooking_time: aiRecipe.cooking_time || aiRecipe.bereidingstijd,
+                difficulty: aiRecipe.difficulty || aiRecipe.moeilijkheidsgraad,
+                id: aiRecipe.id,
+                isAi: true
+            };
+        }
+
+        function renderAIRecipe(recipe) {
+            // Title
+            document.getElementById('recipe-title').textContent = recipe.titel;
+            
+            // Tags
+            const tagsContainer = document.getElementById('recipe-tags');
+            tagsContainer.innerHTML = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
+
+            // Ingredients
+            const ingredientList = document.getElementById('ingredient-list');
+            ingredientList.innerHTML = '';
+            if (recipe.ingredienten && recipe.ingredienten.length > 0) {
+                recipe.ingredienten.forEach((ing, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'ingredient-item';
+                    
+                    li.innerHTML = `
+                        <div class="checkbox-wrapper" onclick="toggleCheckbox(this)">
+                            <div class="custom-checkbox unchecked"><span class="material-symbols-rounded">check</span></div>
+                            <span>${ing.naam}</span>
+                        </div>
+                        <span class="amount" data-base="${ing.hoeveelheid}">${ing.hoeveelheid}</span>
+                    `;
+                    ingredientList.appendChild(li);
+                });
+            } else {
+                ingredientList.innerHTML = '<p>Ingrediënten voor dit recept zijn nog niet beschikbaar.</p>';
+            }
+
+            // Steps
+            const stepsList = document.getElementById('steps-list');
+            stepsList.innerHTML = '';
+            if (recipe.stappen && recipe.stappen.length > 0) {
+                recipe.stappen.forEach((step, index) => {
+                    const stepDiv = document.createElement('div');
+                    stepDiv.className = 'step-card';
+                    
+                    const stepNumber = step.stapnummer || (index + 1);
+                    const stepDuration = step.duur || 0;
+                    
+                    stepDiv.innerHTML = `
+                        <div class="step-header">
+                            <div class="checkbox-wrapper" onclick="toggleCheckbox(this)">
+                                <div class="custom-checkbox unchecked"><span class="material-symbols-rounded">check</span></div>
+                                <span>Stap ${stepNumber}</span>
+                            </div>
+                            <span class="step-time">${stepDuration} min <span class="material-symbols-rounded" style="font-size: 1rem; vertical-align: text-bottom;">timer</span></span>
+                        </div>
+                        <p>${step.beschrijving}</p>
+                    `;
+                    stepsList.appendChild(stepDiv);
+                });
+            } else {
+                stepsList.innerHTML = '<p>De stappen voor dit recept zijn nog niet beschikbaar.</p>';
+            }
+
+            // Store data for cookmode
+            window._sizzleRecipeSteps = recipe.stappen;
+            window._sizzleRecipeIngredients = recipe.ingredienten;
+        }
+
+        function setupRecipeInteractions(recipe) {
+            // Servings control
+            let currentServings = 4;
+            const servingsCount = document.getElementById('servings-count');
+            
+            document.getElementById('decrease-servings').addEventListener('click', () => {
+                if (currentServings > 1) {
+                    currentServings--;
+                    servingsCount.textContent = `${currentServings} Personen`;
+                    updateIngredientAmounts(currentServings / 4);
+                }
+            });
+            
+            document.getElementById('increase-servings').addEventListener('click', () => {
+                currentServings++;
+                servingsCount.textContent = `${currentServings} Personen`;
+                updateIngredientAmounts(currentServings / 4);
+            });
+
+            // Cook mode
+            document.getElementById('cookmode-btn').addEventListener('click', () => {
+                enterCookMode();
+            });
+
+            // Favorite button (AI recipes are already saved, so just show filled)
+            const favoriteIcon = document.getElementById('favorite-icon');
+            favoriteIcon.textContent = 'favorite';
+            favoriteIcon.parentElement.classList.add('filled');
+        }
+
+        function updateIngredientAmounts(multiplier) {
+            document.querySelectorAll('.amount').forEach(amountEl => {
+                const base = amountEl.getAttribute('data-base');
+                if (base) {
+                    // Simple scaling - this could be improved with better parsing
+                    const scaled = scaleIngredient(base, multiplier);
+                    amountEl.textContent = scaled;
+                }
+            });
+        }
+
+        function scaleIngredient(amount, multiplier) {
+            // Simple scaling logic - parse numbers and scale them
+            const match = amount.match(/(\d+(?:\.\d+)?)/);
+            if (match) {
+                const num = parseFloat(match[1]);
+                const scaled = Math.round(num * multiplier * 10) / 10;
+                return amount.replace(match[1], scaled);
+            }
+            return amount;
+        }
+
+        // Cook mode functions (simplified version)
+        function enterCookMode() {
+            const overlay = document.getElementById('cookmode-overlay');
+            overlay.classList.remove('hidden');
+            cookmodeStepIdx = 0;
+            cookmodeRenderStep(0);
+        }
+
+        let cookmodeStepIdx = 0;
+        
+        function cookmodeRenderStep(idx) {
+            const steps = window._sizzleRecipeSteps;
+            const ingredients = window._sizzleRecipeIngredients;
+            if (!steps || !steps.length) return;
+            
+            const totalSteps = steps.length + 1;
+            const isIngredientStep = idx === 0;
+            const step = isIngredientStep ? null : steps[idx - 1];
+            const anim = document.getElementById('cookmode-step-anim');
+            
+            if (isIngredientStep) {
+                anim.innerHTML = `
+                    <div class="cookmode-step-main">
+                        <div class="cookmode-ingredients-inner">
+                            <div class="cookmode-ingredients-header">
+                                <h3>Ingrediënten</h3>
+                            </div>
+                            <ul class="cookmode-ingredients-list">
+                                ${ingredients.map(ing => `
+                                    <li class="ingredient-item">
+                                        <div class="checkbox-wrapper" onclick="toggleCheckbox(this)">
+                                            <div class="custom-checkbox unchecked"><span class="material-symbols-rounded">check</span></div>
+                                            <span>${ing.naam}</span>
+                                        </div>
+                                        <span class="ing-amount">${ing.hoeveelheid}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else {
+                const stepNumberLabel = `Stap ${step.stapnummer || idx} van ${steps.length}`;
+                anim.innerHTML = `
+                    <div class="cookmode-step-label">${stepNumberLabel}</div>
+                    <div class="cookmode-step-main">
+                        <div class="cookmode-step-time"><span class="material-symbols-rounded">timer</span> ${step.duur || 0} min</div>
+                        <div class="cookmode-step-desc">${step.beschrijving}</div>
+                    </div>
+                `;
+            }
+            
+            // Update navigation
+            updateCookModeNavigation(idx, totalSteps);
+        }
+
+        function updateCookModeNavigation(currentIdx, totalSteps) {
+            const prevBtn = document.getElementById('cookmode-prev');
+            const nextBtn = document.getElementById('cookmode-next');
+            const indicators = document.getElementById('cookmode-step-indicators');
+            
+            prevBtn.style.visibility = currentIdx > 0 ? 'visible' : 'hidden';
+            nextBtn.style.visibility = currentIdx < totalSteps - 1 ? 'visible' : 'hidden';
+            
+            // Simple indicators
+            indicators.innerHTML = '';
+            for (let i = 0; i < totalSteps; i++) {
+                const dot = document.createElement('span');
+                dot.className = `indicator ${i === currentIdx ? 'active' : ''}`;
+                indicators.appendChild(dot);
+            }
+            
+            prevBtn.onclick = () => {
+                if (currentIdx > 0) {
+                    cookmodeStepIdx--;
+                    cookmodeRenderStep(cookmodeStepIdx);
+                }
+            };
+            
+            nextBtn.onclick = () => {
+                if (currentIdx < totalSteps - 1) {
+                    cookmodeStepIdx++;
+                    cookmodeRenderStep(cookmodeStepIdx);
+                }
+            };
+        }
+
+        // Exit cook mode
+        document.getElementById('cookmode-exit').addEventListener('click', () => {
+            document.getElementById('cookmode-overlay').classList.add('hidden');
+        });
+
+        function toggleCheckbox(wrapper) {
+            const checkbox = wrapper.querySelector('.custom-checkbox');
+            checkbox.classList.toggle('unchecked');
+            checkbox.classList.toggle('checked');
+        }
 
         function removeAIRecipe(id) {
             let recipes = JSON.parse(localStorage.getItem('aiRecipes') || '[]');
