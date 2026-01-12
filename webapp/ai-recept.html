@@ -12,20 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0" />
     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
-    <style>
-        .ai-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(100, 100, 255, 0.1);
-            color: #646cff;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -43,11 +29,7 @@
         <div class="recipe-detail-container">
             <div class="recipe-content">
                 <div class="recipe-header">
-                    <h4 style="font-family: var(--font-serif); margin-bottom: 10px;">Recept</h4>
-                    <div class="ai-badge" style="margin-bottom: 1rem;">
-                        <span class="material-symbols-rounded" style="font-size: 18px;">auto_awesome</span>
-                        AI Chef Recept
-                    </div>
+                    <h4 style="font-family: var(--font-serif); margin-bottom: 10px;">AI Recept</h4>
                     <h1 id="recipe-title">Laden...</h1>
                     
                     <div class="recipe-meta-tags" id="recipe-tags">
@@ -55,7 +37,7 @@
                     </div>
                     
                     <div class="recipe-actions">
-                        <button id="cookmode-btn" class="primary-btn" style="font-size:1rem; padding: 8px 18px; display: flex; align-items: center; gap: 8px;">
+                        <button id="cookmode-btn" class="primary-btn no-loading" style="font-size:1rem; padding: 8px 18px; display: flex; align-items: center; gap: 8px;">
                             <span class="material-symbols-rounded">play_circle</span> Kookmodus
                         </button>
                         <button id="favorite-btn" class="secondary-btn" style="font-size:1rem; padding: 8px; display: flex; align-items: center; gap: 8px; background: var(--bg-color); border: none;" title="Favoriet">
@@ -88,7 +70,7 @@
                 <!-- Fullscreen Cook Mode Overlay -->
                 <div id="cookmode-overlay" class="cookmode-overlay hidden">
                     <div class="cookmode-content">
-                        <button id="cookmode-exit" class="cookmode-exit-btn" title="Sluiten"><span class="material-symbols-rounded">close</span></button>
+                        <button id="cookmode-exit" class="cookmode-exit-btn no-loading" title="Sluiten"><span class="material-symbols-rounded">close</span></button>
                         <div class="cookmode-body">
                             <div class="cookmode-step-section">
                                 <div class="cookmode-step-anim" id="cookmode-step-anim">
@@ -100,11 +82,11 @@
                             </div>
                         </div>
                         <div class="cookmode-controls">
-                            <button id="cookmode-prev" class="cookmode-nav-btn left"><span class="material-symbols-rounded">arrow_back</span> Vorige stap</button>
+                            <button id="cookmode-prev" class="cookmode-nav-btn left no-loading"><span class="material-symbols-rounded">arrow_back</span> Vorige stap</button>
                             <div class="cookmode-step-indicators" id="cookmode-step-indicators" aria-hidden="false" role="status" aria-label="Stap indicatoren">
                                 <!-- Step indicators (dots) will be injected here by JS -->
                             </div>
-                            <button id="cookmode-next" class="cookmode-nav-btn right">Volgende stap <span class="material-symbols-rounded">arrow_forward</span></button>
+                            <button id="cookmode-next" class="cookmode-nav-btn right no-loading">Volgende stap <span class="material-symbols-rounded">arrow_forward</span></button>
                         </div>
                     </div>
                 </div>
@@ -112,11 +94,11 @@
 
             <aside class="recipe-sidebar">
                 <div class="ai-chat-box">
-                    <div id="ai-login-required" class="ai-login-required" style="display:none;">
-                        <h2 class="ai-login-heading">Je moet <span class="highlight">inloggen</span> om AI te gebruiken</h2>
-                        <button class="primary-btn" onclick="window.location.href='login.html'">Naar login</button>
+                    <div id="ai-login-required" class="ai-login-required">
+                        <h2 class="ai-login-heading">Bij dit gerecht is <span class="highlight">AI onbeschikbaar</span></h2>
+                        <button class="primary-btn" onclick="window.location.href='alle-recepten.html'">Alle gerechten</button>
                     </div>
-                    <div id="ai-chat-ui">
+                    <div id="ai-chat-ui" style="display:none;">
                         <div class="ai-spark-wrapper">
                             <span class="material-symbols-rounded ai-spark">auto_awesome</span>
                             <div class="ai-spark-text">Vraag AI iets over dit recept</div>
@@ -200,7 +182,7 @@
         function convertAIRecipeToStandard(aiRecipe) {
             return {
                 titel: aiRecipe.title || aiRecipe.titel,
-                tags: aiRecipe.tags || ['ai', 'gegenereerd'],
+                tags: Array.isArray(aiRecipe.tags) ? aiRecipe.tags : (typeof aiRecipe.tags === 'string' ? aiRecipe.tags.split(',').map(t => t.trim()).filter(Boolean) : (aiRecipe.tags ? [String(aiRecipe.tags)] : ['ai', 'gegenereerd'])), 
                 ingredienten: (aiRecipe.ingredients || aiRecipe.ingrediënten || []).map(ing => {
                     // If it's already an object, use it
                     if (typeof ing === 'object' && ing.naam) {
@@ -245,7 +227,8 @@
             
             // Tags
             const tagsContainer = document.getElementById('recipe-tags');
-            tagsContainer.innerHTML = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
+            const safeTags = Array.isArray(recipe.tags) ? recipe.tags : (typeof recipe.tags === 'string' ? recipe.tags.split(',').map(t => t.trim()).filter(Boolean) : (recipe.tags ? [String(recipe.tags)] : []));
+            tagsContainer.innerHTML = safeTags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
 
             // Ingredients
             const ingredientList = document.getElementById('ingredient-list');
@@ -309,14 +292,14 @@
                 if (currentServings > 1) {
                     currentServings--;
                     servingsCount.textContent = `${currentServings} Personen`;
-                    updateIngredientAmounts(currentServings / 4);
+                    aiUpdateIngredientAmounts(currentServings / 4);
                 }
             });
             
             document.getElementById('increase-servings').addEventListener('click', () => {
                 currentServings++;
                 servingsCount.textContent = `${currentServings} Personen`;
-                updateIngredientAmounts(currentServings / 4);
+                aiUpdateIngredientAmounts(currentServings / 4);
             });
 
             // Cook mode
@@ -330,18 +313,18 @@
             favoriteIcon.parentElement.classList.add('filled');
         }
 
-        function updateIngredientAmounts(multiplier) {
+        function aiUpdateIngredientAmounts(multiplier) {
             document.querySelectorAll('.amount').forEach(amountEl => {
                 const base = amountEl.getAttribute('data-base');
                 if (base) {
                     // Simple scaling - this could be improved with better parsing
-                    const scaled = scaleIngredient(base, multiplier);
+                    const scaled = aiScaleIngredient(base, multiplier);
                     amountEl.textContent = scaled;
                 }
             });
         }
 
-        function scaleIngredient(amount, multiplier) {
+        function aiScaleIngredient(amount, multiplier) {
             // Simple scaling logic - parse numbers and scale them
             const match = amount.match(/(\d+(?:\.\d+)?)/);
             if (match) {
@@ -352,12 +335,15 @@
             return amount;
         }
 
-        // Cook mode functions (simplified version)
+        // Cook mode functions
         function enterCookMode() {
             const overlay = document.getElementById('cookmode-overlay');
+            if (!overlay) return;
             overlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
             cookmodeStepIdx = 0;
             cookmodeRenderStep(0);
+            document.addEventListener('keydown', cookmodeKeyHandler);
         }
 
         let cookmodeStepIdx = 0;
@@ -404,7 +390,6 @@
                 `;
             }
             
-            // Update navigation
             updateCookModeNavigation(idx, totalSteps);
         }
 
@@ -414,9 +399,15 @@
             const indicators = document.getElementById('cookmode-step-indicators');
             
             prevBtn.style.visibility = currentIdx > 0 ? 'visible' : 'hidden';
-            nextBtn.style.visibility = currentIdx < totalSteps - 1 ? 'visible' : 'hidden';
+
+            if (currentIdx < totalSteps - 1) {
+                nextBtn.style.visibility = 'visible';
+                nextBtn.innerHTML = 'Volgende stap <span class="material-symbols-rounded">arrow_forward</span>';
+            } else {
+                nextBtn.style.visibility = 'visible';
+                nextBtn.innerHTML = '<span class="material-symbols-rounded">check_circle</span> Klaar!';
+            }
             
-            // Simple indicators
             indicators.innerHTML = '';
             for (let i = 0; i < totalSteps; i++) {
                 const dot = document.createElement('span');
@@ -425,23 +416,96 @@
             }
             
             prevBtn.onclick = () => {
-                if (currentIdx > 0) {
+                if (cookmodeStepIdx > 0) {
                     cookmodeStepIdx--;
                     cookmodeRenderStep(cookmodeStepIdx);
                 }
             };
             
             nextBtn.onclick = () => {
-                if (currentIdx < totalSteps - 1) {
+                if (cookmodeStepIdx < totalSteps - 1) {
                     cookmodeStepIdx++;
                     cookmodeRenderStep(cookmodeStepIdx);
+                } else {
+                    finishCookmode();
                 }
             };
         }
 
+        function cookmodeKeyHandler(e) {
+            const overlay = document.getElementById('cookmode-overlay');
+            if (!overlay || overlay.classList.contains('hidden')) return;
+            const steps = window._sizzleRecipeSteps || [];
+            const totalSteps = steps.length + 1;
+            if (e.key === 'ArrowLeft') {
+                if (cookmodeStepIdx > 0) {
+                    cookmodeStepIdx--;
+                    cookmodeRenderStep(cookmodeStepIdx);
+                }
+            } else if (e.key === 'ArrowRight') {
+                if (cookmodeStepIdx < totalSteps - 1) {
+                    cookmodeStepIdx++;
+                    cookmodeRenderStep(cookmodeStepIdx);
+                } else {
+                    finishCookmode();
+                }
+            } else if (e.key === 'Escape') {
+                finishCookmode();
+            }
+        }
+
+        function showConfetti() {
+            if (typeof confetti !== 'undefined') {
+                const duration = 3000;
+                const end = Date.now() + duration;
+                const launchFromLeft = () => {
+                    confetti({
+                        particleCount: 5,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0, y: 0.6 },
+                        colors: ['#ffffff', '#FF0000', '#FFD700', '#00FF00', '#0099FF'],
+                        zIndex: 99999
+                    });
+                };
+                const launchFromRight = () => {
+                    confetti({
+                        particleCount: 5,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1, y: 0.6 },
+                        colors: ['#ffffff', '#FF0000', '#FFD700', '#00FF00', '#0099FF'],
+                        zIndex: 99999
+                    });
+                };
+                const interval = setInterval(() => {
+                    if (Date.now() > end) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    launchFromLeft();
+                    launchFromRight();
+                }, 150);
+                launchFromLeft();
+                launchFromRight();
+            }
+        }
+
+        function finishCookmode() {
+            showConfetti();
+            const overlay = document.getElementById('cookmode-overlay');
+            if (!overlay) return;
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', cookmodeKeyHandler);
+        }
+
         // Exit cook mode
         document.getElementById('cookmode-exit').addEventListener('click', () => {
-            document.getElementById('cookmode-overlay').classList.add('hidden');
+            const overlay = document.getElementById('cookmode-overlay');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', cookmodeKeyHandler);
         });
 
         function toggleCheckbox(wrapper) {

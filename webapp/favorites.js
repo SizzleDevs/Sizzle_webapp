@@ -5,12 +5,17 @@ function createRecipeCard(recipe) {
         window.location.href = `recipe.html?id=${recipe.id}`;
     };
 
-    const tagsHtml = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
+    // Normalize tags to avoid runtime errors if tags is not an array
+    const safeTags = Array.isArray(recipe.tags) ? recipe.tags : (typeof recipe.tags === 'string' ? recipe.tags.split(',').map(t => t.trim()).filter(Boolean) : []);
+    const tagsHtml = safeTags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
     const heartClass = recipe.isFavorite ? 'favorited' : '';
+
+    // Use a tolerant title fallback (AI recipes may have `title` instead of `titel`)
+    const titleText = recipe.titel || recipe.title || 'Onbekend';
 
     card.innerHTML = `
         <div class="card-header">
-            <div class="card-title">${recipe.titel}</div>
+            <div class="card-title">${titleText}</div>
             <div class="favorite-icon" onclick="event.stopPropagation(); toggleFavorite(this, '${recipe.id}')">
                 <span class="material-symbols-rounded ${heartClass}">favorite</span>
             </div>
@@ -108,13 +113,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Load AI Favorites ---
     const aiContainer = document.getElementById('ai-favorites-container');
     const aiSection = document.getElementById('ai-section');
-    const aiRecipes = getAIRecipes();
+    const rawAiRecipes = getAIRecipes();
+
+    // Normalize AI recipes to avoid rendering issues (missing title/tags etc.)
+    const aiRecipes = rawAiRecipes.map(r => ({
+        ...r,
+        titel: r.titel || r.title || 'AI Recept',
+        tags: Array.isArray(r.tags) ? r.tags : (typeof r.tags === 'string' ? r.tags.split(',').map(t => t.trim()).filter(Boolean) : (r.tags ? [String(r.tags)] : [])),
+        isAi: true,
+        isFavorite: true
+    }));
 
     if (aiRecipes.length > 0 && aiContainer && aiSection) {
         aiSection.style.display = 'block';
         aiRecipes.forEach(recipe => {
-            // Ensure source is marked for card click handling differences if needed
-            recipe.isAi = true; 
             const card = createRecipeCard(recipe);
             
             // Override onclick for AI recipes to point to custom detail view

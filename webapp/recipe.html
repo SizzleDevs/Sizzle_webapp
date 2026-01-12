@@ -39,7 +39,7 @@
                     </div>
                     
                     <div class="recipe-actions">
-                        <button id="cookmode-btn" class="primary-btn" style="font-size:1rem; padding: 8px 18px; display: flex; align-items: center; gap: 8px;">
+                        <button id="cookmode-btn" class="primary-btn no-loading" style="font-size:1rem; padding: 8px 18px; display: flex; align-items: center; gap: 8px;">
                             <span class="material-symbols-rounded">play_circle</span> Kookmodus
                         </button>
                         <button id="favorite-btn" class="secondary-btn" style="font-size:1rem; padding: 8px; display: flex; align-items: center; gap: 8px; background: var(--bg-color); border: none;" title="Favoriet">
@@ -72,7 +72,7 @@
                 <!-- Fullscreen Cook Mode Overlay -->
                 <div id="cookmode-overlay" class="cookmode-overlay hidden">
                     <div class="cookmode-content">
-                        <button id="cookmode-exit" class="cookmode-exit-btn" title="Sluiten"><span class="material-symbols-rounded">close</span></button>
+                        <button id="cookmode-exit" class="cookmode-exit-btn no-loading" title="Sluiten"><span class="material-symbols-rounded">close</span></button>
                         <div class="cookmode-body">
                             <div class="cookmode-step-section">
                                 <div class="cookmode-step-anim" id="cookmode-step-anim">
@@ -84,11 +84,11 @@
                             </div>
                         </div>
                         <div class="cookmode-controls">
-                            <button id="cookmode-prev" class="cookmode-nav-btn left"><span class="material-symbols-rounded">arrow_back</span> Vorige stap</button>
+                            <button id="cookmode-prev" class="cookmode-nav-btn left no-loading"><span class="material-symbols-rounded">arrow_back</span> Vorige stap</button>
                             <div class="cookmode-step-indicators" id="cookmode-step-indicators" aria-hidden="false" role="status" aria-label="Stap indicatoren">
                                 <!-- Step indicators (dots) will be injected here by JS -->
                             </div>
-                            <button id="cookmode-next" class="cookmode-nav-btn right">Volgende stap <span class="material-symbols-rounded">arrow_forward</span></button>
+                            <button id="cookmode-next" class="cookmode-nav-btn right no-loading">Volgende stap <span class="material-symbols-rounded">arrow_forward</span></button>
                         </div>
                     </div>
                 </div>

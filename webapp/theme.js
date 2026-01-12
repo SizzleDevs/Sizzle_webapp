@@ -73,10 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
             button = target.closest('.tag');
         }
 
-        // Add loading state to the button (skip filter tags)
+        // Add loading state to the button (skip certain interactive elements)
         if (button) {
             // Don't show loading for filter tags — they update the UI instantly
-            if (button.classList && button.classList.contains('filter-tag')) return;
+            // Also skip buttons explicitly marked with 'no-loading' and cookmode controls
+            if (button.classList && (button.classList.contains('filter-tag') || button.classList.contains('no-loading') || button.classList.contains('cookmode-nav-btn') || button.classList.contains('cookmode-exit-btn') || button.id === 'cookmode-btn' || (button.closest && button.closest('#cookmode-overlay')))) return;
 
             showButtonLoading(button);
 
