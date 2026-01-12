@@ -27,11 +27,12 @@ function renderRecipe(recipe) {
     const tagsContainer = document.getElementById('recipe-tags');
     tagsContainer.innerHTML = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
 
-    // Ingredients
+    // Ingredients - handle both old and new API formats
     const ingredientList = document.getElementById('ingredient-list');
     ingredientList.innerHTML = '';
-    if (recipe.ingrediënten && recipe.ingrediënten.length > 0) {
-        recipe.ingrediënten.forEach((ing, index) => {
+    const ingredients = recipe.ingredienten || recipe.ingrediënten || [];
+    if (ingredients.length > 0) {
+        ingredients.forEach((ing, index) => {
             const li = document.createElement('li');
             li.className = 'ingredient-item';
             
@@ -51,17 +52,18 @@ function renderRecipe(recipe) {
     // Steps
     const stepsList = document.getElementById('steps-list');
     stepsList.innerHTML = '';
-    if (recipe.stappen && recipe.stappen.length > 0) {
-        recipe.stappen.forEach((step, index) => {
+    const steps = recipe.stappen || [];
+    if (steps.length > 0) {
+        steps.forEach((step, index) => {
             const stepDiv = document.createElement('div');
             stepDiv.className = 'step-card';
             
             // Debug logging
             console.log('Step object:', step);
-            console.log('stapNummer:', step.stapNummer);
+            console.log('stapnummer:', step.stapnummer || step.stapNummer);
             console.log('duur:', step.duur);
             
-            const stepNumber = step.stapNummer || (index + 1);
+            const stepNumber = step.stapnummer || step.stapNummer || (index + 1);
             const stepDuration = step.duur || 0;
             
             stepDiv.innerHTML = `
@@ -82,7 +84,7 @@ function renderRecipe(recipe) {
 
     // Store steps and ingredients globally for cookmode
     window._sizzleRecipeSteps = recipe.stappen;
-    window._sizzleRecipeIngredients = recipe.ingrediënten;
+    window._sizzleRecipeIngredients = recipe.ingredienten || recipe.ingrediënten;
 
     // Recalculate sticky positioning removed to respect CSS layout
 }
@@ -152,7 +154,7 @@ function cookmodeRenderStep(idx) {
         } else {
             // Render the actual step.
             const descriptiveText = step.beschrijving;
-            const stepNumberLabel = `Stap ${step.stapNummer} van ${steps.length}`;
+            const stepNumberLabel = `Stap ${step.stapnummer || step.stapNummer} van ${steps.length}`;
             anim.innerHTML = `
                 <div class="cookmode-step-label">${stepNumberLabel}</div>
                 <div class="cookmode-step-main">
@@ -809,22 +811,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sendBtn = document.getElementById('ai-send');
     const input = document.getElementById('ai-input');
     const messages = document.getElementById('ai-messages');
-    const aiRobotWrapper = document.querySelector('.ai-robot-wrapper');
+    const aiSparkWrapper = document.querySelector('.ai-spark-wrapper');
 
-    // Context elements (for selection feature)
+    // Context elements (for selection feature) 
 
-    // If there are already messages, hide the robot helper wrapper
-    if (aiRobotWrapper && messages && messages.children.length > 0) {
-        aiRobotWrapper.classList.add('hidden');
+    // If there are already messages, hide the AI spark helper wrapper
+    if (aiSparkWrapper && messages && messages.children.length > 0) {
+        aiSparkWrapper.classList.add('hidden');
     }
 
     sendBtn.addEventListener('click', () => {
         const text = input.value;
         if (!text) return;
 
-        // hide robot helper wrapper on first user interaction
-        if (aiRobotWrapper && !aiRobotWrapper.classList.contains('hidden')) {
-            aiRobotWrapper.classList.add('hidden');
+        // hide AI spark helper wrapper on first user interaction
+        if (aiSparkWrapper && !aiSparkWrapper.classList.contains('hidden')) {
+            aiSparkWrapper.classList.add('hidden');
         }
 
         // Check if there's context from selection

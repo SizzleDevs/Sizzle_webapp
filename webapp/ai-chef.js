@@ -59,22 +59,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    saveBtn.addEventListener('click', () => {
+    saveBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
         if (currentRecipe) {
-            saveAIRecipe(currentRecipe);
+            await saveAIRecipe(currentRecipe);
         }
     });
 
     function displayRecipe(recipe) {
-        document.getElementById('recipe-title').textContent = recipe.title;
-        document.getElementById('recipe-time').textContent = recipe.cooking_time;
-        document.getElementById('recipe-difficulty').textContent = recipe.difficulty;
+        // Add source to recipe for identification
+        recipe.source = "ai";
+        
+        // Set recipe title
+        document.getElementById('recipe-title').textContent = recipe.title || 'AI Recept';
+        
+        // Set recipe time and difficulty with fallbacks
+        document.getElementById('recipe-time').textContent = recipe.cooking_time || recipe.time || 'Onbekend';
+        document.getElementById('recipe-difficulty').textContent = recipe.difficulty || recipe.moeilijkheidsgraad || 'Gemiddeld';
 
         const ingredientsList = document.getElementById('recipe-ingredients');
-        ingredientsList.innerHTML = recipe.ingredients.map(ing => `<li>${ing}</li>`).join('');
+        ingredientsList.innerHTML = '';
+        
+        if (recipe.ingredients && recipe.ingredients.length > 0) {
+            ingredientsList.innerHTML = recipe.ingredients.map(ing => `<li>${ing}</li>`).join('');
+        } else {
+            ingredientsList.innerHTML = '<li>Geen ingrediënten beschikbaar</li>';
+        }
 
         const stepsList = document.getElementById('recipe-steps');
-        stepsList.innerHTML = recipe.steps.map(step => `<li>${step}</li>`).join('');
+        stepsList.innerHTML = '';
+        
+        if (recipe.steps && recipe.steps.length > 0) {
+            stepsList.innerHTML = recipe.steps.map((step, index) => `<li>${step}</li>`).join('');
+        } else {
+            stepsList.innerHTML = '<li>Geen bereidingsstappen beschikbaar</li>';
+        }
 
         // Reset save button state
         saveBtn.classList.remove('saved');
@@ -88,31 +107,105 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function saveAIRecipe(recipe) {
+async function saveAIRecipe(recipe) {
     if (recipe.source !== "ai") {
         console.error("Only AI recipes can be saved here");
         return;
     }
 
     try {
-        let aiRecipes = getAIRecipes();
-        
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            notifyError('Je moet ingelogd zijn om recepten op te slaan.');
+            return;
+        }
+
         // Add ID if missing (simple timestamp based)
         if (!recipe.id) {
             recipe.id = 'ai_' + Date.now();
         }
 
-        // Check duplicates (avoid adding same generated result twice)
-        // Here we just check simple existence, not content
-        const exists = aiRecipes.some(r => r.id === recipe.id);
-        if (exists) {
-            notifyError('Dit recept is al opgeslagen!');
-            return;
+        // Prepare recipe data for backend
+        const recipeData = {
+            id: recipe.id,
+            titel: recipe.title,
+            beschrijving: recipe.description || 'AI gegenereerd recept',
+            ingrediënten: recipe.ingredients || [],
+            stappen: recipe.steps || [],
+            bereidingstijd: recipe.cooking_time || 'Onbekend',
+            moeilijkheidsgraad: recipe.difficulty || 'Gemiddeld',
+            tags: recipe.tags || ['ai', 'gegenereerd'],
+            afbeelding: recipe.image || '',
+            bron: 'ai',
+            // Add required fields that might be missing
+            auteur: 'AI Chef',
+            porties: recipe.servings || 2,
+            voorbereidingstijd: recipe.prep_time || '10 minuten'
+        };
+
+        let backendSuccess = true;
+        
+        try {
+            // Save to backend
+            const response = await fetch(window.API.RECIPES, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(recipeData)
+            });
+
+            if (!response.ok) {
+                backendSuccess = false;
+                console.warn('Backend save failed, falling back to local storage only');
+            } else {
+                // Add to favorites
+                const favoriteResponse = await fetch(window.API.FAVORITE_TOGGLE(recipe.id), {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!favoriteResponse.ok) {
+                    backendSuccess = false;
+                    console.warn('Favorite add failed, recipe saved to backend but not favorited');
+                }
+            }
+        } catch (backendError) {
+            console.error('Backend operation failed:', backendError);
+            backendSuccess = false;
         }
 
-        aiRecipes.push(recipe);
-        localStorage.setItem('aiRecipes', JSON.stringify(aiRecipes));
-        
+        // Also save to localStorage for AI recipes section
+        let aiRecipes = getAIRecipes();
+        const exists = aiRecipes.some(r => r.id === recipe.id);
+        if (!exists) {
+            // Add all necessary fields to the stored recipe
+            const recipeToStore = {
+                ...recipe,
+                id: recipe.id,
+                titel: recipe.title,
+                beschrijving: recipe.description || 'AI gegenereerd recept',
+                ingrediënten: recipe.ingredients || [],
+                stappen: recipe.steps || [],
+                bereidingstijd: recipe.cooking_time || 'Onbekend',
+                moeilijkheidsgraad: recipe.difficulty || 'Gemiddeld',
+                tags: recipe.tags || ['ai', 'gegenereerd'],
+                afbeelding: recipe.image || '',
+                bron: 'ai',
+                auteur: 'AI Chef',
+                porties: recipe.servings || 2,
+                voorbereidingstijd: recipe.prep_time || '10 minuten',
+                source: 'ai',
+                isFavorite: true,
+                isAi: true
+            };
+            aiRecipes.push(recipeToStore);
+            localStorage.setItem('aiRecipes', JSON.stringify(aiRecipes));
+        }
+
         // Update UI
         const saveBtn = document.getElementById('save-recipe-btn');
         if (saveBtn) {
@@ -121,9 +214,16 @@ function saveAIRecipe(recipe) {
             saveBtn.disabled = true;
         }
         
+        // Show appropriate notification based on backend success
+        if (backendSuccess) {
+            notifySuccess('Recept opgeslagen in favorieten!');
+        } else {
+            notifySuccess('Recept lokaal opgeslagen. Je vindt het in je AI favorieten.');
+        }
+        
     } catch (e) {
         console.error("Failed to save AI recipe", e);
-        notifyError('Kon recept niet lokaal opslaan.');
+        notifyError('Kon recept niet opslaan. Probeer het later opnieuw.');
     }
 }
 

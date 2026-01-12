@@ -22,6 +22,7 @@
             <div class="header-icons">
                 <span class="material-symbols-rounded" onclick="window.location.href='/'" style="cursor: pointer;">home</span>
                 <span class="material-symbols-rounded" onclick="window.location.href='favorites.html'" style="cursor: pointer;">favorite</span>
+                <span class="material-symbols-rounded" onclick="window.location.href='ai-chef.html'" style="cursor: pointer;">auto_awesome</span>
                 <span class="material-symbols-rounded" onclick="window.location.href='about.html'" style="cursor: pointer;">info</span>
                 <span class="material-symbols-rounded" onclick="redirectToProfileIfLoggedIn()" style="cursor: pointer;">person</span>
             </div>
@@ -100,9 +101,9 @@
                         <button class="primary-btn" onclick="window.location.href='login.html'">Naar login</button>
                     </div>
                     <div id="ai-chat-ui">
-                        <div class="ai-robot-wrapper">
-                            <span class="material-symbols-rounded ai-robot">robot_2</span>
-                            <div class="ai-robot-text">Vraag AI iets over dit recept</div>
+                        <div class="ai-spark-wrapper">
+                            <span class="material-symbols-rounded ai-spark">auto_awesome</span>
+                            <div class="ai-spark-text">Vraag AI iets over dit recept</div>
                         </div>
                         <div class="ai-messages" id="ai-messages"></div>
                         <div class="ai-context-box-input hidden" id="ai-context-box-input">
@@ -137,7 +138,7 @@
 
     <!-- Floating AI Selection Button -->
     <div id="ai-selection-btn" class="ai-selection-btn hidden">
-        <span class="material-symbols-rounded" style="font-size: 1rem;">robot_2</span>
+        <span class="material-symbols-rounded" style="font-size: 1rem;">auto_awesome</span>
         Vraag AI
     </div>
 

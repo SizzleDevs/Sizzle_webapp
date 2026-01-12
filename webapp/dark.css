@@ -832,8 +832,8 @@ cent color */
     box-shadow: none; /* removed shadow around AI box */
 }
 
-/* Robot icon shown when there are no messages yet */
-.ai-robot-wrapper {
+/* AI spark icon shown when there are no messages yet */
+.ai-spark-wrapper {
     display: flex;
     flex: 0 0 auto; /* do not take remaining space so messages can expand */
     align-items: center;
@@ -842,24 +842,24 @@ cent color */
     padding-top: var(--spacing-4xl); /* nudge down toward center of the box */
 }
 
-.ai-robot {
+.ai-spark {
     color: #888;
     opacity: 0.6; /* dimmed */
     font-size: 4rem; /* larger */
     user-select: none;
 }
 
-.ai-robot-text {
+.ai-spark-text {
     color: #888;
     opacity: 0.6; /* dimmed to match icon */
     margin-top: var(--spacing-sm);
     font-size: 0.95rem;
 }
 
-.ai-robot.hidden,
-.ai-robot-wrapper.hidden {
+.ai-spark.hidden,
+.ai-spark-wrapper.hidden {
     display: none;
-}
+} 
 
 /* Ensure the messages area fills the remaining space between helper and input */
 .ai-messages {

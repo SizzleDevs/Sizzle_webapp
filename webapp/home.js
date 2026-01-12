@@ -25,6 +25,32 @@ function createRecipeCard(recipe) {
     return card;
 }
 
+function createAIChefCard() {
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    card.onclick = () => {
+        if (window.isLoggedIn()) {
+            window.location.href = 'ai-chef.html';
+        } else {
+            window.location.href = 'login.html';
+        }
+    };
+
+    card.innerHTML = `
+        <div class="card-header">
+            <div class="card-title">Maak een gerecht met de AI chef</div>
+            <div class="favorite-icon" onclick="event.stopPropagation(); if(window.isLoggedIn()) { window.location.href='ai-chef.html'; } else { window.location.href='login.html'; }">
+                <span class="material-symbols-rounded">auto_awesome</span>
+            </div>
+        </div>
+        <div class="card-tags">
+            <span class="card-tag">AI</span>
+        </div>
+    `;
+
+    return card;
+}
+
 // Global function for favorite toggle
 window.toggleFavorite = async function(element, id) {
     if (!isLoggedIn()) {
@@ -72,6 +98,11 @@ function renderSection(title, recipesList, highlightWord = '') {
     
     const grid = document.createElement('div');
     grid.className = 'recipe-scroll-container';
+
+    // Add a special AI Chef card to the first recommendation scroller ('Voor jou')
+    if (title && title.trim() === 'Voor jou') {
+        grid.appendChild(createAIChefCard());
+    }
     
     recipesList.forEach(recipe => {
         grid.appendChild(createRecipeCard(recipe));
