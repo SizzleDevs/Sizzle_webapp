@@ -19,11 +19,12 @@
             margin: 0 auto;
             padding: var(--container-padding);
             padding-bottom: var(--spacing-4xl);
-            /* Center content vertically */
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
             min-height: 60vh;
+            text-align: center;
         }
 
         .ai-chef-header {
@@ -44,139 +45,74 @@
             margin-bottom: 0;
         }
 
-        .ai-input-group {
-            margin-bottom: var(--spacing-xl);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+        #ai-chef-form {
             width: 100%;
-            text-align: left;
-=======
-            text-align: center;
->>>>>>> Stashed changes
-=======
-            text-align: center;
->>>>>>> Stashed changes
-=======
-            text-align: center;
->>>>>>> Stashed changes
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
         }
 
-        .ai-input-group label {
-            display: block;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            text-align: center;
+        }
+
+        .form-group label {
             font-weight: 700;
-            margin-bottom: var(--spacing-xs);
             font-size: 0.9rem;
-=======
-            font-weight: bold;
-            margin-bottom: var(--spacing-sm);
-            font-size: 1.1rem;
->>>>>>> Stashed changes
-=======
-            font-weight: bold;
-            margin-bottom: var(--spacing-sm);
-            font-size: 1.1rem;
->>>>>>> Stashed changes
-=======
-            font-weight: bold;
-            margin-bottom: var(--spacing-sm);
-            font-size: 1.1rem;
->>>>>>> Stashed changes
         }
 
-        .ai-input-group input,
-        .ai-input-group textarea {
-            width: 100%;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            padding: var(--spacing-sm);
-=======
-            padding: var(--spacing-sm) var(--spacing-md);
->>>>>>> Stashed changes
-=======
-            padding: var(--spacing-sm) var(--spacing-md);
->>>>>>> Stashed changes
-=======
-            padding: var(--spacing-sm) var(--spacing-md);
->>>>>>> Stashed changes
+        .input-wrapper {
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-family: var(--font-sans);
             background: var(--card-bg);
-            color: var(--text-color);
-            resize: vertical;
-            display: block;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            outline: none;
-=======
-            max-width: 100%;
->>>>>>> Stashed changes
-=======
-            max-width: 100%;
->>>>>>> Stashed changes
-=======
-            max-width: 100%;
->>>>>>> Stashed changes
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm);
+            position: relative;
+            transition: border-color 0.2s;
         }
 
-        .ai-input-group textarea {
-            min-height: 120px;
-        }
-
-        .ai-input-group input:focus,
-        .ai-input-group textarea:focus {
-            outline: none;
+        .input-wrapper:focus-within {
             border-color: var(--accent-color);
         }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        #generate-btn {
-            display: block;
-=======
-        .generate-btn {
-            display: block !important;
->>>>>>> Stashed changes
-=======
-        .generate-btn {
-            display: block !important;
->>>>>>> Stashed changes
-=======
-        .generate-btn {
-            display: block !important;
->>>>>>> Stashed changes
-            margin: var(--spacing-sm) auto 0 auto;
+        .input-wrapper input,
+        .input-wrapper textarea {
+            flex: 1;
+            border: none;
+            padding: var(--spacing-sm);
+            font-size: 1rem;
+            outline: none;
+            background: transparent;
+            font-family: var(--font-sans);
+            color: var(--text-color);
+            text-align: left;
         }
 
-        #ai-chef-form {
-            width: 100%;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            max-width: 600px; /* match login screen */
-            margin: 0 auto;
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .input-wrapper input::placeholder,
+        .input-wrapper textarea::placeholder {
+            color: #999;
+            opacity: 1;
+        }
+
+        .input-wrapper textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        #generate-btn {
+            margin-top: var(--spacing-md);
+            align-self: center;
         }
 
         .result-container {
             margin-top: var(--section-margin);
             display: none;
+            width: 100%;
         }
 
         .result-container.visible {
@@ -190,7 +126,7 @@
         }
 
         .generated-recipe {
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color); /* Thicker border for "box" feel */
             border-radius: var(--border-radius);
             padding: var(--section-margin);
             background: var(--card-bg);
@@ -198,37 +134,13 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* Added shadow for box emphasis */
+            text-align: left; /* Aligned left as requested */
         }
 
-        .recipe-meta-grid {
-            display: none;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            font-size: 0.9rem;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-
-        .meta-item .material-symbols-rounded {
-            font-size: 1rem;
-            color: var(--accent-color);
-        }
-
-        .generated-recipe h2 {
-            font-family: var(--font-serif);
-            font-size: 2rem;
-            margin-bottom: var(--spacing-md);
-        }
-
+        .generated-recipe h2, 
         .generated-recipe h3 {
-            font-family: var(--font-serif);
-            font-size: 1.5rem;
-            margin-bottom: var(--spacing-md);
-            margin-top: var(--spacing-xl);
+            text-align: left;
         }
 
         .generated-recipe ul,
@@ -311,14 +223,18 @@
             </div>
 
             <form id="ai-chef-form">
-                <div class="ai-input-group">
+                <div class="form-group">
                     <label for="dish-name">Naam van het gerecht (optioneel)</label>
-                    <input type="text" id="dish-name" placeholder="bv. Pasta Surprise">
+                    <div class="input-wrapper">
+                        <input type="text" id="dish-name" placeholder="bv. Pasta Surprise">
+                    </div>
                 </div>
 
-                <div class="ai-input-group">
+                <div class="form-group">
                     <label for="ingredients">Ingrediënten (in huis)</label>
-                    <textarea id="ingredients" placeholder="bv. pasta, tomaten, ui, knoflook, beetje kip..." required></textarea>
+                    <div class="input-wrapper">
+                        <textarea id="ingredients" placeholder="bv. pasta, tomaten, ui, knoflook, beetje kip..." required></textarea>
+                    </div>
                 </div>
 
                 <button type="submit" class="primary-btn" id="generate-btn">
@@ -331,21 +247,6 @@
                 <div class="generated-recipe">
                     <h2 id="recipe-title"></h2>
                     
-                    <div class="recipe-meta-grid">
-                        <div class="meta-item">
-                            <span class="material-symbols-rounded">timer</span>
-                            <span id="recipe-time"></span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="material-symbols-rounded">signal_cellular_alt</span>
-                            <span id="recipe-difficulty"></span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="material-symbols-rounded">auto_awesome</span>
-                            <span>AI Generated</span>
-                        </div>
-                    </div>
-
                     <h3>Ingrediënten</h3>
                     <ul id="recipe-ingredients"></ul>
 

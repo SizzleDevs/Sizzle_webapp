@@ -73,10 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Set recipe title
         document.getElementById('recipe-title').textContent = recipe.title || 'AI Recept';
         
-        // Set recipe time and difficulty with fallbacks
-        document.getElementById('recipe-time').textContent = recipe.cooking_time || recipe.time || 'Onbekend';
-        document.getElementById('recipe-difficulty').textContent = recipe.difficulty || recipe.moeilijkheidsgraad || 'Gemiddeld';
-
         const ingredientsList = document.getElementById('recipe-ingredients');
         ingredientsList.innerHTML = '';
         
