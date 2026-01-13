@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', async () => {
     if (!isLoggedIn()) {
-        window.location.href = 'login.html';
+        window.location.href = 'login';
         return;
     }
 
     const isAdmin = await checkAdminStatus();
     if (!isAdmin) {
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return;
     }
 

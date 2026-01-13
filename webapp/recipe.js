@@ -746,34 +746,15 @@ async function setupFavoriteButton(recipeId) {
 document.addEventListener('DOMContentLoaded', async () => {
     const id = getRecipeId();
 
-    // --- AI Availability Check ---
+    // --- AI Login Check ---
     const aiLoginRequired = document.getElementById('ai-login-required');
     const aiChatUI = document.getElementById('ai-chat-ui');
-    
-    // Check if this is an AI-generated recipe (id === 'generated')
-    const id = getRecipeId();
-    const isAIGeneratedRecipe = id === 'generated';
-    
-    if (isAIGeneratedRecipe) {
-        // For AI-generated recipes, show the "AI not available" message
-        if (aiLoginRequired) {
-            aiLoginRequired.innerHTML = `
-                <h2 class="ai-login-heading">AI is niet beschikbaar bij dit gerecht</h2>
-                <button class="primary-btn" onclick="window.location.href='alle-recepten.html'">Naar alle gerechten</button>
-            `;
-            aiLoginRequired.style.display = 'flex';
-        }
+    if (typeof window.isLoggedIn === 'function' && !window.isLoggedIn()) {
+        if (aiLoginRequired) aiLoginRequired.style.display = 'flex';
         if (aiChatUI) aiChatUI.style.display = 'none';
     } else {
-        // For regular recipes, show the "AI not available" message
-        if (aiLoginRequired) {
-            aiLoginRequired.innerHTML = `
-                <h2 class="ai-login-heading">AI is niet beschikbaar bij dit gerecht</h2>
-                <button class="primary-btn" onclick="window.location.href='alle-recepten.html'">Naar alle gerechten</button>
-            `;
-            aiLoginRequired.style.display = 'flex';
-        }
-        if (aiChatUI) aiChatUI.style.display = 'none';
+        if (aiLoginRequired) aiLoginRequired.style.display = 'none';
+        if (aiChatUI) aiChatUI.style.display = '';
     }
     
     // --- START GENERATED RECIPE HANDLING ---

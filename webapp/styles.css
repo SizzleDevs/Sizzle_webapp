@@ -431,11 +431,11 @@ body {
     opacity: 1;
 }
 .top-banner.success {
-    background: #1a9e4b;
+    background: #22c55e17;
     border: 1px solid #22c55e;
 }
 .top-banner.error {
-    background: #d32f2f;
+    background: #ef444410;
     border: 1px solid #ef4444;
 }
 .banner-icon {

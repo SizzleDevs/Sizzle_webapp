@@ -4,7 +4,7 @@ function createRecipeCard(recipe) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.onclick = () => {
-        window.location.href = `recipe.html?id=${recipe.id}`;
+        window.location.href = `recipe?id=${recipe.id}`;
     };
 
     const tagsHtml = recipe.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('');
@@ -30,16 +30,16 @@ function createAIChefCard() {
     card.className = 'recipe-card';
     card.onclick = () => {
         if (window.isLoggedIn()) {
-            window.location.href = 'ai-chef.html';
+            window.location.href = 'ai-chef';
         } else {
-            window.location.href = 'login.html';
+            window.location.href = 'login';
         }
     };
 
     card.innerHTML = `
         <div class="card-header">
             <div class="card-title">Maak een gerecht met de AI chef</div>
-            <div class="favorite-icon" onclick="event.stopPropagation(); if(window.isLoggedIn()) { window.location.href='ai-chef.html'; } else { window.location.href='login.html'; }">
+            <div class="favorite-icon" onclick="event.stopPropagation(); if(window.isLoggedIn()) { window.location.href='ai-chef'; } else { window.location.href='login'; }">
                 <span class="material-symbols-rounded">auto_awesome</span>
             </div>
         </div>
@@ -54,7 +54,7 @@ function createAIChefCard() {
 // Global function for favorite toggle
 window.toggleFavorite = async function(element, id) {
     if (!isLoggedIn()) {
-        window.location.href = 'login.html';
+        window.location.href = 'login';
         return;
     }
 
@@ -215,7 +215,7 @@ document.addEventListener('visibilitychange', () => {
         const searchTerm = searchInput.value.trim();
         if (searchTerm) {
             // Navigate to alle-recepten page with search query
-            window.location.href = `alle-recepten.html?search=${encodeURIComponent(searchTerm)}`;
+            window.location.href = `alle-recepten?search=${encodeURIComponent(searchTerm)}`;
         }
     }
     
@@ -235,7 +235,7 @@ document.addEventListener('visibilitychange', () => {
                 // Navigate to alle-recepten page with filter query
                 // Preserve optional current search input
                 const searchTerm = searchInput.value.trim();
-                let url = `alle-recepten.html?filter=${encodeURIComponent(filterName)}`;
+                let url = `alle-recepten?filter=${encodeURIComponent(filterName)}`;
                 if (searchTerm) {
                     url += `&search=${encodeURIComponent(searchTerm)}`;
                 }

@@ -47,7 +47,7 @@
 
         #ai-chef-form {
             width: 100%;
-            max-width: 700px;
+            max-width: 500px;
             display: flex;
             flex-direction: column;
             gap: var(--spacing-lg);
@@ -65,7 +65,7 @@
             font-size: 0.9rem;
         }
 
-        .input-wrapper, .search-input-wrapper {
+        .input-wrapper {
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
             background: var(--card-bg);
@@ -76,18 +76,15 @@
             transition: border-color 0.2s;
         }
 
-        .input-wrapper:focus-within,
-        .search-input-wrapper:focus-within {
+        .input-wrapper:focus-within {
             border-color: var(--accent-color);
         }
 
         .input-wrapper input,
-        .input-wrapper textarea,
-        .search-input-wrapper input,
-        .search-input-wrapper textarea {
+        .input-wrapper textarea {
             flex: 1;
             border: none;
-            padding: 10px;
+            padding: var(--spacing-sm);
             font-size: 1rem;
             outline: none;
             background: transparent;
@@ -97,23 +94,14 @@
         }
 
         .input-wrapper input::placeholder,
-        .input-wrapper textarea::placeholder,
-        .search-input-wrapper input::placeholder,
-        .search-input-wrapper textarea::placeholder {
+        .input-wrapper textarea::placeholder {
             color: #999;
             opacity: 1;
         }
 
-        .search-input-wrapper textarea {
-            min-height: 140px;
+        .input-wrapper textarea {
+            min-height: 120px;
             resize: vertical;
-        }
-
-        /* Ensure wrappers in AI Chef fill the form width so inputs align with recipe box */
-        .ai-chef-container .search-input-wrapper {
-            width: 100%;
-            max-width: none; /* override global max-width: 600px so it matches the form's 700px */
-            box-sizing: border-box; /* ensure padding doesn't change outer width */
         }
 
         #generate-btn {
@@ -138,12 +126,12 @@
         }
 
         .generated-recipe {
-            border: 1px solid var(--border-color); /* Match other input boxes' border width */
+            border: 2px solid var(--border-color); /* Thicker border for "box" feel */
             border-radius: var(--border-radius);
             padding: var(--section-margin);
             background: var(--card-bg);
             margin-bottom: var(--spacing-3xl);
-            max-width: 700px; /* Same max-width as the form inputs */
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* Added shadow for box emphasis */
@@ -218,12 +206,12 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">Sizzle</div>
+            <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">Sizzle</div>
             <div class="header-icons">
-                <span class="material-symbols-rounded" onclick="window.location.href='index.html'" style="cursor: pointer;">home</span>
-                <span class="material-symbols-rounded" onclick="window.location.href='favorites.html'" style="cursor: pointer;">favorite</span>
+                <span class="material-symbols-rounded" onclick="window.location.href='/'" style="cursor: pointer;">home</span>
+                <span class="material-symbols-rounded" onclick="window.location.href='favorites'" style="cursor: pointer;">favorite</span>
                 <span class="material-symbols-rounded filled">auto_awesome</span>
-                <span class="material-symbols-rounded" onclick="window.location.href='about.html'" style="cursor: pointer;">info</span>
+                <span class="material-symbols-rounded" onclick="window.location.href='about'" style="cursor: pointer;">info</span>
                 <span class="material-symbols-rounded" onclick="redirectToProfileIfLoggedIn()" style="cursor: pointer;">person</span>
             </div>
         </header>
@@ -237,14 +225,14 @@
             <form id="ai-chef-form">
                 <div class="form-group">
                     <label for="dish-name">Naam van het gerecht (optioneel)</label>
-                    <div class="search-input-wrapper">
+                    <div class="input-wrapper">
                         <input type="text" id="dish-name" placeholder="bv. Pasta Surprise">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="ingredients">Ingrediënten (in huis)</label>
-                    <div class="search-input-wrapper">
+                    <div class="input-wrapper">
                         <textarea id="ingredients" placeholder="bv. pasta, tomaten, ui, knoflook, beetje kip..." required></textarea>
                     </div>
                 </div>

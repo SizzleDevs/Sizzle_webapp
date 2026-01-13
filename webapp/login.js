@@ -37,7 +37,7 @@ function setupLogin() {
             if (response.ok) {
                 const result = await response.json();
                 await window.storeUserData(result.token, result.username, result.name);
-                window.location.href = 'index.html';
+                window.location.href = '/';
             } else {
                 const error = await response.json();
                 notifyError(`Inloggen mislukt: ${error.message || 'Ongeldige gebruikersnaam of wachtwoord'}`);

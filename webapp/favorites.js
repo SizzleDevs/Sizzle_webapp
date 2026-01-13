@@ -2,7 +2,7 @@ function createRecipeCard(recipe) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.onclick = () => {
-        window.location.href = `recipe.html?id=${recipe.id}`;
+        window.location.href = `recipe?id=${recipe.id}`;
     };
 
     // Normalize tags to avoid runtime errors if tags is not an array
@@ -43,7 +43,7 @@ window.toggleFavorite = async function(element, id) {
         if (response.ok) {
             icon.classList.toggle('favorited');
             // If removed from favorites on favorites page, remove card from view
-            if (isCurrentlyFavorite && window.location.pathname.includes('favorites.html')) {
+            if (isCurrentlyFavorite && window.location.pathname.includes('favorites')) {
                 const card = element.closest('.recipe-card');
                 if (card) {
                     card.remove();
@@ -77,7 +77,7 @@ function getAIRecipes() {
 document.addEventListener('DOMContentLoaded', async () => {
     // Check if logged in
     if (!isLoggedIn()) {
-        window.location.href = 'login.html';
+        window.location.href = 'login';
         return;
     }
     

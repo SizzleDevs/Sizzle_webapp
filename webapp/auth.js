@@ -84,24 +84,24 @@ window.logout = function() {
     try{
         if (typeof notifySuccess === 'function') {
             notifySuccess('Je bent uitgelogd');
-            setTimeout(() => { window.location.href = 'login.html'; }, 350);
+            setTimeout(() => { window.location.href = 'login'; }, 350);
             return;
         }
     } catch(e){}
-    window.location.href = 'login.html';
+    window.location.href = 'login';
 }
 
 window.redirectIfNotLoggedIn = function() {
     if (!isLoggedIn()) {
-        window.location.href = 'login.html';
+        window.location.href = 'login';
     }
 }
 
 window.redirectToProfileIfLoggedIn = function() {
     if (isLoggedIn()) {
-        window.location.href = 'profile.html';
+        window.location.href = 'profile';
     } else {
-        window.location.href = 'login.html';
+        window.location.href = 'login';
     }
 }
 

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     if (!isLoggedIn()) {
-        window.location.href = 'login.html';
+        window.location.href = 'login';
         return;
     }
 
@@ -188,7 +188,7 @@ async function saveAIRecipe(recipe) {
                 stappen: recipe.steps || [],
                 bereidingstijd: recipe.cooking_time || 'Onbekend',
                 moeilijkheidsgraad: recipe.difficulty || 'Gemiddeld',
-                tags: Array.isArray(recipe.tags) ? recipe.tags : (typeof recipe.tags === 'string' ? recipe.tags.split(',').map(t => t.trim()).filter(Boolean) : (recipe.tags ? [String(recipe.tags)] : ['ai', 'gegenereerd'])), 
+                tags: recipe.tags || ['ai', 'gegenereerd'],
                 afbeelding: recipe.image || '',
                 bron: 'ai',
                 auteur: 'AI Chef',

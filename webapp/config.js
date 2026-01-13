@@ -42,14 +42,14 @@ async function apiRequest(url, options = {}) {
             localStorage.removeItem('authToken');
             localStorage.removeItem('username');
             localStorage.removeItem('fullname');
-            window.location.href = 'login.html';
+            window.location.href = 'login';
             throw new Error('Session expired');
         }
     }
     
     // Handle 404 errors - redirect to 404 page
     if (response.status === 404) {
-        window.location.href = '404.html';
+        window.location.href = '404';
         throw new Error('Resource not found');
     }
     

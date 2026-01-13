@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 adminLink.className = 'material-symbols-rounded';
                 adminLink.textContent = 'admin_panel_settings';
                 adminLink.style.cursor = 'pointer';
-                adminLink.onclick = () => { window.location.href = 'admin.html'; };
+                adminLink.onclick = () => { window.location.href = 'admin'; };
                 
-                const personIcon = headerIcons.querySelector('span[onclick*="profile.html"]');
+                const personIcon = headerIcons.querySelector('span[onclick*="profile"]');
                 if(personIcon) {
                     headerIcons.insertBefore(adminLink, personIcon);
                 } else {
@@ -28,15 +28,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Ensure AI Chef icon exists on every header (don't duplicate)
     const headerIcons = document.querySelector('.header-icons');
-    if (headerIcons && !headerIcons.querySelector('span[onclick*="ai-chef.html"]')) {
+    if (headerIcons && !headerIcons.querySelector('span[onclick*="ai-chef"]')) {
         const aiLink = document.createElement('span');
         aiLink.className = 'material-symbols-rounded';
         aiLink.textContent = 'auto_awesome';
         aiLink.style.cursor = 'pointer';
-        aiLink.onclick = () => { window.location.href = 'ai-chef.html'; };
+        aiLink.onclick = () => { window.location.href = 'ai-chef'; };
         // Prefer inserting before the About/Info icon when present
-        const infoIcon = headerIcons.querySelector('span[onclick*="about.html"]');
-        const personIcon2 = headerIcons.querySelector('span[onclick*="profile.html"]');
+        const infoIcon = headerIcons.querySelector('span[onclick*="about"]');
+        const personIcon2 = headerIcons.querySelector('span[onclick*="profile"]');
         if (infoIcon) {
             headerIcons.insertBefore(aiLink, infoIcon);
         } else if (personIcon2) {
@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Set/reset the active 'filled' state for the AI icon so it highlights like other header icons
     if (headerIcons) {
-        const aiIcon = headerIcons.querySelector('span[onclick*="ai-chef.html"]') || Array.from(headerIcons.querySelectorAll('span.material-symbols-rounded')).find(s => s.textContent.trim() === 'auto_awesome');
+        const aiIcon = headerIcons.querySelector('span[onclick*="ai-chef"]') || Array.from(headerIcons.querySelectorAll('span.material-symbols-rounded')).find(s => s.textContent.trim() === 'auto_awesome');
         if (aiIcon) {
-            if (window.location.href.includes('ai-chef.html') || window.location.pathname.endsWith('/ai-chef.html')) {
+            if (window.location.href.includes('ai-chef') || window.location.pathname.endsWith('/ai-chef')) {
                 aiIcon.classList.add('filled');
             } else {
                 aiIcon.classList.remove('filled');
